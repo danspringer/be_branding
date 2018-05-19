@@ -2,7 +2,7 @@ $( document ).ready(function() {
 							 
    // Auf Klick checken
    $('#be-branding-showborder').click(function() {
-		$("#show-border-area").toggle(this.checked);
+		$("#show-border-area").slideToggle(this.checked);
 	});
    
    //Immer checken

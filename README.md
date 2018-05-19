@@ -7,3 +7,5 @@ Auch für REDAXO-Dienstleister eignet sich das AddOn, um dem Backend einen indiv
 
 "border" stammt aus dem (mittlerweile nicht mehr weitergeführten AddOn "out5" von Oliver Kreischer / FOR). Vielen Dank!
 
+![Backend Branding für REDAXO 5](https://i.imgur.com/DS3zRxo.png "Backend Branding Redaxo 5")
+

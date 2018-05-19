@@ -1,5 +1,10 @@
 <?php
 
+// Hinweis für ckeditor
+if(!rex_addon::get('ckeditor')->isAvailable()) {
+	echo '<div class="alert alert-warning">Das AddOn <strong>CKEditor</strong> ist nicht installiert oder deaktiviert. Der CKEditor ist nicht notwendig, aber erleichtert die HTML-Eingabe im Feld <strong>Adresse oder Zusatzinfo</strong>.</div>';
+	}
+
 $content = '';
 $buttons = '';
 
@@ -184,7 +189,7 @@ $content .= $fragment->parse('core/form/container.php');
 $formElements = [];
 $n = [];
 $n['label'] = '<label for="be_branding-config-textarea">Adresse oder Zusatzinfo<p><small>Erscheint in den Credits</small></p></label>';
-$n['field'] = '<textarea class="ckeditor" data-ckeditor-profile="lite" id="be_branding-config-textarea" name="config[textarea]" rows="8">' . $this->getConfig('textarea') . '</textarea>';
+$n['field'] = '<textarea class="ckeditor" data-ckeditor-profile="lite" id="be_branding-config-textarea" name="config[textarea]" rows="8" style="width: 100%";>' . $this->getConfig('textarea') . '</textarea>';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
@@ -216,7 +221,7 @@ $buttons = '
 // Ausgabe Formular
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit');
-$fragment->setVar('title', $this->i18n('config'));
+$fragment->setVar('title', 'Einstellungen');
 $fragment->setVar('body', $content, false);
 $fragment->setVar('buttons', $buttons, false);
 $output = $fragment->parse('core/page/section.php');

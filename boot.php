@@ -47,6 +47,12 @@ if (rex::isBackend()) {
 		if ($this->getConfig('agency')) {
 		  rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
 			$suchmuster = array ('<li><a href="https://www.yakamara.de" target="_blank" rel="noreferrer noopener">yakamara.de</a></li>');
+			// Wenn Agenturlogo gesetzt ist, auch im Footer anzeigen
+			/*if($this->getConfig('file2')) {
+			$ersetzen = array ('<li><img src="index.php?rex_media_type=rex_mediapool_preview&rex_media_file='.$this->getConfig('file2').'"></li><li><a href="index.php?page=credits">'.$this->getConfig('agency').'</a></li><li><a href="https://www.yakamara.de" target="_blank">yakamara.de</a></li>');
+			} else {
+				$ersetzen = array ('<li><a href="index.php?page=credits">'.$this->getConfig('agency').'</a></li><li><a href="https://www.yakamara.de" target="_blank">yakamara.de</a></li>');
+				}*/
 			$ersetzen = array ('<li><a href="index.php?page=credits">'.$this->getConfig('agency').'</a></li><li><a href="https://www.yakamara.de" target="_blank">yakamara.de</a></li>');
 			$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
 		  });
@@ -103,7 +109,7 @@ if ($this->getConfig('showborder') == 1) {
 if($this->getConfig('color1') && $this->getConfig('color2') ) {
 	 rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
 				$suchmuster = '</head>';
-				$ersetzen = '<style>.rex-nav-top{background-color: '.$this->getConfig('color1').' !important;} .rex-redaxo-logo path.rex-redaxo-logo-r, .rex-redaxo-logo path.rex-redaxo-logo-e, .rex-redaxo-logo path.rex-redaxo-logo-d, .rex-redaxo-logo path.rex-redaxo-logo-cms{fill: '.$this->getConfig('color2').' !important;} .rex-nav-meta .text-muted {color: '.$this->getConfig('color2').' !important;} .rex-redaxo-logo path.rex-redaxo-logo-a, .rex-redaxo-logo path.rex-redaxo-logo-x, .rex-redaxo-logo path.rex-redaxo-logo-o, .rex-redaxo-logo path.rex-redaxo-logo-reg{fill: #fff !important;}</style></head>';
+				$ersetzen = '<style>.rex-nav-top{background-color: '.$this->getConfig('color1').' !important;} .rex-redaxo-logo path.rex-redaxo-logo-r, .rex-redaxo-logo path.rex-redaxo-logo-e, .rex-redaxo-logo path.rex-redaxo-logo-d, .rex-redaxo-logo path.rex-redaxo-logo-cms{fill: '.$this->getConfig('color2').' !important;} .rex-nav-meta .text-muted {color: '.$this->getConfig('color2').' !important;} .rex-redaxo-logo path.rex-redaxo-logo-a, .rex-redaxo-logo path.rex-redaxo-logo-x, .rex-redaxo-logo path.rex-redaxo-logo-o, .rex-redaxo-logo path.rex-redaxo-logo-reg{fill: #fff !important;} #rex-page-login .rex-page-main:before{border-color: '.$this->getConfig('color1').' transparent transparent transparent !important; top: -1px !important;}</style></head>';
 				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
 			});	
 }	

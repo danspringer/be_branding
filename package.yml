@@ -1,12 +1,12 @@
 # Alle hier gesetzten Werte können über $addon->getProperty($key) abgefragt werden
 
 package: be_branding # Pflichtfeld
-version: '1.0.1' # Pflichtfeld
+version: '1.0.2' # Pflichtfeld
 author: Medienfeuer, Daniel Springer
 supportpage: https://github.com/medienfeuer/be_branding
 
 page:
-    title: 'Backend Branding' 
+    title: 'Backend Branding'
     perm: be_branding[]
     icon: rex-icon fa-fire
     subpages:
@@ -15,5 +15,4 @@ page:
 requires:
     redaxo: '>=5.0' # benötigt mindestens REDAXO 5.0
     packages:
-        ckeditor: '^4.6.2' # benötigt mindestens das Addon ckEditor 4.6.2
-        ui_tools: '^0.2.5' # benötigt UI-Tools für Colorpicker 
+        ui_tools/jquery-minicolors: '>=2.2.6' # benötigt minicolors aus ui_tools
