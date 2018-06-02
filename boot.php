@@ -61,12 +61,10 @@ if (rex::isBackend()) {
 		// Text in den Credits
 		if ($this->getConfig('textarea')) {
 		  rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
-			$suchmuster = array ('<header class="rex-page-header">
-    <div class="page-header">
-        <h1>Credits                    </h1>
+			$suchmuster = array ('Credits                    </h1>
     </div>
     </header>');
-			$ersetzen = array ('<header class="rex-page-header"><div class="page-header"><h1>Credits</h1></div></header>
+			$ersetzen = array ('Credits</h1></div></header>
 			<section class="rex-page-section">
             <div class="panel panel-default">
         	<header class="panel-heading"><div class="panel-title">'.$this->getConfig('agency').'</div></header>
