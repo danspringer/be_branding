@@ -12,6 +12,7 @@ page:
     subpages:
         branding: { title: 'Branding', perm: 'be_branding[branding]', icon: rex-icon fa-fire } # Branding-Seite mit separaten Rechten
         config: { title: 'Konfiguration', perm: 'be_branding[config]', icon: rex-icon fa-wrench } # config-Seite mit separaten Rechten
+        credits: { title: 'Credits', perm: 'be_branding[credits]', icon: rex-icon fa-copyright } # config-Seite mit separaten Rechten
 
 requires:
     redaxo: '>=5.0' # benötigt mindestens REDAXO 5.0

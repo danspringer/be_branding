@@ -39,6 +39,7 @@ if (rex_post('formsubmit', 'string') == '1') {
         ['editor', 'string'],
 		['showborder', 'int'],
 		['coloricon', 'int'],
+		['colorpicker', 'int'],
 		
     ]));
 	
@@ -53,6 +54,23 @@ if (rex_post('formsubmit', 'string') == '1') {
     echo rex_view::success('Grundeinstellungen des AddOns gespeichert');
 }	
 	
+
+
+$content .= '<fieldset><legend>Colorpicker f&uuml;r Farbauswahlfelder</legend>';
+$content .= '<p>Wenn <code>ui_tool/jquery-minicolors</code> installiert und aktiviert ist, wird es verwendet, ansonsten wird es im Backend eingebunden.</p>';
+
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="be-branding-colorpicker">Colorpicker verwenden?</label>';
+$n['field'] = '<input type="checkbox" id="be-branding-colorpicker" name="baseconfig[colorpicker]" value="1" ' . ($this->getConfig('colorpicker') ? 'checked="checked" ' : '') . ' />';
+$formElements[] = $n;
+	
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/form.php');
+	
+$content .= '</fieldset>';
+
 
 
 $content .= '<fieldset><legend>Text-Editor</legend>';
@@ -84,34 +102,45 @@ $content .= $fragment->parse('core/form/form.php');
 $content .= '</fieldset>';
 
 
+
+
 $content .= '<fieldset><legend>Favicon</legend>';
 
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be-branding-coloricon">Favicon im Backend f&auml;rben?</label>';
-$n['field'] = '<input type="checkbox" id="be-branding-coloricon" name="baseconfig[coloricon]" value="1" ' . ($this->getConfig('coloricon') ? 'checked="checked" ' : '') . ' />';
-$formElements[] = $n;
-
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/form.php');
-
+// Nur wenn Imagemagick verfügbar ist anzeigen
+if (class_exists('Imagick') === true) {	
+	$formElements = [];
+	$n = [];
+	$n['label'] = '<label for="be-branding-coloricon">Favicon im Backend f&auml;rben?</label>';
+	$n['field'] = '<input type="checkbox" id="be-branding-coloricon" name="baseconfig[coloricon]" value="1" ' . ($this->getConfig('coloricon') ? 'checked="checked" ' : '') . ' />';
+	$formElements[] = $n;
+		
+	$fragment = new rex_fragment();
+	$fragment->setVar('elements', $formElements, false);
+	$content .= $fragment->parse('core/form/form.php');
+	}
+	
+if (class_exists('Imagick') === false) {	
+	$content .= '<p><code>Imagemagick</code> ist nicht auf dem Server installiert, deshalb k&ouml;nnen keine Favicons generiert werden.</p>';
+}
 $content .= '</fieldset>';
 
 
+
+	
 $content .= '<fieldset><legend>Top-Border</legend>';
 $formElements = [];
 $n = [];
 $n['label'] = '<label for="be-branding-showborder">Top-Border anzeigen?</label>';
 $n['field'] = '<input type="checkbox" id="be-branding-showborder" name="baseconfig[showborder]" value="1" ' . ($this->getConfig('showborder') ? 'checked="checked" ' : '') . ' />';
 $formElements[] = $n;
-
+	
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);
 $content .= $fragment->parse('core/form/form.php');
-
-
+	
+	
 $content .= '</fieldset>';
+
 
 
 // Save-Button

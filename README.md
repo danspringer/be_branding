@@ -8,7 +8,7 @@ Mit dem AddOn lässt sich das Backend von Redaxo branden, um dem Backend eine in
 Features
 -------
 * Einfärben des Headers und REDAXO-Logos im Backend
-* Einfärben des Favicon im Backend
+* Einfärben des Favicon im Backend (Imagemagick benötigt)
 * Anzeigen eines Projektlogos im Login-Screen und in der Navigation des Backends
 * Anzeigen eines (Agentur-) Logos und Anschrift o.ä. in den Credits
 * Anzeigen eines (Agentur-) Namens im Footer des Backends 
@@ -19,12 +19,12 @@ Last Changes
 -------
 ### Version 1.0.4 ####
 
-=== 20.08.2018 ===
-* Favicon im Backend kann gefärbt werden
+=== 21.08.2018 ===
+* Favicon im Backend kann gefärbt werden (Imagemagick benötigt)
 * Übersichtlichere Aufteilung in Konfiguration und Branding-Page
 * Umgestellt auf includeCurrentPageSubPath
-* jQuery Colorpicker ist keine Pflicht mehr. Wenn ui_tools/jquery-minicolors installiert ist, wird es verwendet, ansonsten normales input-Feld
-* In der Konfiguration kann aus den installierten Editoren der bevorzugte festgelegt werden (ckEditor, ckEditor 5, Markitup / Markdown o. Textile, redactor 2, tinymce4.
+* jQuery Colorpicker ist keine Pflicht mehr. Wenn ui_tools/jquery-minicolors installiert ist, wird es verwendet, ansonsten normales input-Feld oder selbst mitglieferter jQuery-Colorpicker
+* In der Konfiguration kann aus den installierten Editoren der bevorzugte festgelegt werden (zur Zeit: ckEditor, ckEditor 5, Markitup / Markdown o. Textile, redactor 2, tinymce4.
 
 ### Version 1.0.3 ####
 
@@ -37,8 +37,8 @@ Credits
 ### border ###
 "border" stammt aus dem (mittlerweile nicht mehr weitergeführten) AddOn "out5" von Oliver Kreischer / FOR. Vielen Dank!
 
-### Klassen hex2rgb und rgb2hex ###
-Die Klassen zur Umwandlung von RGB-, bzw. HEX-Werten stammen von Jan Kristinus aus dem R4-AddON "Backend Utilities" von RexDude.
+### hex2rgb, rgb2hex und makeFavIco ###
+Die Funktionen zur Umwandlung von RGB-, bzw. HEX-Werten und zum Färben des PNGs stammen von Jan Kristinus aus dem R4-AddON "Backend Utilities / Colorizer" von RexDude.
 
 ### FaviconGenerator ###
 Class generation favicon for browsers and devices Android, Apple, Windows and display of html code. It supports a large number of settings such as margins, color, compression, three different methods of crop and screen orientation.
@@ -48,4 +48,14 @@ Class generation favicon for browsers and devices Android, Apple, Windows and di
 * @version   Release: 1.0.0
 * @link      https://github.com/dmamontov/favicon
 * @since     Class available since Release 1.0.0
+
+### jQuery MiniColors ###
+A tiny color picker built on jQuery
+Developed by Cory LaViska for A Beautiful Site, LLC
+
+Licensed under the MIT license: http://opensource.org/licenses/MIT
+
+Demo & Documentation
+http://labs.abeautifulsite.net/jquery-minicolors/
+
 

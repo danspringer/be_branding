@@ -36,8 +36,8 @@ if(!function_exists(hex2rgb)) {
 			  $b = hexdec(substr($hex,4,2));
 		   }
 		   $rgb = array($r, $g, $b);
-		   return implode(",", $rgb); // returns the rgb values separated by commas
-		   //return $rgb; // returns an array with the rgb values
+		   //return implode(",", $rgb); // returns the rgb values separated by commas
+		   return $rgb; // returns an array with the rgb values
 		}
 }
 
@@ -67,6 +67,25 @@ function rgba2hex($rgba) {
 		   
 		   return $hex; // returns the hex value including the number sign (#)
 		}
+}
+
+if(!function_exists(makeFavIcon)) {
+function makeFavIcon($hexColor, $path) {
+	
+		$rgbColor = hex2rgb($hexColor);
+		$favIconOriginal = $path . 'favicon-original.png';
+		$favIconNew = rex_path::addonAssets('be_branding').'/favicon/favicon-original-'.str_replace('#','',$hexColor).'.png';
+
+		$im = imagecreatefrompng($favIconOriginal);
+		imagealphablending($im, false);
+
+		imagesavealpha($im, true);
+
+		if ($im && imagefilter($im, IMG_FILTER_COLORIZE, $rgbColor[0], $rgbColor[1], $rgbColor[2], 0)) {
+			imagepng($im, $favIconNew);
+			imagedestroy($im);
+		}
+	}
 }
 
 
@@ -167,10 +186,17 @@ if (rex::isBackend()) {
    /* if (rex_be_controller::getCurrentPagePart(2) == 'config') {
         rex_view::addJsFile($this->getAssetsUrl('js/script.js?v=' . $this->getVersion()));
     }*/
-
-
-// Favicon färben
-if ($this->getConfig('coloricon') == 1) {
+	
+	// Wenn colorpicker aktiviert ist, checken ob ui_tools/jquery-minicolors bereits aktiviert ist, ansonsten selbst auf branding-Seite einbinden
+    if ($this->getConfig('colorpicker') && !rex_addon::get('ui_tools')->getPlugin('jquery-minicolors')->isAvailable() && rex_be_controller::getCurrentPagePart(2) == 'branding') {
+		rex_view::addCssFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.css?v=' . $this->getVersion()));
+        rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.min.js?v=' . $this->getVersion()));
+		rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery-minicolors.js?v=' . $this->getVersion()));
+    }
+	
+ 
+// Favicon färben nur wenn Imagemagick verfügbar ist
+if ($this->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {
 	rex_extension::register('OUTPUT_FILTER',function(rex_extension_point $ep){
 		 
 		$suchmuster = '<link rel="apple-touch-icon-precomposed" sizes="57x57" href="../assets/addons/be_style/plugins/redaxo/images/apple-touch-icon-57x57.png" />
@@ -193,49 +219,14 @@ if ($this->getConfig('coloricon') == 1) {
     <meta name="msapplication-square310x310logo" content="../assets/addons/be_style/plugins/redaxo/images/mstile-310x310.png" />
     <meta name="msapplication-wide310x150logo" content="../assets/addons/be_style/plugins/redaxo/images/mstile-310x150.png" />';
 		
-				
-		//https://github.com/dmamontov/favicon reinholen
-		require rex_path::backend('src/addons/be_branding/vendor/favicon/src/FaviconGenerator.php');
 		
-		// Initiale Farbe für R setzen
-		$img = imagecreatefrompng(rex_path::backend('src/addons/be_branding/vendor/favicon/favicon-original.png'));
-		imagecolorset($img,0, 255,0,0);
-		imagepng($img); // output neue farbe
-		
-		
-		// REDAXO-Logo als SVG-Code
-		$rex_logo = '<?xml version="1.0" encoding="utf-8"?>
-<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
-<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
-<svg version="1.1" id="Ebene_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px"
-	 width="620px" height="620px" viewBox="0 0 620 620" enable-background="new 0 0 620 620" xml:space="preserve">
-<path fill="'.rgba2hex($this->getConfig('color1')).'" d="M616.141,215.481C625.297,113.45,538.312-0.352,391.817-0.352H65.452L3.319,619.664h158.273l18.967-187.705
-	h151.727l83.061,187.705h172.01l-93.525-211.24C579.517,361.33,608.945,295.267,616.141,215.481z M380.03,274.996H195.605
-	l12.424-119.034c68.671,0.656,156.311,0.656,187.702,0.656c40.555,0,62.784,28.122,62.784,56.895
-	C458.525,251.449,426.473,274.996,380.03,274.996z"/>
-</svg>';
-		
-		//generiere png aus svg und speichere unter
-		// zuerst altes png löschen
-		unlink(rex_path::backend('src/addons/be_branding/vendor/favicon/favicon-original.png'));
-		$png = new Imagick();
-		//$svg = file_get_contents(rex_path::backend('src/addons/be_branding/vendor/favicon/favicon-original.svg'));
-		$svg = $rex_logo;
-		 
-		$png->readImageBlob($svg);
-		$png->setImageBackgroundColor(new ImagickPixel('transparent'));
-		 
-		$png->setImageFormat("png24");
-		$png->resizeImage(310, 310, imagick::FILTER_LANCZOS, 1);
-		 
-		$png->writeImage(rex_path::backend('src/addons/be_branding/vendor/favicon/favicon-original.png'));
-		$png->clear();
-		$png->destroy();
-		
-		
+		// Initiale Farbe für R setzen und als neues png abspeichern		
+		makeFavIcon(rgba2hex($this->getConfig('color1')),rex_path::addon('be_branding').'vendor/favicon/');
 		
 		// aus dem png dann die Favicons generieren
-		$fav = new FaviconGenerator(rex_path::backend('src/addons/be_branding/vendor/favicon/favicon-original.png'));
+		//https://github.com/dmamontov/favicon reinholen
+		require rex_path::addon('be_branding').'vendor/favicon/src/FaviconGenerator.php';
+		$fav = new FaviconGenerator(rex_path::addonAssets('be_branding').'favicon/favicon-original-'.str_replace('#','',rgba2hex($this->getConfig('color1'))).'.png');
 		
 		$fav->setCompression(FaviconGenerator::COMPRESSION_VERYHIGH);
 		
@@ -254,7 +245,6 @@ if ($this->getConfig('coloricon') == 1) {
 	
 		$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
 		//$ep->setSubject(str_replace($ersetzen, 'hex2rgb: '.hex2rgb('#FEC42A').'<br />rgba2hex: '.rgba2hex($this->getConfig('color1')).'<br />rgb2hex: '.rgb2hex('254,203,47'), $ep->getSubject()));
-		unlink(rex_path::backend('src/addons/be_branding/vendor/favicon/favicon-original.png'));
 	});
 		
 

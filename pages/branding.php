@@ -28,7 +28,9 @@ if (rex_post('formsubmit', 'string') == '1') {
     echo rex_view::success('Einstellungen gespeichert');
 }
 
-
+if($this->getConfig('colorpicker')) {
+	$class_colorpicker = ' minicolors';
+	} else $class_colorpicker = '';
 
 
 if($this->getConfig('showborder')) {
@@ -50,7 +52,7 @@ $content .= '<fieldset><legend>Top-Border</legend>';
 	$formElements = [];
 	$n = [];
 	$n['label'] = '<label for="be_branding-config-border-color">Border-Farbe<p><small>Hintergrundfarbe des Balken oben</small></p></label>';
-	$n['field'] = '<input class="form-control minicolors" type="text" id="be_branding-config-border-color" name="config[border_color]" value="' . $this->getConfig('border_color') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 1)</code>)</p>';
+	$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-border-color" name="config[border_color]" value="' . $this->getConfig('border_color') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 1)</code>)</p>';
 	$formElements[] = $n;
 	
 	$fragment = new rex_fragment();
@@ -107,7 +109,7 @@ $content .= '<fieldset><legend>Farbschema</legend>';
 $formElements = [];
 $n = [];
 $n['label'] = '<label for="be_branding-config-color1">Prim&auml;rfarbe<p><small>z.B. HG-Farbe des Redaxo-Headers</small></p></label>';
-$n['field'] = '<input class="form-control minicolors" type="text" id="be_branding-config-color1" name="config[color1]" value="' . $this->getConfig('color1') . '" placeholder="z.B. rgba(255, 100, 0, 1)/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
+$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-color1" name="config[color1]" value="' . $this->getConfig('color1') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
@@ -119,7 +121,7 @@ $content .= $fragment->parse('core/form/container.php');
 $formElements = [];
 $n = [];
 $n['label'] = '<label for="be_branding-config-color2">Sekund&auml;rfarbe<p><small>Farbe f&uuml;r das Redaxo-Logo</small></p></label>';
-$n['field'] = '<input class="form-control minicolors" type="text" id="be_branding-config-color2" name="config[color2]" value="' . $this->getConfig('color2') . '" placeholder="z.B. rgba(255, 100, 0, 1)/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
+$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-color2" name="config[color2]" value="' . $this->getConfig('color2') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
 $formElements[] = $n;
 
 $fragment = new rex_fragment();
