@@ -22,7 +22,7 @@ if (rex::isBackend() && is_object(rex::getUser())) {
 // Assets werden bei der Installation des Addons in den assets-Ordner kopiert und stehen damit
 // öffentlich zur Verfügung. Sie müssen dann allerdings noch eingebunden werden:
 
-if(!function_exists(hex2rgb)) {
+if(!function_exists('hex2rgb')) {
 	function hex2rgb($hex) {
 		   $hex = str_replace("#", "", $hex);
 	
@@ -41,7 +41,7 @@ if(!function_exists(hex2rgb)) {
 		}
 }
 
-if(!function_exists(rgb2hex)) {
+if(!function_exists('rgb2hex')) {
 function rgb2hex($rgb) {
 	
 		   $rgb = str_replace('rgba(','',$rgb);
@@ -55,7 +55,7 @@ function rgb2hex($rgb) {
 		}
 }
 
-if(!function_exists(rgba2hex)) {
+if(!function_exists('rgba2hex')) {
 function rgba2hex($rgba) {
 	
 		   $rgba = str_replace('rgba(','',$rgba);
