@@ -69,7 +69,7 @@ function rgba2hex($rgba) {
 		}
 }
 
-if(!function_exists(makeFavIcon)) {
+if(!function_exists('makeFavIcon')) {
 function makeFavIcon($hexColor, $path) {
 	
 		$rgbColor = hex2rgb($hexColor);
