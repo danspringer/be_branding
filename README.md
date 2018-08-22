@@ -17,6 +17,11 @@ Features
 
 Last Changes
 -------
+### Version 1.0.5 ####
+
+=== 22.08.2018 ===
+* Diverse Notices gefixt
+
 ### Version 1.0.4 ####
 
 === 21.08.2018 ===
