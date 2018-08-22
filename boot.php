@@ -2,8 +2,6 @@
 
 /** @var rex_addon $this */
 
-// Diese Datei ist keine Pflichdatei mehr.
-
 // Daten wie Autor, Version, Subpages etc. sollten wenn möglich in der package.yml notiert werden.
 // Sie können aber auch weiterhin hier gesetzt werden:
 $this->setProperty('author', 'Daniel Springer, Medienfeuer');
@@ -19,87 +17,86 @@ if (rex::isBackend() && is_object(rex::getUser())) {
     rex_perm::register('be_branding[config]');
 }
 
-// Assets werden bei der Installation des Addons in den assets-Ordner kopiert und stehen damit
-// öffentlich zur Verfügung. Sie müssen dann allerdings noch eingebunden werden:
-
-if (!function_exists('hex2rgb')) {
-    function hex2rgb($hex)
-    {
-        $hex = str_replace("#", "", $hex);
-        
-        if (strlen($hex) == 3) {
-            $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-            $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-            $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-        } else {
-            $r = hexdec(substr($hex, 0, 2));
-            $g = hexdec(substr($hex, 2, 2));
-            $b = hexdec(substr($hex, 4, 2));
-        }
-        $rgb = array(
-            $r,
-            $g,
-            $b
-        );
-        //return implode(",", $rgb); // returns the rgb values separated by commas
-        return $rgb; // returns an array with the rgb values
-    }
-}
-
-if (!function_exists('rgb2hex')) {
-    function rgb2hex($rgb)
-    {
-        
-        $rgb = str_replace('rgba(', '', $rgb);
-        $rgb = str_replace(')', '', $rgb);
-        $rgb = str_replace(' ', '', $rgb);
-        
-        $rgbarr = explode(",", $rgb, 3);
-        $hex    = '#' . sprintf("%02x%02x%02x", $rgbarr[0], $rgbarr[1], $rgbarr[2]);
-        
-        return $hex; // returns the hex value including the number sign (#)
-    }
-}
-
-if (!function_exists('rgba2hex')) {
-    function rgba2hex($rgba)
-    {
-        
-        $rgba = str_replace('rgba(', '', $rgba);
-        $rgba = str_replace(')', '', $rgba);
-        $rgba = str_replace(' ', '', $rgba);
-        
-        $rgbarr = explode(",", $rgba, 3);
-        $hex    = '#' . sprintf("%02x%02x%02x", $rgbarr[0], $rgbarr[1], $rgbarr[2]);
-        
-        return $hex; // returns the hex value including the number sign (#)
-    }
-}
-
-if (!function_exists('makeFavIcon')) {
-    function makeFavIcon($hexColor, $path)
-    {
-        
-        $rgbColor        = hex2rgb($hexColor);
-        $favIconOriginal = $path . 'favicon-original.png';
-        $favIconNew      = rex_path::addonAssets('be_branding') . '/favicon/favicon-original-' . str_replace('#', '', $hexColor) . '.png';
-        
-        $im = imagecreatefrompng($favIconOriginal);
-        imagealphablending($im, false);
-        
-        imagesavealpha($im, true);
-        
-        if ($im && imagefilter($im, IMG_FILTER_COLORIZE, $rgbColor[0], $rgbColor[1], $rgbColor[2], 0)) {
-            imagepng($im, $favIconNew);
-            imagedestroy($im);
-        }
-    }
-}
-
-
-
-// Assets im Backend einbinden
+// Im Backend einbinden
 if (rex::isBackend()) {
+        
+    if (!function_exists('hex2rgb')) {
+        function hex2rgb($hex)
+        {
+            $hex = str_replace("#", "", $hex);
+            
+            if (strlen($hex) == 3) {
+                $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
+                $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
+                $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
+            } else {
+                $r = hexdec(substr($hex, 0, 2));
+                $g = hexdec(substr($hex, 2, 2));
+                $b = hexdec(substr($hex, 4, 2));
+            }
+            $rgb = array(
+                $r,
+                $g,
+                $b
+            );
+            //return implode(",", $rgb); // returns the rgb values separated by commas
+            return $rgb; // returns an array with the rgb values
+        }
+    }
+    
+    if (!function_exists('rgb2hex')) {
+        function rgb2hex($rgb)
+        {
+            
+            $rgb = str_replace('rgba(', '', $rgb);
+            $rgb = str_replace(')', '', $rgb);
+            $rgb = str_replace(' ', '', $rgb);
+            
+            $rgbarr = explode(",", $rgb, 3);
+            $hex    = '#' . sprintf("%02x%02x%02x", $rgbarr[0], $rgbarr[1], $rgbarr[2]);
+            
+            return $hex; // returns the hex value including the number sign (#)
+        }
+    }
+    
+    if (!function_exists('rgba2hex')) {
+        function rgba2hex($rgba)
+        {
+            
+            $rgba = str_replace('rgba(', '', $rgba);
+            $rgba = str_replace(')', '', $rgba);
+            $rgba = str_replace(' ', '', $rgba);
+            
+            $rgbarr = explode(",", $rgba, 3);
+            $hex    = '#' . sprintf("%02x%02x%02x", $rgbarr[0], $rgbarr[1], $rgbarr[2]);
+            
+            return $hex; // returns the hex value including the number sign (#)
+        }
+    }
+    
+    if (!function_exists('makeFavIcon')) {
+        function makeFavIcon($hexColor, $path)
+        {
+            
+            $rgbColor        = hex2rgb($hexColor);
+            $favIconOriginal = $path . 'favicon-original.png';
+            $favIconNew      = rex_path::addonAssets('be_branding') . '/favicon/favicon-original-' . str_replace('#', '', $hexColor) . '.png';
+            
+            $im = imagecreatefrompng($favIconOriginal);
+            imagealphablending($im, false);
+            
+            imagesavealpha($im, true);
+            
+            if ($im && imagefilter($im, IMG_FILTER_COLORIZE, $rgbColor[0], $rgbColor[1], $rgbColor[2], 0)) {
+                imagepng($im, $favIconNew);
+                imagedestroy($im);
+            }
+        }
+    }
+    
+    
+    
+    
     
     if ($this->getConfig('file')) {
         rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
@@ -281,7 +278,7 @@ if (rex::isBackend()) {
             // v 1.0.5: Wenn Imagemagick NICHT verfügbar ist, nutze Rex Media Manager (TODO)    
             if (class_exists('Imagick') === false) {
                 // to do: Media-Types in DB anlegen für entsprechende Favicon-Formate, das Ursprungs-Favicon färben und per REX MEDIA MANAGER verkleinern und einbinden
-				//$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+                //$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
             } // Ende Imagemagick false, dann REX MEDIA MANAGER
             
             
