@@ -264,7 +264,7 @@ if (rex::isBackend()) {
                     'apple-margin' => 0,
                     'android-background' => substr($this->getConfig('color1'), 1, 6),
                     'android-margin' => 0,
-                    'android-name' => $REX['SERVERNAME'],
+                    'android-name' => rex::getServerName(),
                     'android-url' => rex::getServer(),
                     'android-orientation' => FaviconGenerator::ANDROID_PORTRAIT,
                     'ms-background' => substr($this->getConfig('color1'), 1, 6)
