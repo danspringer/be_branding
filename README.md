@@ -17,6 +17,11 @@ Features
 
 Last Changes
 -------
+### Version 1.0.6 ####
+
+=== 19.10.2018 ===
+* Der Servername für FavIcons für Android wurde noch mit R4-Methoden angeben und wurde auf R5 korrigiert.
+
 ### Version 1.0.5 ####
 
 === 22.08.2018 ===
