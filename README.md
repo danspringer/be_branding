@@ -10,13 +10,18 @@ Features
 * Einfärben des Headers und REDAXO-Logos im Backend
 * Einfärben des Favicon im Backend (Imagemagick benötigt)
 * Anzeigen eines Projektlogos im Login-Screen und in der Navigation des Backends
-* Anzeigen eines (Agentur-) Logos und Anschrift o.ä. in den Credits
-* Anzeigen eines (Agentur-) Namens im Footer des Backends 
+* Anzeigen eines Logos und Anschrift o.ä. in den Credits
+* Anzeigen eines Namens im Footer des Backends 
 * Anzeigen einer zusätzlichen Hinweisleiste (border) im Backend
 
 
 Last Changes
 -------
+### Version 1.0.7 ####
+
+=== 26.02.2019 ===
+* Der Ordner assets/favicon und die Datei assets/favicon/.original wurden ergänzt. Ohne den Ordner bzw. die Datei gibt es einen Fehler, wenn man das Favicon färben möchte.
+
 ### Version 1.0.6 ####
 
 === 19.10.2018 ===
