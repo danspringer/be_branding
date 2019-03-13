@@ -152,6 +152,9 @@ if (rex::isBackend()) {
         rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
         {
             
+            // Ausgabevariablen initialisieren
+            $text_col = '';
+            $img_col = '';
             // Text und Bild vorhanden
             if ($this->getConfig('textarea') != "" && $this->getConfig('file2') != "") {
                 $html_text = $this->getConfig('textarea');
