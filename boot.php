@@ -228,6 +228,9 @@ if (rex::isBackend()) {
         
         rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
         {
+			// Suchmuster 5.6.5 und darunter
+			if (!rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+				
             $suchmuster = '<link rel="apple-touch-icon-precomposed" sizes="57x57" href="../assets/addons/be_style/plugins/redaxo/images/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="60x60" href="../assets/addons/be_style/plugins/redaxo/images/apple-touch-icon-60x60.png" />
     <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/addons/be_style/plugins/redaxo/images/apple-touch-icon-72x72.png" />
@@ -247,7 +250,19 @@ if (rex::isBackend()) {
     <meta name="msapplication-square150x150logo" content="../assets/addons/be_style/plugins/redaxo/images/mstile-150x150.png" />
     <meta name="msapplication-square310x310logo" content="../assets/addons/be_style/plugins/redaxo/images/mstile-310x310.png" />
     <meta name="msapplication-wide310x150logo" content="../assets/addons/be_style/plugins/redaxo/images/mstile-310x150.png" />';
-            
+			}
+			
+			// Suchmuster ab 5.7.0 (Favicons haben sich mit dieser Version geändert)
+			if (rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+				
+				$suchmuster = '    <link rel="apple-touch-icon" sizes="180x180" href="../assets/addons/be_style/plugins/redaxo/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/addons/be_style/plugins/redaxo/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/addons/be_style/plugins/redaxo/icons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/addons/be_style/plugins/redaxo/icons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/addons/be_style/plugins/redaxo/icons/safari-pinned-tab.svg" color="#4d99d3">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#4d99d3">';
+			}
             
             // Initiale Farbe für R setzen und als neues png abspeichern        
             makeFavIcon(rgba2hex($this->getConfig('color1')), rex_path::addon('be_branding') . 'vendor/favicon/');
