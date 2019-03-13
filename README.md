@@ -17,6 +17,11 @@ Features
 
 Last Changes
 -------
+### Version 1.0.8 ####
+
+=== 13.03.2019 ===
+* Favicon-Update für Rex 5.7.0. In der Redaxo Version 5.7.0 wurden die Favicons geändert und anders eingebunden. Diese Verson korrigiert die Einbindung der gefärbten Icons je nachdem, ob die Redaxo-Version größer oder kleiner als V 5.7.0 ist.
+
 ### Version 1.0.7 ####
 
 === 26.02.2019 ===
