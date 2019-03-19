@@ -17,6 +17,13 @@ Features
 
 Last Changes
 -------
+### Version 1.0.9 ####
+
+=== 19.03.2019 ===
+* Wenn Redaxo in einem Unterordner installiert ist, gab es einen Fehler, wenn man die Option für das Färben der Favicons aktiviert hatte.
+* Tile-Color für Android Endgeräte ergänzt.
+* Pfade für Einbindung der Favicons gefixt. 
+
 ### Version 1.0.8 ####
 
 === 13.03.2019 ===

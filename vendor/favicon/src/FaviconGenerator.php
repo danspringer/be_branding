@@ -186,7 +186,8 @@ class FaviconGenerator
         }
 
         $this->created = $created;
-        $this->root = php_sapi_name() == 'cli' ? __DIR__ : $_SERVER['DOCUMENT_ROOT'];
+        //$this->root = php_sapi_name() == 'cli' ? __DIR__ : $_SERVER['DOCUMENT_ROOT'];
+		$this->root = rex_path::base();
 
         if (file_exists("{$this->root}/assets/addons/be_branding/favicon/.settings")) {
             $this->settings = json_decode(file_get_contents("{$this->root}/assets/addons/be_branding/favicon/.settings"), true);
@@ -507,17 +508,11 @@ class FaviconGenerator
 <browserconfig>
     <msapplication>
         <tile>
-            <square70x70logo src=\"/assets/addons/be_branding/favicon/mstile-70x70-{$hex_name}.png\"/>
-            <square150x150logo src=\"/assets/addons/be_branding/favicon/mstile-150x150-{$hex_name}.png\"/>
-            <square310x310logo src=\"/assets/addons/be_branding/favicon/mstile-310x310-{$hex_name}.png\"/>
-            <wide310x150logo src=\"/assets/addons/be_branding/favicon/mstile-310x150-{$hex_name}.png\"/>
-            <TileColor>" .
-            (
-                isset($this->settings['ms-background']) ?
-                "#{$this->settings['ms-background']}" :
-                ''
-            ) .
-            "</TileColor>
+            <square70x70logo src=\"../assets/addons/be_branding/favicon/mstile-70x70-{$hex_name}.png\"/>
+            <square150x150logo src=\"../assets/addons/be_branding/favicon/mstile-150x150-{$hex_name}.png\"/>
+            <square310x310logo src=\"../assets/addons/be_branding/favicon/mstile-310x310-{$hex_name}.png\"/>
+            <wide310x150logo src=\"../assets/addons/be_branding/favicon/mstile-310x150-{$hex_name}.png\"/>
+            <TileColor>#{$hex_name}</TileColor>
         </tile>
     </msapplication>
 </browserconfig>";
@@ -556,7 +551,7 @@ class FaviconGenerator
 
         foreach (array('16x16', '32x32', '96x96') as $size) {
             if (file_exists("{$this->root}/assets/addons/be_branding/favicon/favicon-{$size}-{$hex_name}.png")) {
-                $html .= "<link rel=\"icon\" type=\"image/png\" href=\"/assets/addons/be_branding/favicon/favicon-{$size}-{$hex_name}.png\" sizes=\"{$size}\">\n";
+                $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/favicon/favicon-{$size}-{$hex_name}.png\" sizes=\"{$size}\">\n";
             }
         }
 
@@ -565,23 +560,23 @@ class FaviconGenerator
             as $size
         ) {
             if (file_exists("{$this->root}/assets/addons/be_branding/favicon/apple-touch-icon-{$size}-{$hex_name}.png")) {
-                $html .= "<link rel=\"apple-touch-icon\" sizes=\"{$size}\" href=\"/assets/addons/be_branding/favicon/apple-touch-icon-{$size}-{$hex_name}.png\">\n";
+                $html .= "<link rel=\"apple-touch-icon\" sizes=\"{$size}\" href=\"../assets/addons/be_branding/favicon/apple-touch-icon-{$size}-{$hex_name}.png\">\n";
             }
         }
 
         if (file_exists("{$this->root}/assets/addons/be_branding/favicon/android-chrome-192x192-{$hex_name}.png")) {
-            $html .= "<link rel=\"icon\" type=\"image/png\" href=\"/assets/addons/be_branding/favicon/android-chrome-192x192-{$hex_name}.png\" sizes=\"192x192\">\n";
+            $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/favicon/android-chrome-192x192-{$hex_name}.png\" sizes=\"192x192\">\n";
         }
         if (file_exists("{$this->root}/assets/addons/be_branding/favicon/manifest-{$hex_name}.json")) {
-            $html .= "<link rel=\"manifest\" href=\"/assets/addons/be_branding/favicon/manifest-{$hex_name}.json\">\n";
+            $html .= "<link rel=\"manifest\" href=\"../assets/addons/be_branding/favicon/manifest-{$hex_name}.json\">\n";
         }
 
         if (file_exists("{$this->root}/assets/addons/be_branding/favicon/mstile-144x144-{$hex_name}.png")) {
-            $html .= "<meta name=\"msapplication-TileImage\" content=\"/assets/addons/be_branding/favicon/mstile-144x144-{$hex_name}.png\">\n";
+            $html .= "<meta name=\"msapplication-TileImage\" content=\"../assets/addons/be_branding/favicon/mstile-144x144-{$hex_name}.png\">\n";
         }
         if (isset($this->settings['ms-background'])) {
-            $html .= "<meta name=\"msapplication-TileColor\" content=\"#{$this->settings['ms-background']}\">\n";
-            $html .= "<meta name=\"theme-color\" content=\"#{$this->settings['ms-background']}\">\n";
+            $html .= "<meta name=\"msapplication-TileColor\" content=\"#{$hex_name}\">\n";
+            $html .= "<meta name=\"theme-color\" content=\"#{$hex_name}\">\n";
         }
 
         return strlen($html) > 0 ? $html : false;
