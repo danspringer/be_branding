@@ -9,6 +9,7 @@ Features
 -------
 * Einfärben des Headers und REDAXO-Logos im Backend
 * Einfärben des Favicon im Backend (Imagemagick benötigt)
+* Generierung von Favicons für das Frontend aus dem Medienpool heraus (Imagemagick benötigt)
 * Anzeigen eines Projektlogos im Login-Screen und in der Navigation des Backends
 * Anzeigen eines Logos und Anschrift o.ä. in den Credits
 * Anzeigen eines Namens im Footer des Backends 
@@ -17,6 +18,14 @@ Features
 
 Last Changes
 -------
+### Version 1.1 ####
+
+=== 11.05.2019 ===
+* NEU: Favicon-Generator fürs Frontend.
+* Unter dem neuen Menüpunkt Frontend-Favicon kann eine Datei aus dem Medienpool ausgewählt werden, die dann automatisch in die jeweiligen Formate für Favicons generiert wird.
+* Ebenfalls kann die Tile-Color für Android-Geräte und Windows-Tiles angegeben werden (Das Favicon wird dabei nicht gefärbt).
+* Die Einbindung ins Frontend ist mittels dem Snippet REX_BE_BRANDING[type=fe_favicon] im Template im <head>-Bereich möglich.
+
 ### Version 1.0.9 ####
 
 === 19.03.2019 ===

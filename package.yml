@@ -1,7 +1,7 @@
 # Alle hier gesetzten Werte können über $addon->getProperty($key) abgefragt werden
 
 package: be_branding # Pflichtfeld
-version: '1.0.9' # Pflichtfeld
+version: '1.1' # Pflichtfeld
 author: Medienfeuer, Daniel Springer
 supportpage: https://github.com/medienfeuer/be_branding
 
@@ -10,7 +10,8 @@ page:
     perm: be_branding[]
     icon: rex-icon fa-fire
     subpages:
-        branding: { title: 'Branding', perm: 'be_branding[branding]', icon: rex-icon fa-fire } # Branding-Seite mit separaten Rechten
+        branding: { title: 'Backend Branding', perm: 'be_branding[branding]', icon: rex-icon fa-fire } # Branding-Seite mit separaten Rechten
+        fe_favicon: { title: 'Frontend-Favicon', perm: 'be_branding[fe_favicon]', icon: rex-icon fa-star } # Frontend-Favicon        
         config: { title: 'Konfiguration', perm: 'be_branding[config]', icon: rex-icon fa-wrench } # config-Seite mit separaten Rechten
         credits: { title: 'Credits', perm: 'be_branding[credits]', icon: rex-icon fa-copyright } # config-Seite mit separaten Rechten
 

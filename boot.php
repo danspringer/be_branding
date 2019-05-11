@@ -15,12 +15,10 @@ $this->setProperty('author', 'Daniel Springer, Medienfeuer');
 if (rex::isBackend() && is_object(rex::getUser())) {
     rex_perm::register('be_branding[branding]');
     rex_perm::register('be_branding[config]');
+	rex_perm::register('be_branding[fe_favicon]');
 }
 
-// Im Backend einbinden
-if (rex::isBackend()) {
-        
-    if (!function_exists('hex2rgb')) {
+if (!function_exists('hex2rgb')) {
         function hex2rgb($hex)
         {
             $hex = str_replace("#", "", $hex);
@@ -93,10 +91,9 @@ if (rex::isBackend()) {
             }
         }
     }
-    
-    
-    
-    
+	
+// Im Backend einbinden
+if (rex::isBackend()) {    
     
     if ($this->getConfig('file')) {
         rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
@@ -216,7 +213,7 @@ if (rex::isBackend()) {
     }*/
     
     // Wenn colorpicker aktiviert ist, checken ob ui_tools/jquery-minicolors bereits aktiviert ist, ansonsten selbst auf branding-Seite einbinden
-    if ($this->getConfig('colorpicker') && !rex_addon::get('ui_tools')->getPlugin('jquery-minicolors')->isAvailable() && rex_be_controller::getCurrentPagePart(2) == 'branding') {
+    if (($this->getConfig('colorpicker') && !rex_addon::get('ui_tools')->getPlugin('jquery-minicolors')->isAvailable()) && rex_be_controller::getCurrentPagePart(2) == 'branding' || rex_be_controller::getCurrentPagePart(2) == 'fe_favicon') {
         rex_view::addCssFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.css?v=' . $this->getVersion()));
         rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.min.js?v=' . $this->getVersion()));
         rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery-minicolors.js?v=' . $this->getVersion()));
@@ -328,5 +325,41 @@ if (rex::isBackend()) {
     } // EoF Farben    
     
     
-    
 } // EoF if rex Backend
+
+
+//Frontend Favicon / fe_favicon 
+if (class_exists('Imagick') === true && $this->getConfig('fe_favicon_filename') && !rex::isBackend()) { 
+	rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
+     {	
+         require rex_path::addon('be_branding') . 'vendor/favicon/src/FE_FaviconGenerator.php';
+         $fav = new FaviconGenerator(rex_path::media().$this->getConfig('fe_favicon_filename'));
+                
+         $fav->setCompression(FaviconGenerator::COMPRESSION_VERYHIGH);
+                
+         $fav->setConfig(array(
+            'apple-background' => substr($this->getConfig('fe_favicon_tilecolor'), 1, 6),
+            'apple-margin' => 0,
+            'android-background' => substr($this->getConfig('fe_favicon_tilecolor'), 1, 6),
+            'android-margin' => 0,
+            'android-name' => rex::getServerName(),
+            'android-url' => rex::getServer(),
+            'android-orientation' => FaviconGenerator::ANDROID_PORTRAIT,
+            'ms-background' => substr($this->getConfig('fe_favicon_tilecolor'), 1, 6)
+         ));
+				
+		 $suchmuster = 'REX_BE_BRANDING[type=fe_favicon]';
+         $ersetzen   = $fav->createAllAndGetHtml(rgba2hex($this->getConfig('fe_favicon_tilecolor')));
+         $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+     });
+} // EoF fe_favicon && !rex::isBackend()
+else {
+		rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
+		{
+			if(rex::isFrontend()) {
+				$suchmuster = 'REX_BE_BRANDING[type=fe_favicon]';
+				$ersetzen   = '';
+				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+			}
+		});
+	}
