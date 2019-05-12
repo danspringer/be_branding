@@ -24,7 +24,7 @@ Last Changes
 * NEU: Favicon-Generator fürs Frontend.
 * Unter dem neuen Menüpunkt Frontend-Favicon kann eine Datei aus dem Medienpool ausgewählt werden, die dann automatisch in die jeweiligen Formate für Favicons generiert wird.
 * Ebenfalls kann die Tile-Color für Android-Geräte und Windows-Tiles angegeben werden (Das Favicon wird dabei nicht gefärbt).
-* Die Einbindung ins Frontend ist mittels dem Snippet REX_BE_BRANDING[type=fe_favicon] im Template im <head>-Bereich möglich.
+* Die Einbindung ins Frontend ist mittels dem Snippet REX_BE_BRANDING[type=fe_favicon] im Template im &lt;head&gt;-Bereich möglich.
 
 ### Version 1.0.9 ####
 
