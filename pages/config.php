@@ -104,7 +104,7 @@ $content .= '</fieldset>';
 
 
 
-$content .= '<fieldset><legend>Favicon</legend>';
+$content .= '<fieldset><legend>Backend-Favicon</legend>';
 
 // Nur wenn Imagemagick verfügbar ist anzeigen
 if (class_exists('Imagick') === true) {	

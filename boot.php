@@ -91,18 +91,42 @@ if (!function_exists('hex2rgb')) {
             }
         }
     }
+
+
+if (!function_exists('checkExtension')) {
+	function checkExtension($filename){
+		
+			$img_file_parts = pathinfo($filename);
+			//print_r($img_file_parts);
+			$be_logo = '/media/'.$filename;
+			
+			$ext = $img_file_parts['extension'];
+			//echo $ext;
+			
+			if ($ext == "jpg" || $ext == "jpeg" || $ext == "png") {
+				$be_logo = 'index.php?rex_media_type=rex_mediapool_maximized&rex_media_file=' . $filename;
+				return $be_logo;
+				}
+			if ($ext === "svg" ) {
+				$be_logo = '/media/' . $filename;
+				return $be_logo;
+				}
+		}// EoF
+}	
 	
 // Im Backend einbinden
 if (rex::isBackend()) {    
     
     if ($this->getConfig('file')) {
+		
         rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
         {
+			
             $suchmuster = array(
                 '<h4 class="rex-nav-main-title">Hauptmenü</h4>'
             );
             $ersetzen   = array(
-                '<a href="index.php?page=credits"><img src="index.php?rex_media_type=rex_mediapool_maximized&rex_media_file=' . $this->getConfig('file') . '" class="img-responsive" style="padding-top: 50px"/></a><h4 class="rex-nav-main-title">Hauptmenü</h4>'
+                '<a href="index.php?page=credits"><img src="'.checkExtension($this->getConfig('file')).'" class="img-responsive" style="padding-top: 50px"/></a><h4 class="rex-nav-main-title">Hauptmenü</h4>'
             );
             $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
         });
@@ -111,11 +135,13 @@ if (rex::isBackend()) {
         if (rex::isBackend() && !rex::getUser()) {
             rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
             {
+				
+				
                 $suchmuster = array(
                     '<section class="rex-page-main-inner" id="rex-js-page-main">'
                 );
                 $ersetzen   = array(
-                    '<img src="index.php?rex_media_type=rex_mediapool_maximized&rex_media_file=' . $this->getConfig('file') . '" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">'
+                    '<img src="'.checkExtension($this->getConfig('file')).'" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">'
                 );
                 $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
             });
@@ -356,7 +382,7 @@ if (class_exists('Imagick') === true && $this->getConfig('fe_favicon_filename') 
 else {
 		rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
 		{
-			if(rex::isFrontend()) {
+			if(!rex::isBackend()) {
 				$suchmuster = 'REX_BE_BRANDING[type=fe_favicon]';
 				$ersetzen   = '';
 				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));

@@ -27,50 +27,57 @@ if($this->getConfig('colorpicker')) {
 
 $content .= '<fieldset><legend>Frontend-Favicon-Generator</legend>';
 
-// Dateiauswahl Medienpool-Widget
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="REX_MEDIA_1">Quelldatei: Favicon-Datei <p><small>Als transparentes PNG mit 310x310 Pixeln</small></p></label>';
+if (class_exists('Imagick') === false) {	
+	$content .= '<p><code>Imagemagick</code> ist nicht auf dem Server installiert, deshalb k&ouml;nnen keine Favicons generiert werden.</p>';
+}
 
-$n['field'] = '
-<div class="rex-js-widget rex-js-widget-media">
-	<div class="input-group">
-		<input class="form-control" type="text" name="config[fe_favicon_filename]" value="' . $this->getConfig('fe_favicon_filename') . '" id="REX_MEDIA_1" readonly="readonly">
-		<span class="input-group-btn">
-        <a href="#" class="btn btn-popup" onclick="openREXMedia(1);return false;" title="ÖFFNEN">
-        	<i class="rex-icon rex-icon-open-mediapool"></i>
-        </a>
-        <a href="#" class="btn btn-popup" onclick="addREXMedia(1);return false;" title="NEU">
-        	<i class="rex-icon rex-icon-add-media"></i>
-        </a>
-        <a href="#" class="btn btn-popup" onclick="deleteREXMedia(1);return false;" title="REMOVE">
-        	<i class="rex-icon rex-icon-delete-media"></i>
-        </a>
-        <a href="#" class="btn btn-popup" onclick="viewREXMedia(1);return false;" title="ANSEHEN">
-        	<i class="rex-icon rex-icon-view-media"></i>
-        </a>
-        </span>
-	</div>
- </div>
-';
-$formElements[] = $n;
+if (class_exists('Imagick') === true) {	
 
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/container.php');
+	// Dateiauswahl Medienpool-Widget
+	$formElements = [];
+	$n = [];
+	$n['label'] = '<label for="REX_MEDIA_1">Quelldatei: Favicon-Datei <p><small>Als transparentes PNG mit 310x310 Pixeln</small></p></label>';
+	
+	$n['field'] = '
+	<div class="rex-js-widget rex-js-widget-media">
+		<div class="input-group">
+			<input class="form-control" type="text" name="config[fe_favicon_filename]" value="' . $this->getConfig('fe_favicon_filename') . '" id="REX_MEDIA_1" readonly="readonly">
+			<span class="input-group-btn">
+			<a href="#" class="btn btn-popup" onclick="openREXMedia(1);return false;" title="ÖFFNEN">
+				<i class="rex-icon rex-icon-open-mediapool"></i>
+			</a>
+			<a href="#" class="btn btn-popup" onclick="addREXMedia(1);return false;" title="NEU">
+				<i class="rex-icon rex-icon-add-media"></i>
+			</a>
+			<a href="#" class="btn btn-popup" onclick="deleteREXMedia(1);return false;" title="REMOVE">
+				<i class="rex-icon rex-icon-delete-media"></i>
+			</a>
+			<a href="#" class="btn btn-popup" onclick="viewREXMedia(1);return false;" title="ANSEHEN">
+				<i class="rex-icon rex-icon-view-media"></i>
+			</a>
+			</span>
+		</div>
+	 </div>
+	';
+	$formElements[] = $n;
+	
+	$fragment = new rex_fragment();
+	$fragment->setVar('elements', $formElements, false);
+	$content .= $fragment->parse('core/form/container.php');
+	
+	
+	// Einfaches Textfeld
+	$formElements = [];
+	$n = [];
+	$n['label'] = '<label for="be_branding-fe_favicon_tilecolor">Favicon-Farbschema<p><small>Betrifft nicht das Favicon selbst, sondern z.B. die <a href="https://css-tricks.com/favicon-quiz/" target="_blank">Tile-Color</a> in Windows oder <a href="https://developers.google.com/web/updates/2014/11/Support-for-theme-color-in-Chrome-39-for-Android" target="_blank">Farbe des Browserfensters in Android</a>.</small></p></label>';
+	$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-fe_favicon_tilecolor" name="config[fe_favicon_tilecolor]" value="' . $this->getConfig('fe_favicon_tilecolor') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
+	$formElements[] = $n;
+	
+	$fragment = new rex_fragment();
+	$fragment->setVar('elements', $formElements, false);
+	$content .= $fragment->parse('core/form/container.php');
 
-
-// Einfaches Textfeld
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be_branding-fe_favicon_tilecolor">Favicon-Farbschema<p><small>Betrifft nicht das Favicon selbst, sondern z.B. die <a href="https://css-tricks.com/favicon-quiz/" target="_blank">Tile-Color</a> in Windows oder <a href="https://developers.google.com/web/updates/2014/11/Support-for-theme-color-in-Chrome-39-for-Android" target="_blank">Farbe des Browserfensters in Android</a>.</small></p></label>';
-$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-fe_favicon_tilecolor" name="config[fe_favicon_tilecolor]" value="' . $this->getConfig('fe_favicon_tilecolor') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
-$formElements[] = $n;
-
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/container.php');
-
+} // EoF ImageMagick verfügbar
 
 $content .= '</fieldset>';
 
@@ -83,16 +90,19 @@ $formElements = [];
 $n = [];
 $n['field'] = '<button class="btn btn-save rex-form-aligned" type="submit" name="save" value="Speichern">Speichern</button>';
 $formElements[] = $n;
-
+	
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);
-$buttons = $fragment->parse('core/form/submit.php');
-$buttons = '
-<fieldset class="rex-form-action">
-    ' . $buttons . '
-</fieldset>
-';
 
+	
+if (class_exists('Imagick') === true) { // Speichern Button nur anzeigen, wenn man ihn auch braucht
+	$buttons = $fragment->parse('core/form/submit.php');
+	$buttons = '
+	<fieldset class="rex-form-action">
+		' . $buttons . '
+	</fieldset>
+	';
+}
 // Ausgabe Formular
 $fragment = new rex_fragment();
 $fragment->setVar('class', 'edit');
@@ -100,21 +110,22 @@ $fragment->setVar('title', 'Einstellungen');
 $fragment->setVar('body', $content, false);
 $fragment->setVar('buttons', $buttons, false);
 $output = $fragment->parse('core/page/section.php');
-
+	
 $output = '
 <form action="' . rex_url::currentBackendPage() . '" method="post">
 <input type="hidden" name="formsubmit" value="1" />
-    ' . $output . '
+	' . $output . '
 </form>
 ';
-
+	
 echo $output;
 
 
 
 
+
 $content = '<h2>Erklärung</h2>
-<p>Das Addon generiert aus der Quell-Datei alle möglichen Favicon-Dateien, die dann einfach per Snippet im Frontend im <code>&lt;head&gt;</code>-Bereich eingefügt werden können.</p><hr />
+<p>Wenn auf dem Server ImageMagick verfügbar ist, generiert das AddOn aus der Quell-Datei alle möglichen Favicon-Dateien, die dann einfach per Snippet im Frontend im <code>&lt;head&gt;</code>-Bereich eingefügt werden können.</p><hr />
 
 <h2>Snippet zum Einbinden im Frontend</h2>
 <p>Das untenstehende Snippet einfach im &lt;head&gt;-Bereich des Templates einfügen.</p>

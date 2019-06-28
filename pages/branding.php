@@ -69,7 +69,7 @@ $content .= '<fieldset><legend>Projektbranding</legend>';
 // Dateiauswahl Medienpool-Widget
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="REX_MEDIA_1">Logo des Projekts <p><small>Erscheint &uuml;ber der Loginbox und in der Navi des BE<br />Am Besten als trans. PNG mit weissen Elementen</small></p></label>';
+$n['label'] = '<label for="REX_MEDIA_1">Logo des Projekts <p><small>Erscheint &uuml;ber der Loginbox und in der Navi des BE<br />Am Besten als trans. PNG o. SVG mit weissen Elementen</small></p></label>';
 
 $n['field'] = '
 <div class="rex-js-widget rex-js-widget-media">

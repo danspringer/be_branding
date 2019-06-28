@@ -18,13 +18,20 @@ Features
 
 Last Changes
 -------
+### Version 1.2 ####
+
+=== 28.06.2019 ===
+* rex::isFrontend() entfernt, da die Funktion erst ab REDAXO 5.7 verfügbar ist und niedrigere Versionen beim Update des AddOns einen Whoops bekommen haben.
+* Meldungen angepasst, wenn ImageMagick auf dem Server nicht verfügbar ist und man Favicons für das Frontend generieren wollte.
+* SVG-Unterstützung für das Projekt-Logo im Backend
+
 ### Version 1.1 ####
 
 === 11.05.2019 ===
 * NEU: Favicon-Generator fürs Frontend.
 * Unter dem neuen Menüpunkt Frontend-Favicon kann eine Datei aus dem Medienpool ausgewählt werden, die dann automatisch in die jeweiligen Formate für Favicons generiert wird.
 * Ebenfalls kann die Tile-Color für Android-Geräte und Windows-Tiles angegeben werden (Das Favicon wird dabei nicht gefärbt).
-* Die Einbindung ins Frontend ist mittels dem Snippet REX_BE_BRANDING[type=fe_favicon] im Template im &lt;head&gt;-Bereich möglich.
+* Die Einbindung ins Frontend ist mittels dem Snippet REX_BE_BRANDING[type=fe_favicon] im Template im <head>-Bereich möglich.
 
 ### Version 1.0.9 ####
 
