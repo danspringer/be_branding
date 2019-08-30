@@ -108,7 +108,7 @@ if (!function_exists('checkExtension')) {
 				return $be_logo;
 				}
 			if ($ext === "svg" ) {
-				$be_logo = '/media/' . $filename;
+				$be_logo = 'index.php?rex_media_type=ORIGINAL_' . hash("md5", $filename) . '&rex_media_file=' . $filename;
 				return $be_logo;
 				}
 		}// EoF
