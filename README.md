@@ -18,6 +18,12 @@ Features
 
 Last Changes
 -------
+### Version 1.3 ####
+
+=== 03.09.2019 ===
+* Backend-Favicon-Update für Rex 5.8.0. In der Redaxo Version 5.8.0 wurden die Favicons geändert und anders eingebunden. Diese Verson korrigiert die Einbindung der gefärbten Icons im Backend und berücksichtigt die verschiedenen Einbindungsarten der Versionen 5.0-5.7, von 5.7-5.8 und ab 5.8.
+* Fixed: SVG-Branding-Logo wurde nicht geladen, wenn Frontend durch maintenance-AddOn gesperrt war. Danke @helpy
+
 ### Version 1.2 ####
 
 === 28.06.2019 ===

@@ -108,7 +108,7 @@ if (!function_exists('checkExtension')) {
 				return $be_logo;
 				}
 			if ($ext === "svg" ) {
-				$be_logo = '/media/' . $filename;
+				$be_logo = 'index.php?rex_media_type=ORIGINAL_' . hash("md5", $filename) . '&rex_media_file=' . $filename;
 				return $be_logo;
 				}
 		}// EoF
@@ -252,7 +252,8 @@ if (rex::isBackend()) {
         rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
         {
 			// Suchmuster 5.6.5 und darunter
-			if (!rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+			//if (!rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+			if (rex::getVersion() <= '5.6.5') {
 				
             $suchmuster = '<link rel="apple-touch-icon-precomposed" sizes="57x57" href="../assets/addons/be_style/plugins/redaxo/images/apple-touch-icon-57x57.png" />
     <link rel="apple-touch-icon-precomposed" sizes="60x60" href="../assets/addons/be_style/plugins/redaxo/images/apple-touch-icon-60x60.png" />
@@ -275,14 +276,28 @@ if (rex::isBackend()) {
     <meta name="msapplication-wide310x150logo" content="../assets/addons/be_style/plugins/redaxo/images/mstile-310x150.png" />';
 			}
 			
-			// Suchmuster ab 5.7.0 (Favicons haben sich mit dieser Version geändert)
-			if (rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+			// Suchmuster ab 5.7.0 bis 5.8.0 (Favicons haben sich mit dieser Version geändert)
+			//if (rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+			if (rex::getVersion() >= '5.7.0' && rex::getVersion() < '5.8.0') {	
 				
 				$suchmuster = '    <link rel="apple-touch-icon" sizes="180x180" href="../assets/addons/be_style/plugins/redaxo/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/addons/be_style/plugins/redaxo/icons/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="../assets/addons/be_style/plugins/redaxo/icons/favicon-16x16.png">
     <link rel="manifest" href="../assets/addons/be_style/plugins/redaxo/icons/site.webmanifest">
     <link rel="mask-icon" href="../assets/addons/be_style/plugins/redaxo/icons/safari-pinned-tab.svg" color="#4d99d3">
+    <meta name="msapplication-TileColor" content="#2d89ef">
+    <meta name="theme-color" content="#4d99d3">';
+			}
+			
+			// Suchmuster ab 5.8.0 (Favicons haben sich mit dieser Version geändert)
+			//if (rex_string::versionCompare(rex::getVersion(), '5.6.5', '>')) {
+			if (rex::getVersion() >= '5.8.0') {	
+				
+				$suchmuster = '    <link rel="apple-touch-icon" sizes="180x180" href="../assets/addons/be_style/plugins/customizer/icons/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="../assets/addons/be_style/plugins/customizer/icons/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="../assets/addons/be_style/plugins/customizer/icons/favicon-16x16.png">
+    <link rel="manifest" href="../assets/addons/be_style/plugins/customizer/icons/site.webmanifest">
+    <link rel="mask-icon" href="../assets/addons/be_style/plugins/customizer/icons/safari-pinned-tab.svg" color="#4d99d3">
     <meta name="msapplication-TileColor" content="#2d89ef">
     <meta name="theme-color" content="#4d99d3">';
 			}
