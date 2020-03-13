@@ -18,9 +18,14 @@ Features
 
 Last Changes
 -------
+### Version 1.3.3 ####
+
+=== 13.03.2019 ===
+* Behebt einen Fehler der Frontend-Favicons der Version 1.3.2. Korrigiert die Einbindung der Color-Pickers.
+
 ### Version 1.3.2 ####
 
-=== 12.03.2020 ===
+=== 12.03.2019 ===
 * Backend-Favicon-Update für Rex 5.10.0. Diese Verson korrigiert die Einbindung der gefärbten Icons im Backend und berücksichtigt die verschiedenen Einbindungsarten der Versionen 5.0-5.7, von 5.7-5.8, 5.8.0 und ab 5.8.1 bis zu 5.10.0.
 
 ### Version 1.3.1 ####
