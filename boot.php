@@ -300,7 +300,7 @@ if (rex::isBackend()) {
 			}
 			
 			// Suchmuster ab 5.8.1 (Favicons haben sich mit dieser Version geändert)
-			if (rex::getVersion() == '5.8.1' || rex::getVersion() >= '5.10.0') {
+			if (rex::getVersion() >= '5.8.1' || rex::getVersion() >= '5.10') {	
 				
 				$suchmuster = '    <link rel="apple-touch-icon" sizes="180x180" href="../assets/addons/be_style/plugins/redaxo/icons/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="../assets/addons/be_style/plugins/redaxo/icons/favicon-32x32.png">
