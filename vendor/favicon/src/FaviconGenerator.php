@@ -612,7 +612,8 @@ class FaviconGenerator
     final private function setColorAndMargin(Imagick $image, $colorKey = '', $marginKey = '')
     {
         if (isset($this->settings[$colorKey]) && empty($this->settings[$colorKey]) === false) {
-            $image->setImageBackgroundColor("#{$this->settings[$colorKey]}");
+			#$image->setImageBackgroundColor("#{$this->settings[$colorKey]}");
+            $image->setImageBackgroundColor("rgba(255,255,255,0)");
 
             if (
                 isset($this->settings[$marginKey]) &&

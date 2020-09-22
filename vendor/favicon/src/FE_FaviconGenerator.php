@@ -202,7 +202,7 @@ class FaviconGenerator
             file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/.original") === false ||
             filesize($icon) != filesize("{$this->root}/assets/addons/be_branding/fe_favicon/.original")
         ) {
-            @mkdir("{$this->root}/favicon", 0755);
+            #@mkdir("{$this->root}/favicon", 0755);
             @copy($icon, "{$this->root}/assets/addons/be_branding/fe_favicon/.original");
             $this->created == true;
         }
@@ -349,7 +349,7 @@ class FaviconGenerator
      */
     final public function createBasic($hex_name)
     {
-        foreach (array('16x16', '32x32', '96x96') as $size) {
+        foreach (array('16x16', '32x32', '96x96', '128x128') as $size) {
             if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png") == false) {
                 $image = $this->createImage($size);
 
@@ -549,7 +549,7 @@ class FaviconGenerator
     {
         $html = '';
 
-        foreach (array('16x16', '32x32', '96x96') as $size) {
+        foreach (array('16x16', '32x32', '96x96', '128x128') as $size) {
             if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png")) {
                 $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png\" sizes=\"{$size}\">\n";
             }
@@ -612,7 +612,8 @@ class FaviconGenerator
     final private function setColorAndMargin(Imagick $image, $colorKey = '', $marginKey = '')
     {
         if (isset($this->settings[$colorKey]) && empty($this->settings[$colorKey]) === false) {
-            $image->setImageBackgroundColor("#{$this->settings[$colorKey]}");
+            #$image->setImageBackgroundColor("#{$this->settings[$colorKey]}");
+			$image->setImageBackgroundColor("rgba(255,255,255,0)");
 
             if (
                 isset($this->settings[$marginKey]) &&

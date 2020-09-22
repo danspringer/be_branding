@@ -388,14 +388,14 @@ if (class_exists('Imagick') === true && $this->getConfig('fe_favicon_filename') 
          $fav->setCompression(FaviconGenerator::COMPRESSION_VERYHIGH);
                 
          $fav->setConfig(array(
-            'apple-background' => substr($this->getConfig('fe_favicon_tilecolor'), 1, 6),
+            'apple-background' => rgba2hex($this->getConfig('fe_favicon_tilecolor')),
             'apple-margin' => 0,
-            'android-background' => substr($this->getConfig('fe_favicon_tilecolor'), 1, 6),
+            'android-background' => rgba2hex($this->getConfig('fe_favicon_tilecolor')),
             'android-margin' => 0,
             'android-name' => rex::getServerName(),
             'android-url' => rex::getServer(),
             'android-orientation' => FaviconGenerator::ANDROID_PORTRAIT,
-            'ms-background' => substr($this->getConfig('fe_favicon_tilecolor'), 1, 6)
+            'ms-background' => rgba2hex($this->getConfig('fe_favicon_tilecolor'))
          ));
 				
 		 $suchmuster = 'REX_BE_BRANDING[type=fe_favicon]';

@@ -1,7 +1,7 @@
 Backend Branding für REDAXO 5
 ========================
 
-Mit dem AddOn lässt sich das Backend von Redaxo branden, um dem Backend eine individuellere Note zu geben. Damit kann man, wenn man mehrere REDAXO-Projekte betreut, das Backend auf einen Blick schneller unterscheiden.
+Mit dem AddOn lässt sich das Backend von Redaxo branden, um dem Backend eine individuellere Note zu geben. Damit kann man, wenn man mehrere REDAXO-Projekte betreut, das Backend auf einen Blick schneller unterscheiden. Inkl. Favicon-Generator für das Frontend aus dem Medienpool heraus.
 
 ![Backend Branding für REDAXO 5](https://i.imgur.com/DS3zRxo.png "Backend Branding Redaxo 5")
 
@@ -18,14 +18,21 @@ Features
 
 Last Changes
 -------
+### Version 1.3.4 ####
+
+=== 22.09.2020 ===
+* Behebt die Warnings bzgl. <code>array_key_exists()</code> in FE_FaviconGenerator.php - Danke an Serhan Sidan @ <a href="https://www.mattomedia.de">Mattomedia.de</a>
+* Anpassung an Imageick-Version zur korrekten Generierung von Favicons.
+* Anpassung des Settings-Array für richtige Farben via <code>rgba2hex()</code>.
+
 ### Version 1.3.3 ####
 
-=== 13.03.2019 ===
+=== 13.03.2020 ===
 * Behebt einen Fehler der Frontend-Favicons der Version 1.3.2. Korrigiert die Einbindung der Color-Pickers.
 
 ### Version 1.3.2 ####
 
-=== 12.03.2019 ===
+=== 12.03.2020 ===
 * Backend-Favicon-Update für Rex 5.10.0. Diese Verson korrigiert die Einbindung der gefärbten Icons im Backend und berücksichtigt die verschiedenen Einbindungsarten der Versionen 5.0-5.7, von 5.7-5.8, 5.8.0 und ab 5.8.1 bis zu 5.10.0.
 
 ### Version 1.3.1 ####
