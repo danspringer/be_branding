@@ -17,7 +17,10 @@ if (rex_post('formsubmit', 'string') == '1') {
 		unlink($file); // delete file
 	}
 	
-    echo rex_view::success('Einstellungen gespeichert');
+	# Frontend-Favicons neu generieren
+	fe_favicon::generate();
+	
+    echo rex_view::success('Einstellungen gespeichert, Frontend-Favicons wurden generiert.');
 }
 
 if($this->getConfig('colorpicker')) {
@@ -141,6 +144,7 @@ $fragment->setVar('title', "Anwendung");
 $fragment->setVar('body', $content, false);
 
 echo $fragment->parse('core/page/section.php');
+
 
 
 

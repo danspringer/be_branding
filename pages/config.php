@@ -57,11 +57,10 @@ if (rex_post('formsubmit', 'string') == '1') {
 
 
 $content .= '<fieldset><legend>Colorpicker f&uuml;r Farbauswahlfelder</legend>';
-$content .= '<p>Wenn <code>ui_tool/jquery-minicolors</code> installiert und aktiviert ist, wird es verwendet, ansonsten wird es im Backend eingebunden.</p>';
 
 $formElements = [];
 $n = [];
-$n['label'] = '<label for="be-branding-colorpicker">Colorpicker verwenden?</label>';
+$n['label'] = '<label for="be-branding-colorpicker">Colorpicker in Farbauswahl verwenden?</label>';
 $n['field'] = '<input type="checkbox" id="be-branding-colorpicker" name="baseconfig[colorpicker]" value="1" ' . ($this->getConfig('colorpicker') ? 'checked="checked" ' : '') . ' />';
 $formElements[] = $n;
 	

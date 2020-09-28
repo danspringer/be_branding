@@ -42,7 +42,7 @@
  */
 
 /**
- * FaviconGenerator - Class generation favicon for browsers and devices Android, Apple, Windows and display of html code. It supports a large number of settings such as margins, color, compression, three different methods of crop and screen orientation.
+ * FE_FaviconGenerator - Class generation favicon for browsers and devices Android, Apple, Windows and display of html code. It supports a large number of settings such as margins, color, compression, three different methods of crop and screen orientation.
  *
  * @author    Dmitry Mamontov <d.slonyara@gmail.com>
  * @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
@@ -51,7 +51,7 @@
  * @link      https://github.com/dmamontov/favicon
  * @since     Class available since Release 1.0.0
  */
-class FaviconGenerator
+class FE_FaviconGenerator
 {
     /*
      * No compression.
@@ -189,7 +189,7 @@ class FaviconGenerator
         //$this->root = php_sapi_name() == 'cli' ? __DIR__ : $_SERVER['DOCUMENT_ROOT'];
 		$this->root = rex_path::base();
 
-        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/.settings")) {
+        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/.settings") && file_get_contents("{$this->root}/assets/addons/be_branding/fe_favicon/.settings") != 'null') {
             $this->settings = json_decode(file_get_contents("{$this->root}/assets/addons/be_branding/fe_favicon/.settings"), true);
         } else {
             $this->settings = array(
@@ -306,14 +306,14 @@ class FaviconGenerator
      * Set options for generating favicon.
      *
      * array(
-     *     'apple-background'    => FaviconGenerator::COLOR_BLUE,
+     *     'apple-background'    => FE_FaviconGenerator::COLOR_BLUE,
      *     'apple-margin'        => 15,
-     *     'android-background'  => FaviconGenerator::COLOR_GREEN,
+     *     'android-background'  => FE_FaviconGenerator::COLOR_GREEN,
      *     'android-margin'      => 15,
      *     'android-name'        => 'My app',
      *     'android-url'         => 'http://test.ru"',
-     *     'android-orientation' => FaviconGenerator::ANDROID_PORTRAIT,
-     *     'ms-background'       => FaviconGenerator::COLOR_GREEN,
+     *     'android-orientation' => FE_FaviconGenerator::ANDROID_PORTRAIT,
+     *     'ms-background'       => FE_FaviconGenerator::COLOR_GREEN,
      * )
      *
      * @param array $config
@@ -531,6 +531,8 @@ class FaviconGenerator
      */
     final public function createAll($hex_name)
     {
+		$hex_name = substr($hex_name,1,6);
+		
         $this->createBasic($hex_name);
         $this->createApple($hex_name);
         $this->createAndroid($hex_name);

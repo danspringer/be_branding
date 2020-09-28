@@ -18,12 +18,25 @@ Features
 
 Last Changes
 -------
+### Version 1.4.1 ####
+
+=== 28.09.2020 ===
+* Umstellung auf Fragments, wo möglich.
+* Frontend-Favicons werden nun nur noch beim Speichern auf der Einstellungsseite für die Frontend-Favicons generiert.
+
+### Version 1.4 ####
+
+=== 24.09.2020 ===
+* Neu: Ein <code>favicon.ico</code> wird zur Sicherheit noch ins Root-Verzeichnis der Website gelegt, da manche Suchmaschinen einfach nach dem Standardpfad schauen.
+* Umstellung auf die Klasse <code>fe_favicon</code> zur Generierung der Icons und zur Ausgabe des HTML-Codes. 
+* Die Frontend-Favicons werden nun nur noch generiert, wenn Sie noch nicht im Assets-Ordner des AddOns existieren, nicht mehr bei jedem Seitenaufruf.
+* Die <code>.settings</code>-Datei für die Frontend-Favicons wird bei einem Update oder Reinstall gelöscht, falls sie aus früheren Versionen noch fehlerhaft war.
+
 ### Version 1.3.4 ####
 
 === 22.09.2020 ===
 * Behebt die Warnings bzgl. <code>array_key_exists()</code> in FE_FaviconGenerator.php - Danke an Serhan Sidan @ <a href="https://www.mattomedia.de">Mattomedia.de</a>
 * Anpassung an Imageick-Version zur korrekten Generierung von Favicons.
-* Anpassung des Settings-Array für richtige Farben via <code>rgba2hex()</code>.
 
 ### Version 1.3.3 ####
 

@@ -1,7 +1,7 @@
 # Alle hier gesetzten Werte können über $addon->getProperty($key) abgefragt werden
 
 package: be_branding # Pflichtfeld
-version: '1.3.4' # Pflichtfeld
+version: '1.4.1' # Pflichtfeld
 author: Medienfeuer, Daniel Springer
 supportpage: https://github.com/medienfeuer/be_branding
 
