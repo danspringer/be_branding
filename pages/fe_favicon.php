@@ -1,5 +1,4 @@
 <?php
-
 $content = '';
 $buttons = '';
 

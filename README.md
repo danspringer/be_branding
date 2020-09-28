@@ -18,6 +18,13 @@ Features
 
 Last Changes
 -------
+### Version 1.4.2 ####
+
+=== 28.09.2020 ===
+* Bei einem Reinstall wurde versehentlich noch ein Ordner "favicon" im Root generiert.
+* vendor/favicon/src/FaviconGenerator.php entfernt.
+* Mögliches Überbleibsel im Root (favicon-Ordner) wir bei Reinstall und Update gelöscht.
+
 ### Version 1.4.1 ####
 
 === 28.09.2020 ===

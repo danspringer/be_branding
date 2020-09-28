@@ -128,7 +128,7 @@ if (rex::isBackend()) {
 				$ersetzen   = array('<img src="'.checkExtension($this->getConfig('file')).'" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">');
 				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
 				}); 
-			} // EoF if rex::isBackend()
+			} // EoF if rex::isBackend() && !rex::getUser()
 		} // EoF getConfig()
     
     
@@ -199,7 +199,7 @@ if (rex::isBackend()) {
 		
 		
 		// BE-Favicon nur färben wenn Imagemagick verfügbar ist
-		if ($this->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {
+		if ($this->getConfig('coloricon') == 1 && class_exists('Imagick') === true ) {
 			
 			rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
 			{

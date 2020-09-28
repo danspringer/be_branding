@@ -202,7 +202,7 @@ class BE_FaviconGenerator
             file_exists("{$this->root}/assets/addons/be_branding/favicon/.original") === false ||
             filesize($icon) != filesize("{$this->root}/assets/addons/be_branding/favicon/.original")
         ) {
-            @mkdir("{$this->root}/favicon", 0755);
+            #@mkdir("{$this->root}/favicon", 0755);
             @copy($icon, "{$this->root}/assets/addons/be_branding/favicon/.original");
             $this->created == true;
         }
