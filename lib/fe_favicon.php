@@ -6,7 +6,7 @@ class fe_favicon {
 	 	 $ico = new PHP_ICO( rex_path::media().rex_addon::get('be_branding')->getConfig('fe_favicon_filename'), array(array(144,144)) );
 		 $ico->save_ico( rex_path::addonAssets('be_branding','fe_favicon/favicon.ico') ); // Zum Verlinken in den Assets-Ordner
 		 if(file_exists(rex_path::frontend('favicon.ico'))) {
-		 	unlink('favicon.ico');
+		 	unlink(rex_path::frontend('favicon.ico'));
 		 }
 		 $ico->save_ico( rex_path::frontend('favicon.ico') ); // Zur Sicherheit noch ins Root
 		 $ico_code = '<link rel="shortcut icon" type="image/x-icon" href="'.substr(rex::getServer(), 0, -1).rex_url::addonAssets('be_branding','fe_favicon/favicon.ico').'">';
