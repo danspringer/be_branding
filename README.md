@@ -3,7 +3,7 @@ Backend Branding für REDAXO 5
 
 Mit dem AddOn lässt sich das Backend von Redaxo branden, um dem Backend eine individuellere Note zu geben. Damit kann man, wenn man mehrere REDAXO-Projekte betreut, das Backend auf einen Blick schneller unterscheiden. Inkl. Favicon-Generator für das Frontend aus dem Medienpool heraus.
 
-![Backend Branding für REDAXO 5](https://i.imgur.com/DS3zRxo.png "Backend Branding Redaxo 5")
+![Backend Branding für REDAXO 5](https://i.imgur.com/oiq5Zqm.png "Backend Branding Redaxo 5")
 
 Features
 -------
