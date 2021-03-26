@@ -41,7 +41,7 @@ class fe_favicon {
 		
         foreach (array('16x16', '32x32', '96x96', '128x128') as $size) {
             if (file_exists(rex_path::addonAssets('be_branding','fe_favicon/favicon-'.$size.'-'.$hex_name.'.png'))) {
-                $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png\" sizes=\"{$size}\">\n";
+                $html .= "<link rel=\"icon\" type=\"image/png\" href=\"".rex::getServer()."assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png\" sizes=\"{$size}\">\n";
             }
         }
 
@@ -50,18 +50,18 @@ class fe_favicon {
             as $size
         ) {
 			if (file_exists(rex_path::addonAssets('be_branding','fe_favicon/apple-touch-icon-'.$size.'-'.$hex_name.'.png'))) {
-                $html .= "<link rel=\"apple-touch-icon\" sizes=\"{$size}\" href=\"../assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}.png\">\n";
+                $html .= "<link rel=\"apple-touch-icon\" sizes=\"{$size}\" href=\"".rex::getServer()."assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}.png\">\n";
             }
         }
 		
 		if (file_exists(rex_path::addonAssets('be_branding','fe_favicon/android-chrome-192x192-'.$hex_name.'.png'))) {
-            $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/android-chrome-192x192-{$hex_name}.png\" sizes=\"192x192\">\n";
+            $html .= "<link rel=\"icon\" type=\"image/png\" href=\"".rex::getServer()."assets/addons/be_branding/fe_favicon/android-chrome-192x192-{$hex_name}.png\" sizes=\"192x192\">\n";
         }
 		if (file_exists(rex_path::addonAssets('be_branding','fe_favicon/manifest-'.$hex_name.'.png'))) {
-            $html .= "<link rel=\"manifest\" href=\"../assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json\">\n";
+            $html .= "<link rel=\"manifest\" href=\"".rex::getServer()."assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json\">\n";
         }
 		if (file_exists(rex_path::addonAssets('be_branding','fe_favicon/mstile-144x144-'.$hex_name.'.png'))) {
-            $html .= "<meta name=\"msapplication-TileImage\" content=\"../assets/addons/be_branding/fe_favicon/mstile-144x144-{$hex_name}.png\">\n";
+            $html .= "<meta name=\"msapplication-TileImage\" content=\"".rex::getServer()."assets/addons/be_branding/fe_favicon/mstile-144x144-{$hex_name}.png\">\n";
         }
         if ($addon->getConfig('fe_favicon_tilecolor')) {
             $html .= "<meta name=\"msapplication-TileColor\" content=\"#{$hex_name}\">\n";

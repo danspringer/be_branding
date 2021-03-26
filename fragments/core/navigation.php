@@ -4,7 +4,7 @@
             <div class="navbar-collapse collapse">
             	<?php
 				if(rex_addon::get('be_branding')->getConfig('file')) {
-					echo '<img src="'.checkExtension(rex_addon::get('be_branding')->getConfig('file')).'" class="img-responsive center-block" style="padding: 20px 0px 5px 0px; width: 370px;"/></a>';
+					echo '<img src="'.checkExtension(rex_addon::get('be_branding')->getConfig('file')).'" class="img-responsive center-block" style="padding: 20px 10px 5px 10px; width: 100%;"/></a>';
 					}
 					
 				echo $this->navigation;

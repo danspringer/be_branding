@@ -18,6 +18,14 @@ Features
 
 Last Changes
 -------
+### Version 1.5 ####
+
+=== 26.03.2021 ===
+* Anpassung an neuen Login-Screen ab REDAXO 5.12
+* Hintergrundbild des neuen Login-Screens (REX 5.12) kann nun bequem im AddOn eingestellt werden
+* Media-Manager-Types für JPG und WebP werden bei Reinstall und Update in REX 5.12 angelegt.
+* Credits wurden nicht mehr angezeigt => fixed Danke @helpy
+
 ### Version 1.4.2 ####
 
 === 28.09.2020 ===

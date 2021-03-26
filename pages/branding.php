@@ -14,6 +14,7 @@ if (rex_post('formsubmit', 'string') == '1') {
 		['border_color', 'string'],
 		['color1', 'string'],
 		['color2', 'string'],
+		['login_bg', 'string'],
 		
 		
     ]));
@@ -97,6 +98,43 @@ $formElements[] = $n;
 $fragment = new rex_fragment();
 $fragment->setVar('elements', $formElements, false);
 $content .= $fragment->parse('core/form/container.php');
+
+
+// Wenn REX 5.12 - erst ab hier gibt es den Login-Screen mit BG
+if(rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
+	
+	$formElements = [];
+	$n = [];
+	$n['label'] = '<label for="REX_MEDIA_3">Hintergrundbild des Login-Screens</label>';
+	
+	$n['field'] = '
+	<div class="rex-js-widget rex-js-widget-media">
+		<div class="input-group">
+			<input class="form-control" type="text" name="config[login_bg]" value="' . $this->getConfig('login_bg') . '" id="REX_MEDIA_3" readonly="readonly">
+			<span class="input-group-btn">
+			<a href="#" class="btn btn-popup" onclick="openREXMedia(3);return false;" title="ÖFFNEN">
+				<i class="rex-icon rex-icon-open-mediapool"></i>
+			</a>
+			<a href="#" class="btn btn-popup" onclick="addREXMedia(3);return false;" title="NEU">
+				<i class="rex-icon rex-icon-add-media"></i>
+			</a>
+			<a href="#" class="btn btn-popup" onclick="deleteREXMedia(3);return false;" title="REMOVE">
+				<i class="rex-icon rex-icon-delete-media"></i>
+			</a>
+			<a href="#" class="btn btn-popup" onclick="viewREXMedia(3);return false;" title="ANSEHEN">
+				<i class="rex-icon rex-icon-view-media"></i>
+			</a>
+			</span>
+		</div>
+	 </div>
+	';
+	$formElements[] = $n;
+	
+	$fragment = new rex_fragment();
+	$fragment->setVar('elements', $formElements, false);
+	$content .= $fragment->parse('core/form/container.php');
+	
+	} // Eo REX 5.12
 
 $content .= '</fieldset>';
 
