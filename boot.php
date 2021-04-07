@@ -251,7 +251,9 @@ if (rex::isBackend()) {
 						
 					$ersetzen .= '
 					#rex-page-login {
-						background: ' . $this->getConfig('color1') . ' !important;
+						background-color: ' . $this->getConfig('color2') . ' !important;
+						background-image: url("'.rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg')).'");
+						background-size: cover;
 					}
 
 					#rex-form-login .rex-redaxo-logo path.rex-redaxo-logo-r,
