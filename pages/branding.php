@@ -15,8 +15,7 @@ if (rex_post('formsubmit', 'string') == '1') {
 		['color1', 'string'],
 		['color2', 'string'],
 		['login_bg', 'string'],
-		
-		
+		['login_bg_setting', 'string'],
     ]));
 	
 	// Generierte Favicons löschen wenn gespeichert wurde, damit Sie frisch generiert werden können
@@ -65,6 +64,34 @@ $content .= '<fieldset><legend>Top-Border</legend>';
 }
 
 
+$content .= '<fieldset><legend>Farbschema</legend>';
+
+// Einfaches Textfeld
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="be_branding-config-color1">Prim&auml;rfarbe<p><small>z.B. HG-Farbe des Redaxo-Headers</small></p></label>';
+$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-color1" name="config[color1]" value="' . $this->getConfig('color1') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/container.php');
+
+
+// Einfaches Textfeld
+$formElements = [];
+$n = [];
+$n['label'] = '<label for="be_branding-config-color2">Sekund&auml;rfarbe<p><small>Farbe f&uuml;r das Redaxo-Logo</small></p></label>';
+$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-color2" name="config[color2]" value="' . $this->getConfig('color2') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
+$formElements[] = $n;
+
+$fragment = new rex_fragment();
+$fragment->setVar('elements', $formElements, false);
+$content .= $fragment->parse('core/form/container.php');
+
+$content .= '</fieldset>';
+
+
 $content .= '<fieldset><legend>Projektbranding</legend>';
 
 // Dateiauswahl Medienpool-Widget
@@ -103,6 +130,33 @@ $content .= $fragment->parse('core/form/container.php');
 // Wenn REX 5.12 - erst ab hier gibt es den Login-Screen mit BG
 if(rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
 	
+	$formElements = array();
+	$elements = array();
+	$elements['label'] = '
+	  <label for="mf_quicktests-ga-meldung">Hintergrund Login-Screen</label>';
+	
+	// create select
+	$select = new rex_select;
+	$select->setId('be-branding-login-bg-option');
+	$select->setSize(1);
+	$select->setAttribute('class', 'form-control');
+	$select->setName('config[login_bg_setting]');
+	// add options
+	$select->addOption('Eigenes Hintergrundbild', 'own_bg');
+	$select->addOption('Primärfarbe aus Farbschema', 'primary_bg');
+	$select->addOption('Sekundärfarbe aus Farbschema', 'secondary_bg');
+	$select->addOption('Farbverlauf aus Primär-und Sekundärfarbe aus Farbschema', 'gradient_bg');
+	$select->addOption('REDAXO-Standard-Hintergrundbild', 'redaxo_standard_bg');
+	$select->setSelected($this->getConfig('login_bg_setting'));
+	$elements['field'] = $select->get();
+	$formElements[] = $elements;
+	// parse select element
+	$fragment = new rex_fragment();
+	$fragment->setVar('elements', $formElements, false);
+	$content .= $fragment->parse('core/form/form.php');
+	
+	
+	$content .= '<div id="be-branding-login-bg-setting">';
 	$formElements = [];
 	$n = [];
 	$n['label'] = '<label for="REX_MEDIA_3">Hintergrundbild des Login-Screens</label>';
@@ -129,46 +183,14 @@ if(rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
 	 </div>
 	';
 	$formElements[] = $n;
-	
 	$fragment = new rex_fragment();
 	$fragment->setVar('elements', $formElements, false);
 	$content .= $fragment->parse('core/form/container.php');
+	$content .= '</div>'; // Div be-branding-login-bg-setting schliessen
 	
 	} // Eo REX 5.12
 
 $content .= '</fieldset>';
-
-
-
-
-$content .= '<fieldset><legend>Farbschema</legend>';
-
-// Einfaches Textfeld
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be_branding-config-color1">Prim&auml;rfarbe<p><small>z.B. HG-Farbe des Redaxo-Headers</small></p></label>';
-$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-color1" name="config[color1]" value="' . $this->getConfig('color1') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
-$formElements[] = $n;
-
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/container.php');
-
-
-// Einfaches Textfeld
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be_branding-config-color2">Sekund&auml;rfarbe<p><small>Farbe f&uuml;r das Redaxo-Logo</small></p></label>';
-$n['field'] = '<input class="form-control'.$class_colorpicker.'" type="text" id="be_branding-config-color2" name="config[color2]" value="' . $this->getConfig('color2') . '" placeholder="z.B. rgba(255, 100, 0, 1)"/><p class="help-block rex-note">Beliebige RGBa-Farbangabe (z.B. <code>rgba(255, 100, 0, 0.5)</code>)</p>';
-$formElements[] = $n;
-
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/container.php');
-
-$content .= '</fieldset>';
-
-
 
 
 $content .= '<fieldset><legend>Agenturbranding</legend>';
@@ -287,6 +309,27 @@ $output = '
 ';
 
 echo $output;
+?>
+
+<script>
+$(document).on('rex:ready', function() {
+	
+	if($("#be-branding-login-bg-option").val() == 'own_bg') {
+		$('#be-branding-login-bg-setting').show();
+		} else {
+			$('#be-branding-login-bg-setting').hide();
+			}
+		
+    $("#be-branding-login-bg-option").change(function() {
+	  if(this.value != 'own_bg') {
+		  $('#be-branding-login-bg-setting').hide('fast');
+		  } else {
+			  $('#be-branding-login-bg-setting').show('fast');
+			  }
+	});
+	
+});
+</script>
 
 
 

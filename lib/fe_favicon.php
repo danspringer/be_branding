@@ -19,17 +19,18 @@ class fe_favicon {
          $fav->setCompression(FE_FaviconGenerator::COMPRESSION_VERYHIGH);
                 
          $fav->setConfig(array(
-            'apple-background' => rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor')),
+            'apple-background' => be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor')),
             'apple-margin' => 0,
-            'android-background' => rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor')),
+            'android-background' => be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor')),
             'android-margin' => 0,
             'android-name' => rex::getServerName(),
             'android-url' => rex::getServer(),
             'android-orientation' => FE_FaviconGenerator::ANDROID_PORTRAIT,
-            'ms-background' => rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor'))
+            'ms-background' => be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor'))
          ));
 		 
-		 $fav->createAll(rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor')));
+		 $fav->createAll(be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor')));
+		 rex_delete_cache();
 		 /* Ende alle anderen*/
 		} // EoF generate()
 		

@@ -57,7 +57,7 @@
 
     <?php
     if (rex_addon::get('be_branding')->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {	
-		echo be_favicon::getHtml(rgba2hex(rex_addon::get('be_branding')->getConfig('color1')));
+		echo be_favicon::getHtml(be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('color1')));
 	}
 	else {
 		echo $this->pageHeader;

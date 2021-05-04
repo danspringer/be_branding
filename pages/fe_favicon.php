@@ -19,7 +19,7 @@ if (rex_post('formsubmit', 'string') == '1') {
 	# Frontend-Favicons neu generieren
 	fe_favicon::generate();
 	
-    echo rex_view::success('Einstellungen gespeichert, Frontend-Favicons wurden generiert.');
+    echo rex_view::success('Einstellungen gespeichert, Frontend-Favicons wurden generiert und Redaxo-Cache wurde gelöscht.');
 }
 
 if($this->getConfig('colorpicker')) {

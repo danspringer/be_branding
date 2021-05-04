@@ -9,6 +9,7 @@ Features
 -------
 * Einfärben des Headers und REDAXO-Logos im Backend
 * Einfärben des Favicon im Backend (Imagemagick benötigt)
+* Einfache Anpassung des Loginscreen-Hintergrundbildes ab REDAXO 5.12 aus dem Backend heraus
 * Generierung von Favicons für das Frontend aus dem Medienpool heraus (Imagemagick benötigt)
 * Anzeigen eines Projektlogos im Login-Screen und in der Navigation des Backends
 * Anzeigen eines Logos und Anschrift o.ä. in den Credits
@@ -18,6 +19,15 @@ Features
 
 Last Changes
 -------
+### Version 1.6 ####
+
+=== 04.05.2021 (beta)===
+* <strong>NEU:</strong> Mehr Optionen zur Einstellung des neuen REX-Loginscreens (Eigenes Hintergrundbild, REDAXO-Standard-HG-Bild, Primärfarbe, Sekundärfarbe oder Verlauf wählbar)
+* Umstellung auf eigene Redaxo-Variable <code>REX_BE_BRANDING[]</code> anstatt <code>str_replace()</code>
+* Auslagerung der Funktionen in der boot.php in die Klasse <code>be_branding</code>
+* Redaxo-Cache wird nach Änderung des Frontend-Favicon gelöscht
+* Fallback-Hintergrundbild im Loginscreen wird nun nur noch bei mobiler Ansicht angezeigt, nicht bei Desktop-Version, da es zu einem kurzen Zitter-Effekt gekommen ist
+
 ### Version 1.5.1 ####
 
 === 07.04.2021 ===

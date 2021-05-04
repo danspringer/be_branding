@@ -18,114 +18,18 @@ if (rex::isBackend() && is_object(rex::getUser())) {
 	rex_perm::register('be_branding[fe_favicon]');
 }
 
-if (!function_exists('hex2rgb')) {
-        function hex2rgb($hex)
-        {
-            $hex = str_replace("#", "", $hex);
-            
-            if (strlen($hex) == 3) {
-                $r = hexdec(substr($hex, 0, 1) . substr($hex, 0, 1));
-                $g = hexdec(substr($hex, 1, 1) . substr($hex, 1, 1));
-                $b = hexdec(substr($hex, 2, 1) . substr($hex, 2, 1));
-            } else {
-                $r = hexdec(substr($hex, 0, 2));
-                $g = hexdec(substr($hex, 2, 2));
-                $b = hexdec(substr($hex, 4, 2));
-            }
-            $rgb = array(
-                $r,
-                $g,
-                $b
-            );
-            //return implode(",", $rgb); // returns the rgb values separated by commas
-            return $rgb; // returns an array with the rgb values
-        }
-    }
-    
-    if (!function_exists('rgb2hex')) {
-        function rgb2hex($rgb)
-        {
-            
-            $rgb = str_replace('rgba(', '', $rgb);
-            $rgb = str_replace(')', '', $rgb);
-            $rgb = str_replace(' ', '', $rgb);
-            
-            $rgbarr = explode(",", $rgb, 3);
-            $hex    = '#' . sprintf("%02x%02x%02x", $rgbarr[0], $rgbarr[1], $rgbarr[2]);
-            
-            return $hex; // returns the hex value including the number sign (#)
-        }
-    }
-    
-    if (!function_exists('rgba2hex')) {
-        function rgba2hex($rgba)
-        {
-            
-            $rgba = str_replace('rgba(', '', $rgba);
-            $rgba = str_replace(')', '', $rgba);
-            $rgba = str_replace(' ', '', $rgba);
-            
-            $rgbarr = explode(",", $rgba, 3);
-            $hex    = '#' . sprintf("%02x%02x%02x", $rgbarr[0], $rgbarr[1], $rgbarr[2]);
-            
-            return $hex; // returns the hex value including the number sign (#)
-        }
-    }
-    
-    if (!function_exists('makeFavIcon')) {
-        function makeFavIcon($hexColor, $path)
-        {
-            
-            $rgbColor        = hex2rgb($hexColor);
-            $favIconOriginal = $path . 'favicon-original.png';
-            $favIconNew      = rex_path::addonAssets('be_branding') . '/favicon/favicon-original-' . str_replace('#', '', $hexColor) . '.png';
-            
-            $im = imagecreatefrompng($favIconOriginal);
-            imagealphablending($im, false);
-            
-            imagesavealpha($im, true);
-            
-            if ($im && imagefilter($im, IMG_FILTER_COLORIZE, $rgbColor[0], $rgbColor[1], $rgbColor[2], 0)) {
-                imagepng($im, $favIconNew);
-                imagedestroy($im);
-            }
-        }
-    }
-
-
-if (!function_exists('checkExtension')) {
-	function checkExtension($filename){
-		
-			$img_file_parts = pathinfo($filename);
-			//print_r($img_file_parts);
-			$be_logo = '/media/'.$filename;
-			
-			$ext = $img_file_parts['extension'];
-			//echo $ext;
-			
-			if ($ext == "jpg" || $ext == "jpeg" || $ext == "png") {
-				$be_logo = 'index.php?rex_media_type=rex_mediapool_maximized&rex_media_file=' . $filename;
-				return $be_logo;
-				}
-			if ($ext === "svg" ) {
-				$be_logo = 'index.php?rex_media_type=ORIGINAL_' . hash("md5", $filename) . '&rex_media_file=' . $filename;
-				return $be_logo;
-				}
-		}// EoF
-}
-
 	
 // Im Backend
 if (rex::isBackend()) {    
     
     if ($this->getConfig('file')) {
         // Wenn nicht eingeloggt und Backend Logo einbinden
-		// Login-Screen hat kein Fragment, deshalb per Output-Filter
+		// Login-Screen hat kein Fragment für < R5.12, deshalb per Output-Filter
         if (rex::isBackend() && !rex::getUser()) {
             rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
             {
 				$suchmuster = array('<section class="rex-page-main-inner" id="rex-js-page-main">');
-				$ersetzen   = array('<img src="'.checkExtension($this->getConfig('file')).'" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">');
+				$ersetzen   = array('<img src="'.be_branding::checkExtension($this->getConfig('file')).'" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">');
 				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
 				}); 
 			} // EoF if rex::isBackend() && !rex::getUser()
@@ -194,12 +98,12 @@ if (rex::isBackend()) {
 			rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
 			{
 				// Initiale Farbe für R setzen und als neues png abspeichern        
-				makeFavIcon(rgba2hex($this->getConfig('color1')), rex_path::addon('be_branding') . 'vendor/favicon/');
+				be_branding::makeFavIcon(be_branding::rgba2hex($this->getConfig('color1')), rex_path::addon('be_branding') . 'vendor/favicon/');
 				
 					// aus dem png dann die Favicons generieren
 					//https://github.com/dmamontov/favicon reinholen
 					require rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
-					$fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', rgba2hex($this->getConfig('color1'))) . '.png');
+					$fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', be_branding::rgba2hex($this->getConfig('color1'))) . '.png');
 					
 					$fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
 					
@@ -214,7 +118,7 @@ if (rex::isBackend()) {
 						'ms-background' => substr($this->getConfig('color1'), 1, 6)
 					));
 					
-					$ersetzen = $fav->createAllAndGetHtml(rgba2hex($this->getConfig('color1')));
+					$ersetzen = $fav->createAllAndGetHtml(be_branding::rgba2hex($this->getConfig('color1')));
 				
 			}); // EoF rex_extension::register
 			
@@ -247,15 +151,78 @@ if (rex::isBackend()) {
 					$panel_bg = rex_addon::get('be_branding')->getConfig('color1');
 					if(rex_addon::get('be_branding')->getConfig('color1')) {
 						$panel_bg = str_replace(', 1)', ', 0.8)', $panel_bg);
-						}
-						
-					$ersetzen .= '
-					#rex-page-login {
-						background-color: ' . $this->getConfig('color2') . ' !important;
-						background-image: url("'.rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg')).'");
-						background-size: cover;
 					}
-
+					
+					
+					$rex_page_login = '
+						#rex-page-login {
+								background-color: ' . $this->getConfig('color2') . ' !important;
+						}
+						';
+					
+					// Wenn eigenes BG-Bild
+					if(rex_addon::get('be_branding')->getConfig('login_bg') && rex_addon::get('be_branding')->getConfig('login_bg_setting') == "own_bg") {
+						$rex_page_login = '
+						#rex-page-login {
+								background-color: ' . $this->getConfig('color2') . ' !important;
+						}
+						@media (max-width: 991px) {
+							#rex-page-login {
+								background-image: url("'.rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg')).'");
+								background-size: cover;
+							}
+						}';
+					}
+					
+					// Wenn REDAXO-Standard
+					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "redaxo_standard_bg") {
+						$rex_page_login = '
+						#rex-page-login {
+								background-color: ' . $this->getConfig('color2') . ' !important;
+						}
+						';
+					}	
+					
+					// Wenn Primärfarbe 
+					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "primary_bg") {
+						$rex_page_login = '
+						#rex-page-login {
+								background-color: ' . $this->getConfig('color1') . ' !important;
+						}
+						';
+						// Panel in transp. wess, damit man es noch sieht
+						$panel_bg = '
+							rgba(255,255,255, 0.4)
+						';
+					}
+					
+					// Wenn Sekundärfarbe
+					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "secondary_bg") {
+						$rex_page_login = '
+						#rex-page-login {
+								background-color: ' . $this->getConfig('color2') . ' !important;
+						}
+						';
+					}
+					
+					// Wenn Verlauf
+					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "gradient_bg") {
+						$rex_page_login = '
+						#rex-page-login {
+								background: ' . $this->getConfig('color2') . ';
+								background: -moz-linear-gradient(71deg, ' . $this->getConfig('color1') . ') 0%, ' . $this->getConfig('color2') . ' 100%);
+								background: -webkit-linear-gradient(71deg, ' . $this->getConfig('color1') . ' 0%, ' . $this->getConfig('color2') . ' 100%);
+								background: linear-gradient(71deg, ' . $this->getConfig('color1') . ' 0%, ' . $this->getConfig('color2') . ' 100%);
+								filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="'.be_branding::rgba2hex($this->getConfig('color1')).'",endColorstr="'.be_branding::rgba2hex($this->getConfig('color2')).'",GradientType=1);
+						}
+						';
+					}
+					
+					
+					$ersetzen .= $rex_page_login;
+					
+					$ersetzen .= '
+					
 					#rex-form-login .rex-redaxo-logo path.rex-redaxo-logo-r,
 					#rex-form-login .rex-redaxo-logo path.rex-redaxo-logo-e,
 					#rex-form-login .rex-redaxo-logo path.rex-redaxo-logo-d,
@@ -297,29 +264,3 @@ if (rex::isBackend()) {
     
     
 } // EoF if rex Backend
-
-
-//Frontend Favicon / fe_favicon 
-if (class_exists('Imagick') === true && $this->getConfig('fe_favicon_filename') && !rex::isBackend()) { 
-	rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
-     {	
-	 	// Nur neu generieren, wenn nicht existent
-	 	 /*if(!file_exists(rex_path::addonAssets('be_branding','fe_favicon/favicon-16x16-'.substr(rgba2hex($this->getConfig('fe_favicon_tilecolor')),1,6).'.png'))) {
-         	fe_favicon::generate();
-	 		}*/
-		 $suchmuster = 'REX_BE_BRANDING[type=fe_favicon]';
-		 $ersetzen	= fe_favicon::getHtml(rgba2hex($this->getConfig('fe_favicon_tilecolor')));
-         $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-     });
-} // EoF fe_favicon && !rex::isBackend()
-else {
-		// Var REX_BE_BRANDING durch nichts ersetzen, wenn Imageick nicht verfügbar oder Backend
-		rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
-		{
-			if(!rex::isBackend()) {
-				$suchmuster = 'REX_BE_BRANDING[type=fe_favicon]';
-				$ersetzen   = '';
-				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-			}
-		});
-	}
