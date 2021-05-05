@@ -19,9 +19,14 @@ Features
 
 Last Changes
 -------
-### Version 1.6 ####
+### Version 1.6-beta2 ####
 
-=== 04.05.2021 (beta)===
+=== 05.05.2021 ===
+* Nach Update, Installation oder Reinstallation wird der Template-Cache geleert, damit die Ersetzung von <code>REX_BE_BRANDING[type=fe_favicon]</code> im Frontend korrekt funktioniert.
+
+### Version 1.6-beta ####
+
+=== 04.05.2021 ===
 * <strong>NEU:</strong> Mehr Optionen zur Einstellung des neuen REX-Loginscreens (Eigenes Hintergrundbild, REDAXO-Standard-HG-Bild, Primärfarbe, Sekundärfarbe oder Verlauf wählbar)
 * Umstellung auf eigene Redaxo-Variable <code>REX_BE_BRANDING[]</code> anstatt <code>str_replace()</code>
 * Auslagerung der Funktionen in der boot.php in die Klasse <code>be_branding</code>
@@ -146,6 +151,11 @@ Last Changes
 === 05.06.2018 ===
 * Bugfix Kompatibilität mit Quick Navigation
 
+
+Autor
+-------
+Daniel Springer, Medienfeuer<br>
+<a href="https://www.medienfeuer.de">www.medienfeuer.de</a>
 
 Credits
 -------

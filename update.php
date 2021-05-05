@@ -71,3 +71,6 @@ if(rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
 	} 
 
 } // End if REX 5.12
+
+// Template Cache leeren
+rex_dir::delete(rex_path::addonCache('templates'), false);
