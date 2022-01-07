@@ -1,19 +1,39 @@
+<?php
+/**
+ * @var rex_fragment $this
+ * @psalm-scope-this rex_fragment
+ */
+?>
 <!doctype html>
-<html lang="<?php echo  rex_i18n::msg('htmllang'); ?>">
+<html lang="<?php echo rex_i18n::msg('htmllang'); ?>">
 <head>
     <meta charset="utf-8" />
 
     <title><?php echo $this->pageTitle ?></title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-<?php
+    <?php
+    $user = rex::getUser();
+
+    $colorScheme = 'light dark'; // default: support both
+    if (rex::getProperty('theme')) {
+        // global theme from config.yml
+        $colorScheme = rex_escape((string) rex::getProperty('theme'));
+    } elseif ($user && $user->getValue('theme')) {
+        // user selected theme
+        $colorScheme = rex_escape($user->getValue('theme'));
+    }
+    echo "\n" . '    <meta name="color-scheme" content="' . $colorScheme . '">';
+    echo "\n" . '    <style>:root { color-scheme: ' . $colorScheme . ' }</style>';
+
     $assetDir = rex_path::assets();
 
     foreach ($this->cssFiles as $media => $files) {
         foreach ($files as $file) {
+            $file = (string) $file;
             $path = rex_path::frontend(rex_path::absolute($file));
-            if (!rex::isDebugMode() && 0 === strpos($path, $assetDir) && $mtime = @filemtime($path)) {
-                $file = rex_url::backendController(['asset' => $file, 'buster' => $mtime]);
+            if (!rex::isDebugMode() && str_starts_with($path, $assetDir) && $mtime = @filemtime($path)) {
+                $file = rex_url::backendController(['asset' => ltrim($file, '.'), 'buster' => $mtime]);
             } elseif ($mtime = @filemtime($path)) {
                 $file .= '?buster='. $mtime;
             }
@@ -34,10 +54,11 @@
             [$file, $options] = $file;
         }
 
+        $file = (string) $file;
         $path = rex_path::frontend(rex_path::absolute($file));
         if (array_key_exists(rex_view::JS_IMMUTABLE, $options) && $options[rex_view::JS_IMMUTABLE]) {
-            if (!rex::isDebugMode() && 0 === strpos($path, $assetDir) && $mtime = @filemtime($path)) {
-                $file = rex_url::backendController(['asset' => $file, 'buster' => $mtime]);
+            if (!rex::isDebugMode() && str_starts_with($path, $assetDir) && $mtime = @filemtime($path)) {
+                $file = rex_url::backendController(['asset' => ltrim($file, '.'), 'buster' => $mtime]);
             }
         } elseif ($mtime = @filemtime($path)) {
             $file .= '?buster='. $mtime;
@@ -53,34 +74,44 @@
 
         echo "\n" . '    <script type="text/javascript" src="' . $file .'" '. implode(' ', $attributes) .'></script>';
     }
-?>
-
+    ?>
     <?php
-    if (rex_addon::get('be_branding')->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {	
-		echo be_favicon::getHtml(be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('color1')));
-	}
-	else {
-		echo $this->pageHeader;
-		}
+    // BE-Favicon nur färben wenn Imagemagick verfügbar ist
+    if (rex_addon::get('be_branding')->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {
+        $addon = rex_addon::get('be_branding');
+        // Initiale Farbe für R setzen und als neues png abspeichern
+        be_branding::makeFavIcon(be_branding::rgba2hex($addon->getConfig('color1')), rex_path::addon('be_branding') . 'vendor/favicon/');
+        // aus dem png dann die Favicons generieren
+        //https://github.com/dmamontov/favicon reinholen
+        require rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
+        $fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', be_branding::rgba2hex($addon->getConfig('color1'))) . '.png');
+
+        $fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
+
+        $fav->setConfig(array(
+            'apple-background' => substr($addon->getConfig('color1'), 1, 6),
+            'apple-margin' => 0,
+            'android-background' => substr($addon->getConfig('color1'), 1, 6),
+            'android-margin' => 0,
+            'android-name' => rex::getServerName(),
+            'android-url' => rex::getServer(),
+            'android-orientation' => BE_FaviconGenerator::ANDROID_PORTRAIT,
+            'ms-background' => substr($addon->getConfig('color1'), 1, 6)
+        ));
+
+        echo $fav->createAllAndGetHtml(be_branding::rgba2hex($addon->getConfig('color1')));
+    } // EoF if coloricon == 1
+    else {
+        echo $this->pageHeader;
+    }
     ?>
 
 </head>
 <body<?php echo $this->bodyAttr; ?>>
 
 <div class="rex-ajax-loader" id="rex-js-ajax-loader">
-    <div class="rex-ajax-loader-elements">
-        <div class="rex-ajax-loader-element1 rex-ajax-loader-element"></div>
-        <div class="rex-ajax-loader-element2 rex-ajax-loader-element"></div>
-        <div class="rex-ajax-loader-element3 rex-ajax-loader-element"></div>
-        <div class="rex-ajax-loader-element4 rex-ajax-loader-element"></div>
-        <div class="rex-ajax-loader-element5 rex-ajax-loader-element"></div>
-    </div>
+    <div class="rex-ajax-loader-element"></div>
+    <div class="rex-ajax-loader-backdrop"></div>
 </div>
-<?php
-// Border reinnehmen
-if (rex_addon::get('be_branding')->getConfig('showborder') == 1 && rex_addon::get('be_branding')->getConfig('border_text') != "") {
-        
-echo '<div style="font-size: 12px; background-color: '.rex_addon::get('be_branding')->getConfig('border_color').'; color: #fff; width: 100%; font-weight: bold; text-align: center; padding: 8px 0 6px 0;">'.rex_addon::get('be_branding')->getConfig('border_text').'</div>';
-} // EoF border
-?>
+
 <div id="rex-start-of-page" class="rex-page">

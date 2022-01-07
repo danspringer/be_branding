@@ -347,13 +347,13 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function createBasic($hex_name)
+    final public function createBasic($hex_name, $domainId)
     {
         foreach (array('16x16', '32x32', '96x96', '128x128') as $size) {
-            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png") == false) {
+            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}--{$domainId}.png") == false) {
                 $image = $this->createImage($size);
 
-                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png");
+                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}--{$domainId}.png");
             }
         }
 
@@ -366,17 +366,17 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function createApple($hex_name)
+    final public function createApple($hex_name, $domainId)
     {
         foreach (
             array('57x57', '60x60', '72x72', '76x76', '114x114', '120x120', '144x144', '152x152', '180x180')
             as $size
         ) {
-            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}.png") == false) {
+            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}--{$domainId}.png") == false) {
                 $image = $this->createImage($size);
                 $image = $this->setColorAndMargin($image, 'apple-background', 'apple-margin');
 
-                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}.png");
+                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}--{$domainId}.png");
             }
         }
 
@@ -389,12 +389,12 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function createAndroid($hex_name)
+    final public function createAndroid($hex_name,$domainId)
     {
         $replace = false;
 
-        $manifest = file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json") ?
-                            json_decode(file_get_contents("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json"), true) :
+        $manifest = file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}--{$domainId}.json") ?
+                            json_decode(file_get_contents("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}--{$domainId}.json"), true) :
                             array();
 
         if (
@@ -459,15 +459,15 @@ class FE_FaviconGenerator
             array('36x36', '48x48', '72x72', '96x96', '144x144', '192x192')
             as $size
         ) {
-            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/android-chrome-{$size}-{$hex_name}.png") == false) {
+            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/android-chrome-{$size}-{$hex_name}--{$domainId}.png") == false) {
                 $image = $this->createImage($size);
                 $image = $this->setColorAndMargin($image, 'android-background', 'android-margin');
 
-                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/android-chrome-{$size}-{$hex_name}.png");
+                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/android-chrome-{$size}-{$hex_name}--{$domainId}.png");
             }
 
             $manifest['icons'][] = array(
-                'src'     => "/assets/addons/be_branding/fe_favicon/android-chrome-{$size}-{$hex_name}.png",
+                'src'     => "/assets/addons/be_branding/fe_favicon/android-chrome-{$size}-{$hex_name}--{$domainId}.png",
                 'size'    => $size,
                 'type'    => 'image/png',
                 'density' => $mapDensity[$size]
@@ -475,7 +475,7 @@ class FE_FaviconGenerator
         }
 
         if ($replace && count($manifest) > 0) {
-            file_put_contents("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json", json_encode($manifest));
+            file_put_contents("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}--{$domainId}.json", json_encode($manifest));
         }
 
         return true;
@@ -487,10 +487,10 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function createMicrosoft($hex_name)
+    final public function createMicrosoft($hex_name,$domainId)
     {
         foreach (array('70x70', '144x144', '150x150', '310x310', '310x150') as $size) {
-            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/mstile-{$size}-{$hex_name}.png") == false) {
+            if ($this->created || file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/mstile-{$size}-{$hex_name}--{$domainId}.png") == false) {
                 if ($size == '310x150') {
                     $image = $this->createImage('150x150');
                     $image->borderImage(new ImagickPixel('none'), 80, 0);
@@ -498,26 +498,26 @@ class FE_FaviconGenerator
                     $image = $this->createImage($size);
                 }
 
-                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/mstile-{$size}-{$hex_name}.png");
+                $image->writeimage("{$this->root}/assets/addons/be_branding/fe_favicon/mstile-{$size}-{$hex_name}--{$domainId}.png");
             }
         }
 
-        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/browserconfig-{$hex_name}.xml") === false || $this->created) {
+        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/browserconfig-{$hex_name}--{$domainId}.xml") === false || $this->created) {
             $browserconfig =
 "<?xml version=\"1.0\" encoding=\"utf-8\"?>
 <browserconfig>
     <msapplication>
         <tile>
-            <square70x70logo src=\"../assets/addons/be_branding/fe_favicon/mstile-70x70-{$hex_name}.png\"/>
-            <square150x150logo src=\"../assets/addons/be_branding/fe_favicon/mstile-150x150-{$hex_name}.png\"/>
-            <square310x310logo src=\"../assets/addons/be_branding/fe_favicon/mstile-310x310-{$hex_name}.png\"/>
-            <wide310x150logo src=\"../assets/addons/be_branding/fe_favicon/mstile-310x150-{$hex_name}.png\"/>
+            <square70x70logo src=\"../assets/addons/be_branding/fe_favicon/mstile-70x70-{$hex_name}--{$domainId}.png\"/>
+            <square150x150logo src=\"../assets/addons/be_branding/fe_favicon/mstile-150x150-{$hex_name}--{$domainId}.png\"/>
+            <square310x310logo src=\"../assets/addons/be_branding/fe_favicon/mstile-310x310-{$hex_name}--{$domainId}.png\"/>
+            <wide310x150logo src=\"../assets/addons/be_branding/fe_favicon/mstile-310x150-{$hex_name}--{$domainId}.png\"/>
             <TileColor>#{$hex_name}</TileColor>
         </tile>
     </msapplication>
 </browserconfig>";
 
-            file_put_contents("{$this->root}/assets/addons/be_branding/fe_favicon/browserconfig-{$hex_name}.xml", $browserconfig);
+            file_put_contents("{$this->root}/assets/addons/be_branding/fe_favicon/browserconfig-{$hex_name}--{$domainId}.xml", $browserconfig);
         }
 
         return true;
@@ -529,14 +529,14 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function createAll($hex_name)
+    final public function createAll($hex_name,$domainId)
     {
 		$hex_name = substr($hex_name,1,6);
 		
-        $this->createBasic($hex_name);
-        $this->createApple($hex_name);
-        $this->createAndroid($hex_name);
-        $this->createMicrosoft($hex_name);
+        $this->createBasic($hex_name,$domainId);
+        $this->createApple($hex_name,$domainId);
+        $this->createAndroid($hex_name,$domainId);
+        $this->createMicrosoft($hex_name,$domainId);
 
         return true;
     }
@@ -547,13 +547,13 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function getHtml($hex_name)
+    final public function getHtml($hex_name, $domainId)
     {
         $html = '';
 
         foreach (array('16x16', '32x32', '96x96', '128x128') as $size) {
-            if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png")) {
-                $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}.png\" sizes=\"{$size}\">\n";
+            if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}--{$domainId}.png")) {
+                $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/favicon-{$size}-{$hex_name}--{$domainId}.png\" sizes=\"{$size}\">\n";
             }
         }
 
@@ -561,20 +561,20 @@ class FE_FaviconGenerator
             array('57x57', '60x60', '72x72', '76x76', '114x114', '120x120', '144x144', '152x152', '180x180')
             as $size
         ) {
-            if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}.png")) {
-                $html .= "<link rel=\"apple-touch-icon\" sizes=\"{$size}\" href=\"../assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}.png\">\n";
+            if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}--{$domainId}.png")) {
+                $html .= "<link rel=\"apple-touch-icon\" sizes=\"{$size}\" href=\"../assets/addons/be_branding/fe_favicon/apple-touch-icon-{$size}-{$hex_name}--{$domainId}.png\">\n";
             }
         }
 
-        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/android-chrome-192x192-{$hex_name}.png")) {
-            $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/android-chrome-192x192-{$hex_name}.png\" sizes=\"192x192\">\n";
+        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/android-chrome-192x192-{$hex_name}--{$domainId}.png")) {
+            $html .= "<link rel=\"icon\" type=\"image/png\" href=\"../assets/addons/be_branding/fe_favicon/android-chrome-192x192-{$hex_name}--{$domainId}.png\" sizes=\"192x192\">\n";
         }
-        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json")) {
-            $html .= "<link rel=\"manifest\" href=\"../assets/addons/be_branding/fe_favicon/manifest-{$hex_name}.json\">\n";
+        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/manifest-{$hex_name}--{$domainId}.json")) {
+            $html .= "<link rel=\"manifest\" href=\"../assets/addons/be_branding/fe_favicon/manifest-{$hex_name}--{$domainId}.json\">\n";
         }
 
-        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/mstile-144x144-{$hex_name}.png")) {
-            $html .= "<meta name=\"msapplication-TileImage\" content=\"../assets/addons/be_branding/fe_favicon/mstile-144x144-{$hex_name}.png\">\n";
+        if (file_exists("{$this->root}/assets/addons/be_branding/fe_favicon/mstile-144x144-{$hex_name}--{$domainId}.png")) {
+            $html .= "<meta name=\"msapplication-TileImage\" content=\"../assets/addons/be_branding/fe_favicon/mstile-144x144-{$hex_name}--{$domainId}.png\">\n";
         }
         if (isset($this->settings['ms-background'])) {
             $html .= "<meta name=\"msapplication-TileColor\" content=\"#{$hex_name}\">\n";
@@ -590,16 +590,16 @@ class FE_FaviconGenerator
      * @access public
      * @final
      */
-    final public function createAllAndGetHtml($hex_name)
+    final public function createAllAndGetHtml($hex_name, $domainId)
     {
 		$hex_name = substr($hex_name,1,6);
 		
-        $this->createBasic($hex_name);
-        $this->createApple($hex_name);
-        $this->createAndroid($hex_name);
-        $this->createMicrosoft($hex_name);
+        $this->createBasic($hex_name, $domainId);
+        $this->createApple($hex_name, $domainId);
+        $this->createAndroid($hex_name, $domainId);
+        $this->createMicrosoft($hex_name, $domainId);
 
-        return $this->getHtml($hex_name);
+        return $this->getHtml($hex_name, $domainId);
     }
 
     /**

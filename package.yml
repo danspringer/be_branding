@@ -1,7 +1,7 @@
 # Alle hier gesetzten Werte können über $addon->getProperty($key) abgefragt werden
 
 package: be_branding # Pflichtfeld
-version: '1.6-beta2' # Pflichtfeld
+version: '1.7' # Pflichtfeld
 author: Medienfeuer, Daniel Springer
 supportpage: https://github.com/medienfeuer/be_branding
 
@@ -10,12 +10,13 @@ page:
     perm: be_branding[]
     icon: rex-icon fa-fire
     subpages:
+        infos: { title: 'Infos', perm: 'be_branding[help]',subPath: README.md  } # config-Seite mit separaten Rechten
         branding: { title: 'Backend Branding', perm: 'be_branding[branding]', icon: rex-icon fa-fire } # Branding-Seite mit separaten Rechten
-        fe_favicon: { title: 'Frontend-Favicon', perm: 'be_branding[fe_favicon]', icon: rex-icon fa-star } # Frontend-Favicon        
+        fe_favicon: { title: 'Frontend-Favicons', perm: 'be_branding[fe_favicon]', icon: rex-icon fa-star } # Frontend-Favicon
         config: { title: 'Konfiguration', perm: 'be_branding[config]', icon: rex-icon fa-wrench } # config-Seite mit separaten Rechten
-        credits: { title: 'Credits', perm: 'be_branding[credits]', icon: rex-icon fa-copyright } # config-Seite mit separaten Rechten
+        credits: { title: 'Credits', perm: 'be_branding[credits]', icon: rex-icon fa-copyright, itemclass: pull-right} # config-Seite mit separaten Rechten
 
 requires:
-    redaxo: '>=5.0' # benötigt mindestens REDAXO 5.0
-   # packages:
-       # ui_tools/jquery-minicolors: '>=2.2.6' # benötigt minicolors aus ui_tools
+    redaxo: '>=5.13' # benötigt mindestens REDAXO 5.13
+    packages:
+        yrewrite: '>=2.7'

@@ -15,61 +15,66 @@ $this->setProperty('author', 'Daniel Springer, Medienfeuer');
 if (rex::isBackend() && is_object(rex::getUser())) {
     rex_perm::register('be_branding[branding]');
     rex_perm::register('be_branding[config]');
-	rex_perm::register('be_branding[fe_favicon]');
+    rex_perm::register('be_branding[fe_favicon]');
 }
 
-	
+
 // Im Backend
-if (rex::isBackend()) {    
-    
+if (rex::isBackend()) {
+
     if ($this->getConfig('file')) {
         // Wenn nicht eingeloggt und Backend Logo einbinden
-		// Login-Screen hat kein Fragment für < R5.12, deshalb per Output-Filter
-        if (rex::isBackend() && !rex::getUser()) {
-            rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
-            {
-				$suchmuster = array('<section class="rex-page-main-inner" id="rex-js-page-main">');
-				$ersetzen   = array('<img src="'.be_branding::checkExtension($this->getConfig('file')).'" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">');
-				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-				}); 
-			} // EoF if rex::isBackend() && !rex::getUser()
-		} // EoF getConfig()
-    
-    
-    
-		// Text in den Credits per Output-Filter, da kein Fragment
-		  if ($this->getConfig('agency') && rex_be_controller::getCurrentPage() == 'credits' && rex_get('license', 'string', 'NONE') == 'NONE') {
-			rex_extension::register('PAGE_TITLE_SHOWN', function (rex_extension_point $ep) {
-			  // Ausgabevariablen initialisieren
-			  $text_col = '';
-			  $img_col = '';
-			  // Text und Bild vorhanden
-			  if ($this->getConfig('textarea') != "" && $this->getConfig('file2') != "") {
-				$html_text = $this->getConfig('textarea');
-				if ($this->getConfig('editor') == 'markitup markdown') {
-				  $html_text = markitup::parseOutput('markdown', $html_text);
-				} elseif ($this->getConfig('editor') == 'markitup textile') {
-				  $html_text = markitup::parseOutput('textile', $html_text);
-				}
-				$text_col = '<div class="col-md-6">' . $html_text . '</div>';
-				$img_col  = '<div class="col-md-6"><p><img src="index.php?rex_media_type=rex_mediapool_maximized&rex_media_file=' . $this->getConfig('file2') . '" class="img-responsive" /></p></div>';
-			  }
-			  // Nur Text, kein Bild vorhanden
-			  if ($this->getConfig('textarea') != "" && $this->getConfig('file2') == "") {
-				$html_text = $this->getConfig('textarea');
-				if ($this->getConfig('editor') == 'markitup') {
-				  $html_text = markitup::parseOutput('markdown', $html_text);
-				}
-				$text_col = '<div class="col-md-12">' . $html_text . '</div>';
-				$img_col  = '';
-			  }
-			  // Nur Bild, kein Text vorhanden
-			  if ($this->getConfig('textarea') == "" && $this->getConfig('file2') != "") {
-				$text_col = '';
-				$img_col  = '<div class="col-md-12"><p><img src="index.php?rex_media_type=rex_mediapool_maximized&rex_media_file=' . $this->getConfig('file2') . '" class="img-responsive" /></p></div>';
-			  }
-		
-			  $html_append = '
+        // Login-Screen hat kein Fragment für < R5.12, deshalb per Output-Filter
+        if (!rex::getUser()) {
+            rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
+                $suchmuster = array('<section class="rex-page-main-inner" id="rex-js-page-main">');
+                $ersetzen = array('<img src="' . be_branding::checkExtension($this->getConfig('file')) . '" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">');
+                $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+            });
+        } // EoF if rex::isBackend() && !rex::getUser()
+    } // EoF getConfig()
+
+
+    // Text in den Credits per Output-Filter, da kein Fragment
+    if ($this->getConfig('agency') && rex_be_controller::getCurrentPage() == 'credits' && rex_get('license', 'string', 'NONE') == 'NONE') {
+        rex_extension::register('PAGE_TITLE_SHOWN', function (rex_extension_point $ep) {
+
+            // Ausgabevariablen initialisieren
+            $text_col = '';
+            $img_col = '';
+
+            // SVGs abfangen
+            if ($this->getConfig('file2')) {
+                $imgSrc = be_branding::checkExtension($this->getConfig('file2'));
+            }
+
+            // Text und Bild vorhanden
+            if ($this->getConfig('textarea') != "" && $this->getConfig('file2') != "") {
+                $html_text = $this->getConfig('textarea');
+                if ($this->getConfig('editor') == 'markitup markdown') {
+                    $html_text = markitup::parseOutput('markdown', $html_text);
+                } elseif ($this->getConfig('editor') == 'markitup textile') {
+                    $html_text = markitup::parseOutput('textile', $html_text);
+                }
+                $text_col = '<div class="col-md-6">' . $html_text . '</div>';
+                $img_col = '<div class="col-md-6"><p><img src="' . $imgSrc . '" class="img-responsive" /></p></div>';
+            }
+            // Nur Text, kein Bild vorhanden
+            if ($this->getConfig('textarea') != "" && $this->getConfig('file2') == "") {
+                $html_text = $this->getConfig('textarea');
+                if ($this->getConfig('editor') == 'markitup') {
+                    $html_text = markitup::parseOutput('markdown', $html_text);
+                }
+                $text_col = '<div class="col-md-12">' . $html_text . '</div>';
+                $img_col = '';
+            }
+            // Nur Bild, kein Text vorhanden
+            if ($this->getConfig('textarea') == "" && $this->getConfig('file2') != "") {
+                $text_col = '';
+                $img_col = '<div class="col-md-12"><p><img src="' . $imgSrc . '" class="img-responsive" /></p></div>';
+            }
+
+            $html_append = '
 				<section class="rex-page-section">
 				  <div class="panel panel-default">
 					<header class="panel-heading"><div class="panel-title">' . $this->getConfig('agency') . '</div></header>
@@ -80,58 +85,25 @@ if (rex::isBackend()) {
 					</div>
 				  </div>
 				</section>';
-			  $ep->setSubject($html_append);
-			}, rex_extension::EARLY);
-		  }
-		
-		// Wenn colorpicker aktiviert ist, checken ob ui_tools/jquery-minicolors bereits aktiviert ist, ansonsten selbst auf branding-Seite einbinden
-		if (($this->getConfig('colorpicker') && !rex_addon::get('ui_tools')->getPlugin('jquery-minicolors')->isAvailable()) && rex_be_controller::getCurrentPagePart(2) == 'branding' || rex_be_controller::getCurrentPagePart(2) == 'fe_favicon') {
-			rex_view::addCssFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.css?v=' . $this->getVersion()));
-			rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.min.js?v=' . $this->getVersion()));
-			rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery-minicolors.js?v=' . $this->getVersion()));
-		}
-		
-		
-		// BE-Favicon nur färben wenn Imagemagick verfügbar ist
-		if ($this->getConfig('coloricon') == 1 && class_exists('Imagick') === true ) {
-			
-			rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
-			{
-				// Initiale Farbe für R setzen und als neues png abspeichern        
-				be_branding::makeFavIcon(be_branding::rgba2hex($this->getConfig('color1')), rex_path::addon('be_branding') . 'vendor/favicon/');
-				
-					// aus dem png dann die Favicons generieren
-					//https://github.com/dmamontov/favicon reinholen
-					require rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
-					$fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', be_branding::rgba2hex($this->getConfig('color1'))) . '.png');
-					
-					$fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
-					
-					$fav->setConfig(array(
-						'apple-background' => substr($this->getConfig('color1'), 1, 6),
-						'apple-margin' => 0,
-						'android-background' => substr($this->getConfig('color1'), 1, 6),
-						'android-margin' => 0,
-						'android-name' => rex::getServerName(),
-						'android-url' => rex::getServer(),
-						'android-orientation' => BE_FaviconGenerator::ANDROID_PORTRAIT,
-						'ms-background' => substr($this->getConfig('color1'), 1, 6)
-					));
-					
-					$ersetzen = $fav->createAllAndGetHtml(be_branding::rgba2hex($this->getConfig('color1')));
-				
-			}); // EoF rex_extension::register
-			
-		} // EoF if coloricon == 1
-	  
-	  
-		//Farben
-		if ($this->getConfig('color1') && $this->getConfig('color2')) {
-			rex_extension::register('OUTPUT_FILTER', function(rex_extension_point $ep)
-			{
-				$suchmuster = '</head>';
-				$ersetzen   = '<style>
-				.rex-nav-top{background-color: ' . $this->getConfig('color1') . ' !important;}
+            $ep->setSubject($html_append);
+        }, rex_extension::EARLY);
+    }
+
+    // Wenn colorpicker aktiviert ist, checken ob ui_tools/jquery-minicolors bereits aktiviert ist, ansonsten selbst auf branding-Seite einbinden
+    if (($this->getConfig('colorpicker') && !rex_addon::get('ui_tools')->getPlugin('jquery-minicolors')->isAvailable()) && rex_be_controller::getCurrentPagePart(2) == 'branding' || rex_be_controller::getCurrentPagePart(2) == 'fe_favicon') {
+        rex_view::addCssFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.css?v=' . $this->getVersion()));
+        rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.min.js?v=' . $this->getVersion()));
+        rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery-minicolors.js?v=' . $this->getVersion()));
+    }
+
+    //Farben für das REDAXO-Logo anpassen
+    if ($this->getConfig('color1') && $this->getConfig('color2')) {
+        rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {
+            $suchmuster = '</head>';
+            $ersetzen = '<style>
+				.rex-nav-top .navbar{
+				    background-color: ' . $this->getConfig('color1') . ' !important;
+				}
 				
 				.rex-redaxo-logo path.rex-redaxo-logo-r,
 				.rex-redaxo-logo path.rex-redaxo-logo-e,
@@ -144,84 +116,83 @@ if (rex::isBackend()) {
 				.rex-redaxo-logo path.rex-redaxo-logo-x,
 				.rex-redaxo-logo path.rex-redaxo-logo-o,
 				.rex-redaxo-logo path.rex-redaxo-logo-reg{fill: #fff !important;}';
-				
-				# Bissle Farbe im Login Screen ab REX 5.12
-				if(rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
-					
-					$panel_bg = rex_addon::get('be_branding')->getConfig('color1');
-					if(rex_addon::get('be_branding')->getConfig('color1')) {
-						$panel_bg = str_replace(', 1)', ', 0.8)', $panel_bg);
-					}
-					
-					
-					$rex_page_login = '
+
+            # Bissle Farbe im Login Screen ab REX 5.12
+            if (rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
+
+                $panel_bg = rex_addon::get('be_branding')->getConfig('color1');
+                if (rex_addon::get('be_branding')->getConfig('color1')) {
+                    $panel_bg = str_replace(', 1)', ', 0.8)', $panel_bg);
+                }
+
+                $rex_page_login = '
 						#rex-page-login {
 								background-color: ' . $this->getConfig('color2') . ' !important;
 						}
 						';
-					
-					// Wenn eigenes BG-Bild
-					if(rex_addon::get('be_branding')->getConfig('login_bg') && rex_addon::get('be_branding')->getConfig('login_bg_setting') == "own_bg") {
-						$rex_page_login = '
+
+                // Wenn eigenes BG-Bild
+                if (rex_addon::get('be_branding')->getConfig('login_bg') && rex_addon::get('be_branding')->getConfig('login_bg_setting') == "own_bg") {
+                    $rex_page_login = '
 						#rex-page-login {
 								background-color: ' . $this->getConfig('color2') . ' !important;
 						}
 						@media (max-width: 991px) {
 							#rex-page-login {
-								background-image: url("'.rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg')).'");
+								background-image: url("' . rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg')) . '");
 								background-size: cover;
 							}
 						}';
-					}
-					
-					// Wenn REDAXO-Standard
-					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "redaxo_standard_bg") {
-						$rex_page_login = '
+                }
+
+                // Wenn REDAXO-Standard
+                if (rex_addon::get('be_branding')->getConfig('login_bg_setting') == "redaxo_standard_bg") {
+                    $rex_page_login = '
 						#rex-page-login {
 								background-color: ' . $this->getConfig('color2') . ' !important;
 						}
 						';
-					}	
-					
-					// Wenn Primärfarbe 
-					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "primary_bg") {
-						$rex_page_login = '
+                }
+
+                // Wenn Primärfarbe
+                if (rex_addon::get('be_branding')->getConfig('login_bg_setting') == "primary_bg") {
+                    $rex_page_login = '
 						#rex-page-login {
 								background-color: ' . $this->getConfig('color1') . ' !important;
 						}
 						';
-						// Panel in transp. wess, damit man es noch sieht
-						$panel_bg = '
+                    // Panel in transp. wess, damit man es noch sieht
+                    $panel_bg = '
 							rgba(255,255,255, 0.4)
 						';
-					}
-					
-					// Wenn Sekundärfarbe
-					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "secondary_bg") {
-						$rex_page_login = '
+                }
+
+                // Wenn Sekundärfarbe
+                if (rex_addon::get('be_branding')->getConfig('login_bg_setting') == "secondary_bg") {
+                    $rex_page_login = '
 						#rex-page-login {
 								background-color: ' . $this->getConfig('color2') . ' !important;
 						}
 						';
-					}
-					
-					// Wenn Verlauf
-					if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "gradient_bg") {
-						$rex_page_login = '
+                }
+
+                // Wenn Verlauf
+                if (rex_addon::get('be_branding')->getConfig('login_bg_setting') == "gradient_bg") {
+                    $rex_page_login = '
 						#rex-page-login {
 								background: ' . $this->getConfig('color2') . ';
 								background: -moz-linear-gradient(71deg, ' . $this->getConfig('color1') . ') 0%, ' . $this->getConfig('color2') . ' 100%);
 								background: -webkit-linear-gradient(71deg, ' . $this->getConfig('color1') . ' 0%, ' . $this->getConfig('color2') . ' 100%);
 								background: linear-gradient(71deg, ' . $this->getConfig('color1') . ' 0%, ' . $this->getConfig('color2') . ' 100%);
-								filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="'.be_branding::rgba2hex($this->getConfig('color1')).'",endColorstr="'.be_branding::rgba2hex($this->getConfig('color2')).'",GradientType=1);
+								filter: progid:DXImageTransform.Microsoft.gradient(startColorstr="' . be_branding::rgba2hex($this->getConfig('color1')) . '",endColorstr="' . be_branding::rgba2hex($this->getConfig('color2')) . '",GradientType=1);
 						}
 						';
-					}
-					
-					
-					$ersetzen .= $rex_page_login;
-					
-					$ersetzen .= '
+                }
+
+
+                $ersetzen .= $rex_page_login;
+
+                $ersetzen .= '
 					
 					#rex-form-login .rex-redaxo-logo path.rex-redaxo-logo-r,
 					#rex-form-login .rex-redaxo-logo path.rex-redaxo-logo-e,
@@ -235,7 +206,7 @@ if (rex::isBackend()) {
 					border-radius: 5px;}
 					
 					#rex-page-login .form-control {
-						background-color: '.$panel_bg.' !important;
+						background-color: ' . $panel_bg . ' !important;
 						color: #fff;
 						border: none !important;
 						box-shadow: none;
@@ -243,7 +214,7 @@ if (rex::isBackend()) {
 					
 					#rex-page-login .input-group-addon,
 					#rex-page-login .input-group-btn .btn-view {
-						background-color: '.$panel_bg.' !important;
+						background-color: ' . $panel_bg . ' !important;
 						color: ' . $this->getConfig('color2') . ' !important;
 						border: none !important;
 					}
@@ -254,13 +225,13 @@ if (rex::isBackend()) {
 						border-color:' . $this->getConfig('color1') . ' !important;
 					}
 					';
-					} // End Rex 5.12
-				
-				$ersetzen .= '#rex-page-login .rex-page-main:before{border-color: ' . $this->getConfig('color1') . ' transparent transparent transparent !important; top: -1px !important;}
+            } // End Rex 5.12
+
+            $ersetzen .= '#rex-page-login .rex-page-main:before{border-color: ' . $this->getConfig('color1') . ' transparent transparent transparent !important; top: -1px !important;}
 				</style></head>';
-				$ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-			});
-		} // EoF Farben    
-    
-    
+            $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
+        });
+    } // EoF Farben
+
+
 } // EoF if rex Backend
