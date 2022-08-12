@@ -14,7 +14,7 @@ Features
 * Frontend-Favicons für Multidomain-Installationen mit YRewrite
 * Anzeigen eines Projektlogos im Login-Screen und in der Navigation des Backends
 * Anzeigen eines Logos und Anschrift o.ä. in den Credits
-* Anzeigen eines Namens im Footer des Backends 
+* Anzeigen eines Namens im Footer des Backends
 * Anzeigen einer zusätzlichen Hinweisleiste (border) im Backend
 
 Benutzung
@@ -46,6 +46,13 @@ Um die Favicons im Template einzubinden wird folgender PHP-Code im <code>head</c
 
 Last Changes
 -------
+### Version 1.7.1 ###
+
+=== 12.08.2022 ===
+
+<strong>Fixed:</strong>
+* Scripts, die im pageHeader untergebracht sind, funktionieren nun wieder (z.B. Watson, Fontawesome-Picker oder Structure Tweaks, etc.): https://github.com/danspringer/be_branding/issues/28
+
 ### Version 1.7 ###
 
 === 07.01.2022 ===
@@ -59,7 +66,7 @@ Last Changes
 * Anpassungen an die neue REDAXO-Backend-Struktur ab Version 5.13
 
 <strong>Neu:</strong>
-* Frontend-Favicons nun auch für Multidomain-Installationen mit YRewrite 
+* Frontend-Favicons nun auch für Multidomain-Installationen mit YRewrite
 * Hilfedatei ergänzt
 
 ### Version 1.6-beta2 ###
@@ -107,7 +114,7 @@ Last Changes
 
 === 24.09.2020 ===
 * Neu: Ein <code>favicon.ico</code> wird zur Sicherheit noch ins Root-Verzeichnis der Website gelegt, da manche Suchmaschinen einfach nach dem Standardpfad schauen.
-* Umstellung auf die Klasse <code>fe_favicon</code> zur Generierung der Icons und zur Ausgabe des HTML-Codes. 
+* Umstellung auf die Klasse <code>fe_favicon</code> zur Generierung der Icons und zur Ausgabe des HTML-Codes.
 * Die Frontend-Favicons werden nun nur noch generiert, wenn Sie noch nicht im Assets-Ordner des AddOns existieren, nicht mehr bei jedem Seitenaufruf.
 * Die <code>.settings</code>-Datei für die Frontend-Favicons wird bei einem Update oder Reinstall gelöscht, falls sie aus früheren Versionen noch fehlerhaft war.
 
@@ -158,7 +165,7 @@ Last Changes
 === 19.03.2019 ===
 * Wenn Redaxo in einem Unterordner installiert ist, gab es einen Fehler, wenn man die Option für das Färben der Favicons aktiviert hatte.
 * Tile-Color für Android Endgeräte ergänzt.
-* Pfade für Einbindung der Favicons gefixt. 
+* Pfade für Einbindung der Favicons gefixt.
 
 ### Version 1.0.8 ###
 

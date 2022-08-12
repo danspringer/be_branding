@@ -76,7 +76,7 @@
     }
     ?>
     <?php
-    // BE-Favicon nur färben wenn Imagemagick verfügbar ist
+    // BE-Favicon nur färben, wenn Imagemagick verfügbar ist
     if (rex_addon::get('be_branding')->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {
         $addon = rex_addon::get('be_branding');
         // Initiale Farbe für R setzen und als neues png abspeichern
@@ -99,7 +99,10 @@
             'ms-background' => substr($addon->getConfig('color1'), 1, 6)
         ));
 
+        // Erst die BE-Branding Favicons ausgeben
         echo $fav->createAllAndGetHtml(be_branding::rgba2hex($addon->getConfig('color1')));
+        // Jetzt die Redaxo-Favicons löschen, aber die Scripts im pageHeader beibehalten
+        echo be_favicon::removeRexCoreFavicons($this->pageHeader,"link","rel","icon");
     } // EoF if coloricon == 1
     else {
         echo $this->pageHeader;

@@ -30,7 +30,7 @@ if (rex::isBackend()) {
                 $suchmuster = array('<section class="rex-page-main-inner" id="rex-js-page-main">');
                 $ersetzen = array('<img src="' . be_branding::checkExtension($this->getConfig('file')) . '" class="img-responsive center-block" style="padding: 10px 0px 15px 0px; width: 370px;"/></a><section class="rex-page-main-inner" id="rex-js-page-main">');
                 $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-            });
+            }, rex_extension::LATE);
         } // EoF if rex::isBackend() && !rex::getUser()
     } // EoF getConfig()
 
@@ -86,7 +86,7 @@ if (rex::isBackend()) {
 				  </div>
 				</section>';
             $ep->setSubject($html_append);
-        }, rex_extension::EARLY);
+        }, rex_extension::LATE);
     }
 
     // Wenn colorpicker aktiviert ist, checken ob ui_tools/jquery-minicolors bereits aktiviert ist, ansonsten selbst auf branding-Seite einbinden
@@ -115,8 +115,17 @@ if (rex::isBackend()) {
 				.rex-redaxo-logo path.rex-redaxo-logo-a,
 				.rex-redaxo-logo path.rex-redaxo-logo-x,
 				.rex-redaxo-logo path.rex-redaxo-logo-o,
-				.rex-redaxo-logo path.rex-redaxo-logo-reg{fill: #fff !important;}';
-
+				.rex-redaxo-logo path.rex-redaxo-logo-reg{
+				    fill: #fff !important;
+				}';
+            // Wenn Watson verfügbar ist, Icon einfärben und noch ein bisschen gerade rücken
+            if(rex_addon::get('watson')->isAvailable()){
+                $ersetzen .= '
+                .watson-btn svg {
+				    color: ' . $this->getConfig('color2') . ';
+				    padding-top: 8px;
+				}';
+            }
             # Bissle Farbe im Login Screen ab REX 5.12
             if (rex_string::versionCompare(rex::getVersion(), '5.12', '>=')) {
 
@@ -230,7 +239,7 @@ if (rex::isBackend()) {
             $ersetzen .= '#rex-page-login .rex-page-main:before{border-color: ' . $this->getConfig('color1') . ' transparent transparent transparent !important; top: -1px !important;}
 				</style></head>';
             $ep->setSubject(str_replace($suchmuster, $ersetzen, $ep->getSubject()));
-        });
+        }, rex_extension::LATE);
     } // EoF Farben
 
 
