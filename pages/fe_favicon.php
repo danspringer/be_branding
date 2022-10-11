@@ -54,10 +54,37 @@ if (class_exists('Imagick') === true) {
 
 	if(rex_addon::get("yrewrite")->isAvailable()) {
 			$domains = rex_sql::factory()->setDebug(0)->setQuery('SELECT * FROM rex_yrewrite_domain');
+
+            // Start Tab-Navigation
+            $content .= '<div class="nav">
+                            <ul class="nav nav-tabs" role="tablist">';
+            $domain_i = 0;
+            foreach($domains as $domain) {
+                $domain_i ++;
+                $active = '';
+                if($domain_i == 1) {
+                    $active = ' active';
+                }
+                $content .= '<li role="presentation" class="'.$active.'">
+                                    <a href="#be_branding-fe-favicons-id--'.$domain->getValue('id').'" aria-controls="#be_branding-fe-favicons-id--'.$domain->getValue('id').'" role="tab" data-toggle="tab">
+                                        '.$domain->getValue('domain').'
+                                    </a>
+                                </li>';
+            } // Ende foreach
+            $content .= '    </ul>
+                        </div>';
+            // Ende Tab-Navigation
+
+            $content .= '<div class="tab-content">';
+            $domain_i = 0;
 			foreach($domains as $domain) {
+                $domain_i ++;
+                $active = '';
+                if($domain_i == 1) {
+                    $active = ' active';
+                }
 				#dump($domain);
-				
-				
+                $content .= '<div role="tabpanel" class="tab-pane'.$active.'" id="be_branding-fe-favicons-id--'.$domain->getValue('id').'">';
 				$content .= '<h3>'.$domain->getValue('domain').' (ID: '.$domain->getValue('id').')</h3>';
 				// Dateiauswahl Medienpool-Widget
 				$formElements = [];
@@ -103,9 +130,9 @@ if (class_exists('Imagick') === true) {
 				$fragment->setVar('elements', $formElements, false);
 				$content .= $fragment->parse('core/form/container.php');
 				
-				$content .= '<hr>';
-				
+				$content .= '</div>'; // Ende .tab-pane
 			}
+            $content .= '</div>'; // Ende .tab-content
 		}
 /*
 	// Dateiauswahl Medienpool-Widget

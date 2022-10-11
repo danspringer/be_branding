@@ -5,7 +5,7 @@ class be_branding
 
     public static function hex2rgb($hex)
     {
-        if($hex) {
+        if ($hex) {
             $hex = str_replace("#", "", $hex);
 
             if (strlen($hex) == 3) {
@@ -30,7 +30,7 @@ class be_branding
 
     public static function rgb2hex($rgb)
     {
-        if($rgb) {
+        if ($rgb) {
             $rgb = str_replace('rgba(', '', $rgb);
             $rgb = str_replace(')', '', $rgb);
             $rgb = str_replace(' ', '', $rgb);
@@ -45,7 +45,7 @@ class be_branding
 
     public static function rgba2hex($rgba)
     {
-        if($rgba) {
+        if ($rgba) {
             $rgba = str_replace('rgba(', '', $rgba);
             $rgba = str_replace(')', '', $rgba);
             $rgba = str_replace(' ', '', $rgba);
@@ -85,13 +85,14 @@ class be_branding
         $ext = $img_file_parts['extension'];
         //echo $ext;
         if ($ext == "jpg" || $ext == "jpeg" || $ext == "png") {
-            $be_logo = 'index.php?rex_media_type=rex_media_medium&rex_media_file=' . $filename;
-            return $be_logo;
+            $be_logo = '/index.php?rex_media_type=rex_media_medium&rex_media_file=' . $filename;
         }
         if ($ext === "svg") {
             $be_logo = '/media/' . $filename;
-            return $be_logo;
         }
+
+        $frontEndUrl = self::getDomainByID( self::getCurrentBeDomainId(false) );
+        return $frontEndUrl['domain'] . $be_logo;
     }// EoF
 
     /**
@@ -105,6 +106,33 @@ class be_branding
         return fe_favicon::getHtml(be_branding::rgba2hex(rex_addon::get('be_branding')->getConfig('fe_favicon_tilecolor_' . $domainId)), $domainId);
     }
 
-}
+    public static function getCurrentBeDomainId($withPostfix = false)
+    {
+        if (rex_addon::get('be_branding')->getConfig('domainprofiles_enabled')) {
+            $domain = rex_sql::factory();
+            $domain->setDebug(false);
+            $domain->setQuery('SELECT id from rex_yrewrite_domain WHERE domain LIKE :domain', ['domain' => '%' . $_SERVER['HTTP_HOST'] . '%']);
+            if ($withPostfix) {
+                return '--' . $domain->getValue('id');
+            } else {
+                return $domain->getValue('id');
+            }
+        } else {
+            return '';
+        }
+    }
 
+    public static function getDomainById($id)
+    {
+        if ($id) {
+            $domain = rex_sql::factory();
+            $domain->setDebug(false);
+            $domain->setQuery('SELECT * from rex_yrewrite_domain WHERE id = :id', ["id" => $id]);
+            $domain = $domain->getArray();
+            return $domain[0];
+        }
+        return false;
+    }
+
+}// EoC be_branding
 ?>

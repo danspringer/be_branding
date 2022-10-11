@@ -10,14 +10,14 @@ $login_bg_3300_webp    = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-
 $login_bg_2100_jpg     = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-korpa-9XngoIpxcEo-unsplash_2100.jpg');
 $login_bg_3300_jpg     = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-korpa-9XngoIpxcEo-unsplash_3300.jpg');
 
-if(rex_addon::get('be_branding')->getConfig('login_bg') && rex_addon::get('be_branding')->getConfig('login_bg_setting') == "own_bg")  {
+if(rex_addon::get('be_branding')->getConfig('login_bg'.be_branding::getCurrentBeDomainId(true)) && rex_addon::get('be_branding')->getConfig('login_bg_setting'.be_branding::getCurrentBeDomainId(true)) == "own_bg")  {
     $fileType = 'webp';
-    $login_bg_2100_webp    = rex_media_manager::getUrl('be_branding_login_2100_webp', rex_addon::get('be_branding')->getConfig('login_bg'));
-    $login_bg_3300_webp    = rex_media_manager::getUrl('be_branding_login_3300_webp', rex_addon::get('be_branding')->getConfig('login_bg'));
-    $login_bg_2100_jpg     = rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg'));
-    $login_bg_3300_jpg    = rex_media_manager::getUrl('be_branding_login_3300_jpg', rex_addon::get('be_branding')->getConfig('login_bg'));
+    $login_bg_2100_webp    = rex_media_manager::getUrl('be_branding_login_2100_webp', rex_addon::get('be_branding')->getConfig('login_bg'.be_branding::getCurrentBeDomainId(true)));
+    $login_bg_3300_webp    = rex_media_manager::getUrl('be_branding_login_3300_webp', rex_addon::get('be_branding')->getConfig('login_bg'.be_branding::getCurrentBeDomainId(true)));
+    $login_bg_2100_jpg     = rex_media_manager::getUrl('be_branding_login_2100_jpg', rex_addon::get('be_branding')->getConfig('login_bg'.be_branding::getCurrentBeDomainId(true)));
+    $login_bg_3300_jpg    = rex_media_manager::getUrl('be_branding_login_3300_jpg', rex_addon::get('be_branding')->getConfig('login_bg'.be_branding::getCurrentBeDomainId(true)));
 }
-if(rex_addon::get('be_branding')->getConfig('login_bg_setting') == "own_bg" || rex_addon::get('be_branding')->getConfig('login_bg_setting') == "redaxo_standard_bg") {
+if(rex_addon::get('be_branding')->getConfig('login_bg_setting'.be_branding::getCurrentBeDomainId(true)) == "own_bg" || rex_addon::get('be_branding')->getConfig('login_bg_setting'.be_branding::getCurrentBeDomainId(true)) == "redaxo_standard_bg") {
 ?>
 <picture class="rex-background">
     <source

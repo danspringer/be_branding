@@ -9,7 +9,26 @@
 <head>
     <meta charset="utf-8" />
 
-    <title><?php echo $this->pageTitle ?></title>
+    <?php
+    // PageTitle fuer be_branding anpassen, wenn yRewrite aktiv fuer Multidomain
+    $pageTitle = $this->pageTitle;
+    if(rex_addon::get('yrewrite')->isAvailable()) {
+        $yrewrite = new rex_yrewrite;
+        $domain = $yrewrite->getDomainById(be_branding::getCurrentBeDomainId(false));
+
+        $activePageObj = rex_be_controller::getCurrentPageObject();
+        if ($activePageObj->getTitle()) {
+            $parts[] = $activePageObj->getTitle();
+        }
+        if (be_branding::getDomainById(be_branding::getCurrentBeDomainId(false))['domain']) {
+            $parts[] = be_branding::getDomainById(be_branding::getCurrentBeDomainId(false))['domain'];
+        }
+        $parts[] = 'REDAXO CMS';
+
+        $pageTitle =  implode(' · ', $parts);
+    }
+    ?>
+    <title><?php echo $pageTitle ?></title>
 
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <?php
@@ -77,35 +96,37 @@
     ?>
     <?php
     // BE-Favicon nur färben, wenn Imagemagick verfügbar ist
-    if (rex_addon::get('be_branding')->getConfig('coloricon') == 1 && class_exists('Imagick') === true) {
-        $addon = rex_addon::get('be_branding');
-        // Initiale Farbe für R setzen und als neues png abspeichern
-        be_branding::makeFavIcon(be_branding::rgba2hex($addon->getConfig('color1')), rex_path::addon('be_branding') . 'vendor/favicon/');
-        // aus dem png dann die Favicons generieren
-        //https://github.com/dmamontov/favicon reinholen
-        require rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
-        $fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', be_branding::rgba2hex($addon->getConfig('color1'))) . '.png');
+    if(class_exists('Imagick') === true) {
+        if(rex_addon::get('be_branding')->getConfig('coloricon') == 1) {
 
-        $fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
+            $addon = rex_addon::get('be_branding');
+            // Initiale Farbe für R setzen und als neues png abspeichern
+            be_branding::makeFavIcon(be_branding::rgba2hex($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true))), rex_path::addon('be_branding') . 'vendor/favicon/');
+            // aus dem png dann die Favicons generieren
+            //https://github.com/dmamontov/favicon reinholen
+            require rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
+            $fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', be_branding::rgba2hex($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true)))) . '.png');
 
-        $fav->setConfig(array(
-            'apple-background' => substr($addon->getConfig('color1'), 1, 6),
-            'apple-margin' => 0,
-            'android-background' => substr($addon->getConfig('color1'), 1, 6),
-            'android-margin' => 0,
-            'android-name' => rex::getServerName(),
-            'android-url' => rex::getServer(),
-            'android-orientation' => BE_FaviconGenerator::ANDROID_PORTRAIT,
-            'ms-background' => substr($addon->getConfig('color1'), 1, 6)
-        ));
+            $fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
 
-        // Erst die BE-Branding Favicons ausgeben
-        echo $fav->createAllAndGetHtml(be_branding::rgba2hex($addon->getConfig('color1')));
-        // Jetzt die Redaxo-Favicons löschen, aber die Scripts im pageHeader beibehalten
-        echo be_favicon::removeRexCoreFavicons($this->pageHeader,"link","rel","icon");
-    } // EoF if coloricon == 1
-    else {
-        echo $this->pageHeader;
+            $fav->setConfig(array(
+                'apple-background' => substr($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true)), 1, 6),
+                'apple-margin' => 0,
+                'android-background' => substr($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true)), 1, 6),
+                'android-margin' => 0,
+                'android-name' => rex::getServerName(),
+                'android-url' => rex::getServer(),
+                'android-orientation' => BE_FaviconGenerator::ANDROID_PORTRAIT,
+                'ms-background' => substr($addon->getConfig('color1'), 1, 6)
+            ));
+
+            // Erst die BE-Branding Favicons ausgeben
+            echo $fav->createAllAndGetHtml(be_branding::rgba2hex($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true))));
+            // Jetzt die Redaxo-Favicons löschen, aber die Scripts im pageHeader beibehalten
+            echo be_favicon::removeRexCoreFavicons($this->pageHeader,"link","rel","icon");
+        } else {
+            echo $this->pageHeader;
+        }
     }
     ?>
 

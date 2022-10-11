@@ -29,6 +29,10 @@ Folgende Optionen für den Hintergrund des Login-Screens stehen zur Verfügung:
 * Farbverlauf aus Primärfarbe und Sekundärfarbe
 * Das Standard-Hintergrundbild von REDAXO
 
+### Multidomainfähigkeit mit YRewrite ###
+Wenn in YRewrite mehrere Domains angelegt sind, hat man im Backend Branding Addon die Möglichkeit, auch das Backend der jeweiligen Domain individuell darzustellen.
+Hierzu aktiviert man unter <code>Backend Branding > Konfiguration</code> die <strong>Domainprofile</strong>. Anschließend stehen unter Backend Branding für die verfügbaren Domains unterschiedliche Profile für das Backend zur Verfügung.
+So kann ein Backend für Domain A (<code>domain-a.de/redaxo</code>) anders aussehen als ein Backend von Domain B (<code>domain-b.de/redaxo</code>), obwohl beides unter einer REDAXO-Installation läuft.
 
 ### Backend individualisieren ###
 Das AddOn bietet die Möglichkeit, das Aussehen von REDAXO im Backend anzupassen, um es so stärker individualisieren zu können. Dies eignet sich, um bei Kundenprojekten näher an der CI zu sein oder um unterschiedliche REDAXo-Installationen optisch leichter unterscheiden zu können.<br>
@@ -46,6 +50,20 @@ Um die Favicons im Template einzubinden wird folgender PHP-Code im <code>head</c
 
 Last Changes
 -------
+### Version 1.8.0 ###
+
+=== 11.10.2022 ===
+
+<strong>Neu:</strong>
+* Multidomainfähigkeit: Es können nun pro in YRewrite angelegter Domain verschiedene Profile für das Backend  angelegt werden. Unterschiedliche Domains können nun also auch im Backend unterschiedlich aussehen.
+ Beispiel: Wenn man als Redaxo-User*in im Backend unter <code>domain1.de/redaxo</code> eingeloggt ist, so kann dieses Backend ein anderes Branding bekommen als z.B. <code>domain2.de/redaxo</code>.
+Es werden auch die Backend-Favicons entsprechend des Profils gefärbt und der Frontend-Link im Header über be_style/customizer wird ebenfalls angepasst.
+* Favicon-Einstellungen pro Domain werden nun übersichtlicher in Tabs dargestellt.
+
+<strong>Fixed:</strong>
+* Logo des Projekts wird bei Installation im Unterordner jetzt korrekt angezeigt [@aeberhard](https://github.com/aeberhard)
+https://github.com/danspringer/be_branding/issues/31
+
 ### Version 1.7.1 ###
 
 === 12.08.2022 ===

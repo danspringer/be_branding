@@ -10,7 +10,7 @@
             <div>
                 <?php
                 if (rex_addon::get('be_branding')->getConfig('file')) {
-                    echo '<img src="' . be_branding::checkExtension(rex_addon::get('be_branding')->getConfig('file')) . '" class="img-responsive center-block" style="padding: 20px 10px 5px 10px; width: 100%;"/></a>';
+                    echo '<img src="' . be_branding::checkExtension(rex_addon::get('be_branding')->getConfig('file'.be_branding::getCurrentBeDomainId(true))) . '" class="img-responsive center-block" style="padding: 20px 10px 5px 10px; width: 100%;"/></a>';
                 }
                 echo $this->navigation;
                 ?>
