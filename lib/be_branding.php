@@ -75,6 +75,12 @@ class be_branding
         }
     }
 
+    public static function getCurrentDomainWithProtocol()
+    {
+        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+        $domainName = $_SERVER['HTTP_HOST'];
+        return $protocol . $domainName;
+    }
 
     public static function checkExtension($filename)
     {
@@ -90,9 +96,14 @@ class be_branding
         if ($ext === "svg") {
             $be_logo = '/media/' . $filename;
         }
-
-        $frontEndUrl = self::getDomainByID( self::getCurrentBeDomainId(false) );
-        return $frontEndUrl['domain'] . $be_logo;
+        $currentDomainId = self::getCurrentBeDomainId(false);
+        $frontEndUrl = self::getDomainByID( $currentDomainId  );
+        if($frontEndUrl) {
+            $frontEndUrl = $frontEndUrl['domain'];
+        } else {
+            $frontEndUrl = self::getCurrentDomainWithProtocol();
+        }
+        return $frontEndUrl . $be_logo;
     }// EoF
 
     /**
@@ -118,7 +129,7 @@ class be_branding
                 return $domain->getValue('id');
             }
         } else {
-            return '';
+            return false;
         }
     }
 

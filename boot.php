@@ -2,14 +2,7 @@
 
 /** @var rex_addon $this */
 
-// Daten wie Autor, Version, Subpages etc. sollten wenn möglich in der package.yml notiert werden.
-// Sie können aber auch weiterhin hier gesetzt werden:
 $this->setProperty('author', 'Daniel Springer, Medienfeuer');
-
-// Die Datei sollte keine veränderbare Konfigurationen mehr enthalten, um die Updatefähigkeit zu erhalten.
-// Stattdessen sollte dafür die rex_config verwendet werden (siehe install.php)
-
-// Klassen und lang-Dateien müssen hier nicht mehr eingebunden werden, sie werden nun automatisch gefunden.
 
 // Addonrechte (permissions) registieren
 if (rex::isBackend() && is_object(rex::getUser())) {
@@ -18,13 +11,11 @@ if (rex::isBackend() && is_object(rex::getUser())) {
     rex_perm::register('be_branding[fe_favicon]');
 }
 
-
 // Im Backend
 if (rex::isBackend()) {
-    
 
     if ($this->getConfig('file')) {
-        // Wenn nicht eingeloggt und Backend Logo einbinden
+        // Wenn nicht User eingeloggt ist und Backend Logo definiert ist, das Logo einbinden.
         // Login-Screen hat kein Fragment für < R5.12, deshalb per Output-Filter
         if (!rex::getUser()) {
             rex_extension::register('OUTPUT_FILTER', function (rex_extension_point $ep) {

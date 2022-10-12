@@ -20,7 +20,6 @@ if (rex_post('formsubmit', 'string') == '1') {
             $domainprofiles[] =  ['login_bg--'.$domain->getValue('id'), 'string'];
             $domainprofiles[] =  ['login_bg_setting--'.$domain->getValue('id'), 'string'];
         }
-        dump($domainprofiles);
 
         $this->setConfig(rex_post('config',
             $domainprofiles
@@ -39,18 +38,6 @@ if (rex_post('formsubmit', 'string') == '1') {
             ['login_bg', 'string'],
             ['login_bg_setting', 'string'],
         ]));
-        dump([
-            ['agency', 'string'],
-            ['file', 'string'],
-            ['file2', 'string'],
-            ['textarea', 'string'],
-            ['border_text', 'string'],
-            ['border_color', 'string'],
-            ['color1', 'string'],
-            ['color2', 'string'],
-            ['login_bg', 'string'],
-            ['login_bg_setting', 'string'],
-        ]);
     }
 
 	// Generierte Favicons löschen, wenn gespeichert wurde, damit Sie frisch generiert werden können

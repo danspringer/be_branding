@@ -12,7 +12,7 @@
     <?php
     // PageTitle fuer be_branding anpassen, wenn yRewrite aktiv fuer Multidomain
     $pageTitle = $this->pageTitle;
-    if(rex_addon::get('yrewrite')->isAvailable()) {
+    if(rex_addon::get('yrewrite')->isAvailable() && rex_addon::get('be_branding')->getConfig('domainprofiles_enabled') ) {
         $yrewrite = new rex_yrewrite;
         $domain = $yrewrite->getDomainById(be_branding::getCurrentBeDomainId(false));
 
