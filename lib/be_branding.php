@@ -75,35 +75,22 @@ class be_branding
         }
     }
 
-    public static function getCurrentDomainWithProtocol()
-    {
-        $protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-        $domainName = $_SERVER['HTTP_HOST'];
-        return $protocol . $domainName;
-    }
-
     public static function checkExtension($filename)
     {
         $img_file_parts = pathinfo($filename);
         //print_r($img_file_parts);
-        $be_logo = '/media/' . $filename;
+        $be_logo = 'media/' . $filename;
 
         $ext = $img_file_parts['extension'];
         //echo $ext;
         if ($ext == "jpg" || $ext == "jpeg" || $ext == "png") {
-            $be_logo = '/index.php?rex_media_type=rex_media_medium&rex_media_file=' . $filename;
+            $be_logo = 'index.php?rex_media_type=rex_media_medium&rex_media_file=' . $filename;
         }
         if ($ext === "svg") {
-            $be_logo = '/media/' . $filename;
+            $be_logo = 'media/' . $filename;
         }
-        $currentDomainId = self::getCurrentBeDomainId(false);
-        $frontEndUrl = self::getDomainByID( $currentDomainId  );
-        if($frontEndUrl) {
-            $frontEndUrl = $frontEndUrl['domain'];
-        } else {
-            $frontEndUrl = self::getCurrentDomainWithProtocol();
-        }
-        return $frontEndUrl . $be_logo;
+        return rex_url::frontend($be_logo);
+#        return $frontEndUrl . $be_logo;
     }// EoF
 
     /**
