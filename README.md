@@ -3,7 +3,7 @@ Backend Branding für REDAXO 5
 
 Mit dem AddOn lässt sich das Backend von Redaxo branden, um dem Backend eine individuellere Note zu geben. Damit kann man, wenn man mehrere REDAXO-Projekte betreut, das Backend auf einen Blick schneller unterscheiden. Inkl. Favicon-Generator für das Frontend aus dem Medienpool heraus.
 
-![Backend Branding für REDAXO 5](https://camo.githubusercontent.com/862161690ca664720e911080eb44709619245d0bd554d55b11e5a6fb0e352d4d/68747470733a2f2f692e696d6775722e636f6d2f6f6971355a716d2e706e67 "Backend Branding Redaxo 5")
+![Backend Branding für REDAXO 5](https://raw.githubusercontent.com/danspringer/be_branding/master/assets/img/splashscreen.png "Backend Branding Redaxo 5")
 
 Features
 -------
@@ -50,6 +50,17 @@ Um die Favicons im Template einzubinden wird folgender PHP-Code im <code>head</c
 
 Last Changes
 -------
+### Version 1.8.1 ###
+
+===29.01.2024 ===
+
+Letzte Version vor REDAXO 5.16 - Plugins werden entfernt (z.B. Customizer) - ggf. wird die Backendstruktur von Redaxo dann angepasst.
+
+Mit REDAXO 5.16 soll dann eine neue Version von <strong>be_branding</strong> kommen.
+
+<strong>Fixed:</strong>
+* Splashscreen in Readme angepasst
+
 ### Version 1.8.0 ###
 
 === 11.10.2022 ===
