@@ -9,14 +9,19 @@
         <nav class="rex-nav-main-navigation" role="navigation">
             <div>
                 <?php
-                if (rex_addon::get('be_branding')->getConfig('file')) {
-                    echo '<img src="' . be_branding::checkExtension(rex_addon::get('be_branding')->getConfig('file'.be_branding::getCurrentBeDomainId(true))) . '" class="img-responsive center-block" style="padding: 20px 10px 5px 10px; width: 100%;"/></a>';
-                }
-                echo $this->navigation;
+                $addon  = rex_addon::get('be_branding');
+                $file   = $addon->getConfig('file' . be_branding::getCurrentBeDomainId(true));
+                $logoSrc = $file ? be_branding::checkExtension($file) : '';
+                if ($logoSrc):
                 ?>
+                    <img src="<?= rex_escape($logoSrc) ?>"
+                         class="img-responsive center-block"
+                         style="padding:20px 10px 5px;width:100%;"
+                         alt=""/>
+                <?php endif; ?>
+                <?= $this->navigation ?>
             </div>
         </nav>
     </div>
     <div id="rex-js-nav-main-backdrop" class="rex-nav-main-backdrop"></div>
 <?php endif;
-

@@ -1,265 +1,260 @@
 Backend Branding für REDAXO 5
 ========================
 
-Mit dem AddOn lässt sich das Backend von Redaxo branden, um dem Backend eine individuellere Note zu geben. Damit kann man, wenn man mehrere REDAXO-Projekte betreut, das Backend auf einen Blick schneller unterscheiden. Inkl. Favicon-Generator für das Frontend aus dem Medienpool heraus.
+Mit dem AddOn lässt sich das Backend von REDAXO individuell gestalten. Ob Agentur-CI, Projektfarben oder Multidomain-Installationen – be_branding macht verschiedene REDAXO-Projekte auf einen Blick unterscheidbar. Inkl. Favicon-Generator für das Frontend aus dem Medienpool heraus.
 
 ![Backend Branding für REDAXO 5](https://raw.githubusercontent.com/danspringer/be_branding/master/assets/img/splashscreen.png "Backend Branding Redaxo 5")
 
 Features
--------
+--------
+
 * Einfärben des Headers und REDAXO-Logos im Backend
-* Einfärben des Favicon im Backend (Imagemagick benötigt)
-* Einfache Anpassung des Loginscreen-Hintergrundbildes ab REDAXO 5.12 aus dem Backend heraus
+* **Dark Mode:** Separate Farben für helles und dunkles Backend-Theme
+* Einfärben des Backend-Favicons (Imagick benötigt)
+* **Live-Farbvorschau:** Farbänderungen werden sofort im Backend sichtbar – ohne Speichern
+* **Hex-Farbcodes:** `#ff6400` wird automatisch in `rgba()` umgerechnet
+* Anpassung des Login-Screen-Hintergrundbildes aus dem Backend heraus
+* Anzeigen eines Projektlogos im Login-Screen und in der Navigation
+* Anzeigen eines Agenturlogos, Adresse o.ä. in den Credits
+* Anzeigen des Agenturnamens im Footer des Backends
+* Hinweisleiste (Border) am oberen Rand des Backends
+* **Custom CSS:** Freies CSS-Feld für individuelle Backend-Anpassungen
+* **Export/Import:** Branding-Konfiguration als JSON exportieren und auf anderen Systemen importieren (kompatibel mit v1-Exporten)
 * Generierung von Favicons für das Frontend aus dem Medienpool heraus (Imagick benötigt)
-* Frontend-Favicons für Multidomain-Installationen mit YRewrite
-* Anzeigen eines Projektlogos im Login-Screen und in der Navigation des Backends
-* Anzeigen eines Logos und Anschrift o.ä. in den Credits
-* Anzeigen eines Namens im Footer des Backends
-* Anzeigen einer zusätzlichen Hinweisleiste (border) im Backend
+* **AVIF-Support** für Login-Hintergrundbilder (zusätzlich zu WebP/JPG)
+* Multidomainfähigkeit mit YRewrite – pro Domain ein eigenes Branding-Profil
+* **Favicon-Vorschau** direkt in der Konfigurationsseite
+
+---
 
 Benutzung
--------
-### Login-Seite individualisieren ###
-Um die Login-Seite von REDAXO mit einem eigenen Hintergrundbild zu individualisieren, muss in den AddOn-Einstellungen unter <code>Backend-Branding > Projektbranding</code> als Hintergrund des Login-Screens die Option "Eigenes Hintergrundbild" auswählen und aus dem Medienpool ein geeignetes Bild auswählen.<br>
-Die Farben der Login-Box oder des Farbverlaufs als Hintergrund werden aus dem Farbschema der Primärfarbe und Sekundärfarbe gebildet. Sollte ein Projektlogo hinterlegt sein, wird dieses oberhalb der Login-Box angezeigt.<br><br>
-Folgende Optionen für den Hintergrund des Login-Screens stehen zur Verfügung:
-* Eigenes Hintergrundbild
-* Primärfarbe aus Farbschema
-* Sekundärfarbe aus Farbschema
-* Farbverlauf aus Primärfarbe und Sekundärfarbe
-* Das Standard-Hintergrundbild von REDAXO
+---------
 
-### Multidomainfähigkeit mit YRewrite ###
-Wenn in YRewrite mehrere Domains angelegt sind, hat man im Backend Branding Addon die Möglichkeit, auch das Backend der jeweiligen Domain individuell darzustellen.
-Hierzu aktiviert man unter <code>Backend Branding > Konfiguration</code> die <strong>Domainprofile</strong>. Anschließend stehen unter Backend Branding für die verfügbaren Domains unterschiedliche Profile für das Backend zur Verfügung.
-So kann ein Backend für Domain A (<code>domain-a.de/redaxo</code>) anders aussehen als ein Backend von Domain B (<code>domain-b.de/redaxo</code>), obwohl beides unter einer REDAXO-Installation läuft.
+### Login-Seite individualisieren
 
-### Backend individualisieren ###
-Das AddOn bietet die Möglichkeit, das Aussehen von REDAXO im Backend anzupassen, um es so stärker individualisieren zu können. Dies eignet sich, um bei Kundenprojekten näher an der CI zu sein oder um unterschiedliche REDAXo-Installationen optisch leichter unterscheiden zu können.<br>
-Hierzu können eine Primärfarbe und eine Sekundärfarbe im AddOn definiert werden. Mit diesen beiden Farben wird das REDAXO-Logo eingefärbt, die Header-Leiste im Backend sowie die Login-Box eingefärbt.
+Unter `Backend Branding > Projektbranding` den gewünschten Hintergrund für den Login-Screen wählen:
 
-#### Backend-Favicon einfärben ####
-Das Backend-Favicon von REDAXO kann im AddOn unter <code>Konfiguration > Favicon im Backend färben?</code> umgefärbt werden. Hierbei wird die Primärfarbe des Farbschemas verwendet.
+| Option | Beschreibung |
+|---|---|
+| Eigenes Hintergrundbild | Bild aus dem Medienpool, automatisch als WebP, AVIF und JPG ausgeliefert |
+| Primärfarbe | Vollflächige Primärfarbe als Hintergrund |
+| Sekundärfarbe | Vollflächige Sekundärfarbe als Hintergrund |
+| Farbverlauf | Linearer Verlauf von Primär- zu Sekundärfarbe |
+| REDAXO-Standard | Das Original-Hintergrundbild von REDAXO |
 
-### Frontend-Favicons generieren und einbinden ###
-Das AddOn ermöglicht die einfache Generierung und Einbindung aller möglichen Favicon-Formate für das Frontend.<br>
-Hierzu muss YRewrite installiert und aktiviert sein. Außerdem muss mindestens eine Domain in YRewrite angelegt sein.
-Für jede Domain steht anschließend ein Auswahlfeld für den Medienpool zur Verfügung, mit welchem man eine Quelldatei wählen kann, aus welcher dann die entsprechenden Favicons generiert werden. (Empfohlen wird eine PNG-Datei mit mindestens 310x310 Pixeln)<br><br>
-Um die Favicons im Template einzubinden wird folgender PHP-Code im <code>head</code>-Bereich des Templates eingefügt:
-<p><code>be_branding::getFrontendFavicons( rex_yrewrite::getCurrentDomain()->getId() )</code></p>
+Ein hinterlegtes Projektlogo erscheint automatisch oberhalb der Login-Box.
 
-Last Changes
--------
-### Version 1.8.1 ###
+### Farben eingeben
 
-===29.01.2024 ===
+Farbfelder akzeptieren zwei Formate:
 
-Letzte Version vor REDAXO 5.16 - Plugins werden entfernt (z.B. Customizer) - ggf. wird die Backendstruktur von Redaxo dann angepasst.
+* **RGBa:** `rgba(255, 100, 0, 1)` – mit Alpha-Kanal für Transparenz
+* **Hex:** `#ff6400` – wird beim Verlassen des Feldes automatisch in rgba umgerechnet
 
-Mit REDAXO 5.16 soll dann eine neue Version von <strong>be_branding</strong> kommen.
+Mit aktiviertem Colorpicker kann die Farbe auch grafisch gewählt werden.
 
-<strong>Fixed:</strong>
-* Splashscreen in Readme angepasst
+### Dark Mode
 
-### Version 1.8.0 ###
+Unter `Backend Branding > Farbschema` können separate Farben für den Dark Mode hinterlegt werden. Diese werden automatisch verwendet, wenn der Browser oder Nutzer den Dark Mode aktiviert hat. Leer lassen bedeutet: gleiche Farben wie im hellen Modus.
+
+### Custom CSS
+
+Das Feld `Freies CSS für das Backend` erlaubt beliebige CSS-Regeln, die in den Backend-Output eingebettet werden. Nützlich für Anpassungen, die über Farben und Logo hinausgehen – z.B. Abstände, Schriftgrößen oder das Ausblenden bestimmter Elemente.
+
+### Export / Import
+
+Am Ende der Branding-Seite befindet sich der Export/Import-Bereich:
+
+* **Export:** Lädt die gesamte Konfiguration als `be_branding_config_YYYY-MM-DD.json` herunter
+* **Import:** Liest eine JSON-Datei ein und übernimmt die Einstellungen. v1-Exporte werden automatisch migriert.
+
+Typischer Workflow: Konfiguration auf Staging fertigstellen → exportieren → auf Live importieren.
+
+### Multidomainfähigkeit mit YRewrite
+
+Unter `Konfiguration > Domainprofile aktivieren` wird die Multidomain-Unterstützung eingeschaltet. Anschließend stehen für jede in YRewrite angelegte Domain separate Branding-Profile zur Verfügung.
+
+Das Backend sieht je nach Login-URL unterschiedlich aus:
+* `domain-a.de/redaxo` → Profil A (eigene Farben, Logo, Hintergrundbild)
+* `domain-b.de/redaxo` → Profil B (eigene Farben, Logo, Hintergrundbild)
+
+Alles unter einer gemeinsamen REDAXO-Installation.
+
+### Frontend-Favicons generieren und einbinden
+
+Unter `Frontend-Favicons` stehen pro YRewrite-Domain zwei Methoden zur Verfügung:
+
+#### SVG-Favicon (empfohlen)
+
+Eine SVG-Datei direkt aus dem Medienpool wählen – kein Imagick nötig. SVGs skalieren pixelgenau auf jede Auflösung und unterstützen Dark Mode direkt in der Datei:
+
+```svg
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <style>
+    .icon { fill: #ff6400; }
+    @media (prefers-color-scheme: dark) {
+      .icon { fill: #ffffff; }
+    }
+  </style>
+  <circle class="icon" cx="50" cy="50" r="50"/>
+</svg>
+```
+
+Alle modernen Browser (Chrome, Firefox, Edge, Safari ab 2022) unterstützen SVG-Favicons.
+
+#### PNG/ICO-Favicons (Fallback)
+
+Quelldatei aus dem Medienpool wählen (empfohlen: transparentes PNG, mindestens 310×310 Pixel). Das AddOn generiert daraus alle benötigten Formate für ältere Browser und Apple-Geräte. Erfordert Imagick auf dem Server.
+
+#### Einbindung im Template
+
+Folgenden Code einmalig im `<head>`-Bereich des Templates einfügen:
+
+```php
+<?= be_branding::getFrontendFavicons(rex_yrewrite::getCurrentDomain()->getId()) ?>
+```
+
+Das gibt automatisch den SVG-Link zuerst aus, gefolgt von den PNG/ICO-Fallbacks. Browser mit SVG-Support ignorieren die PNG-Links automatisch:
+
+```html
+<!-- Ausgabe im Frontend -->
+<link rel="icon" type="image/svg+xml" href="https://example.com/media/favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href=".../favicon-32x32-ff6400--1.png">
+<link rel="icon" type="image/png" sizes="16x16" href=".../favicon-16x16-ff6400--1.png">
+<link rel="apple-touch-icon" sizes="180x180" href=".../apple-touch-icon-180x180-ff6400--1.png">
+<link rel="shortcut icon" type="image/x-icon" href=".../favicon--1.ico">
+<meta name="theme-color" content="#ff6400">
+```
+
+### Backend-Favicon einfärben
+
+Unter `Konfiguration > Favicon im Backend einfärben` wird das REDAXO-Backend-Favicon in der Primärfarbe eingefärbt. Erfordert Imagick auf dem Server. Die generierten Icons werden direkt in der Konfigurationsseite als Vorschau angezeigt.
+
+---
+
+Migration von v1 auf v2
+------------------------
+
+Das Update ist **abwärtskompatibel**. Bestehende Konfigurationen werden beim ersten Backend-Aufruf nach dem Update automatisch migriert. Ein Protokoll der Migration erscheint einmalig als Hinweis im Backend.
+
+Neu in v2 hinzugekommene Einstellungen (Dark Mode, Custom CSS) starten leer und greifen nicht in bestehende Konfigurationen ein.
+
+---
+
+Voraussetzungen
+---------------
+
+* REDAXO >= 5.13
+* YRewrite >= 2.7
+* PHP >= 8.1
+* Imagick (optional, für Favicon-Einfärbung)
+
+---
+
+Änderungshistorie
+-----------------
+
+### Version 2.0.0
+
+**Neu:**
+* Dark Mode Support: separate Primär- und Sekundärfarbe für helles/dunkles Theme
+* Live-Farbvorschau: Farbänderungen sofort im Backend sichtbar
+* Hex-Farbcodes (`#rrggbb`) werden automatisch in rgba umgerechnet
+* Custom CSS-Feld: freies CSS pro Profil/Domain
+* Export/Import der Branding-Konfiguration als JSON (v1-kompatibel)
+* AVIF-Support für Login-Hintergrundbilder
+* Favicon-Vorschau in der Konfigurationsseite
+* Automatische Migration bestehender v1-Konfigurationen mit Protokoll
+
+**Verbessert:**
+* `getCurrentBeDomainId()` gecacht – kein wiederholter Datenbank-Aufruf pro Request mehr
+* CSS-Ausgabe aus `boot.php` in Klassenmethoden ausgelagert (`buildHeaderCss()`, `buildLoginCss()`)
+* `install.php` und `update.php` teilen gemeinsame Logik (`be_branding_setup.php`)
+* `uninstall.php` räumt jetzt alle Media-Manager-Typen vollständig auf
+* `checkExtension()` unterstützt WebP und AVIF
+* Farbwerte in der CSS-Ausgabe durch `rex_escape()` abgesichert (XSS-Fix)
+* HTTP_HOST wird vor der Datenbankabfrage validiert
+* Gradient-CSS-Fehler aus v1 behoben (fehlende Klammer bei `-moz-`/`-webkit-linear-gradient`)
+* Redundante `rgb2hex()`-Funktion bereinigt (BC-Alias auf `rgba2hex()`)
+* Veralteten REDAXO 5.12-Versionscheck entfernt (REX ≥ 5.13 ist Voraussetzung)
+* Alle Fragments: konsequentes `rex_escape()` für alle ausgegebenen Werte
+
+### Version 1.8.1
+
+=== 29.01.2024 ===
+
+Letzte Version vor REDAXO 5.16 – Anpassung der Splashscreen-URL in der README.
+
+### Version 1.8.0
 
 === 11.10.2022 ===
 
-<strong>Neu:</strong>
-* Multidomainfähigkeit: Es können nun pro in YRewrite angelegter Domain verschiedene Profile für das Backend  angelegt werden. Unterschiedliche Domains können nun also auch im Backend unterschiedlich aussehen.
- Beispiel: Wenn man als Redaxo-User*in im Backend unter <code>domain1.de/redaxo</code> eingeloggt ist, so kann dieses Backend ein anderes Branding bekommen als z.B. <code>domain2.de/redaxo</code>.
-Es werden auch die Backend-Favicons entsprechend des Profils gefärbt und der Frontend-Link im Header über be_style/customizer wird ebenfalls angepasst.
-* Favicon-Einstellungen pro Domain werden nun übersichtlicher in Tabs dargestellt.
+**Neu:**
+* Multidomainfähigkeit: Pro YRewrite-Domain ein eigenes Backend-Branding-Profil
+* Backend-Favicons werden pro Domain eingefärbt
+* Frontend-Link im Header (be_style/customizer) wird je nach Domain angepasst
+* Favicon-Einstellungen in Tabs dargestellt
 
-<strong>Fixed:</strong>
-* Logo des Projekts wird bei Installation im Unterordner jetzt korrekt angezeigt [@aeberhard](https://github.com/aeberhard)
-https://github.com/danspringer/be_branding/issues/31
+**Fixed:**
+* Logo bei Installation im Unterordner wird korrekt angezeigt ([@aeberhard](https://github.com/aeberhard))
 
-### Version 1.7.1 ###
+### Version 1.7.1
 
 === 12.08.2022 ===
 
-<strong>Fixed:</strong>
-* Scripts, die im pageHeader untergebracht sind, funktionieren nun wieder (z.B. Watson, Fontawesome-Picker oder Structure Tweaks, etc.): https://github.com/danspringer/be_branding/issues/28
+**Fixed:**
+* Scripts im pageHeader funktionieren wieder (Watson, Fontawesome-Picker, Structure Tweaks etc.)
 
-### Version 1.7 ###
+### Version 1.7
 
 === 07.01.2022 ===
 
-<strong>ACHTUNG - Breaking-Changes:</strong>
-* Die Version 1.7 ist nur noch kompatibel mit REDAXO ab Version 5.13.0
+**Breaking Changes:**
+* Nur noch kompatibel mit REDAXO ab 5.13.0
 * YRewrite wird vorausgesetzt
-* Die REX-Variable <code>REX_BE_BRANDING[type=fe_favicon]</code> wird in dieser Version nicht mehr berücksichtigt. Zur Ausgabe der Frontend-Favicons bitte den PHP-Code <code>be_branding::getFrontendFavicons( rex_yrewrite::getCurrentDomain()->getId() )</code> nutzen.
+* `REX_BE_BRANDING[type=fe_favicon]` entfernt – bitte `be_branding::getFrontendFavicons()` verwenden
 
-<strong>Fixed:</strong>
-* Anpassungen an die neue REDAXO-Backend-Struktur ab Version 5.13
+**Neu:**
+* Frontend-Favicons für Multidomain-Installationen mit YRewrite
 
-<strong>Neu:</strong>
-* Frontend-Favicons nun auch für Multidomain-Installationen mit YRewrite
-* Hilfedatei ergänzt
-
-### Version 1.6-beta2 ###
-
-=== 05.05.2021 ===
-* Nach Update, Installation oder Reinstallation wird der Template-Cache geleert, damit die Ersetzung von <code>REX_BE_BRANDING[type=fe_favicon]</code> im Frontend korrekt funktioniert.
-
-### Version 1.6-beta ###
+### Version 1.6-beta
 
 === 04.05.2021 ===
-* <strong>NEU:</strong> Mehr Optionen zur Einstellung des neuen REX-Loginscreens (Eigenes Hintergrundbild, REDAXO-Standard-HG-Bild, Primärfarbe, Sekundärfarbe oder Verlauf wählbar)
-* Umstellung auf eigene Redaxo-Variable <code>REX_BE_BRANDING[]</code> anstatt <code>str_replace()</code>
-* Auslagerung der Funktionen in der boot.php in die Klasse <code>be_branding</code>
-* Redaxo-Cache wird nach Änderung des Frontend-Favicon gelöscht
-* Fallback-Hintergrundbild im Loginscreen wird nun nur noch bei mobiler Ansicht angezeigt, nicht bei Desktop-Version, da es zu einem kurzen Zitter-Effekt gekommen ist
 
-### Version 1.5.1 ###
+* Mehr Optionen für den Login-Screen (eigenes Bild, Primär-/Sekundärfarbe, Verlauf, REDAXO-Standard)
+* Umstellung auf eigene REDAXO-Variable `REX_BE_BRANDING[]`
 
-=== 07.04.2021 ===
-* Anpassung background-properties für #rex-page-login: Hintergrund-Bild für Login-Screen nun auch bei mobiler-Anicht
-* Anpassung Screenshot-URL in README.md
+### Ältere Versionen
 
-### Version 1.5 ###
+Versionshistorie < 1.6 siehe [GitHub Releases](https://github.com/medienfeuer/be_branding/releases).
 
-=== 26.03.2021 ===
-* Anpassung an neuen Login-Screen ab REDAXO 5.12
-* Hintergrundbild des neuen Login-Screens (REX 5.12) kann nun bequem im AddOn eingestellt werden
-* Media-Manager-Types für JPG und WebP werden bei Reinstall und Update in REX 5.12 angelegt.
-* Credits wurden nicht mehr angezeigt => fixed Danke @helpy
-
-### Version 1.4.2 ###
-
-=== 28.09.2020 ===
-* Bei einem Reinstall wurde versehentlich noch ein Ordner "favicon" im Root generiert.
-* vendor/favicon/src/FaviconGenerator.php entfernt.
-* Mögliches Überbleibsel im Root (favicon-Ordner) wir bei Reinstall und Update gelöscht.
-
-### Version 1.4.1 ###
-
-=== 28.09.2020 ===
-* Umstellung auf Fragments, wo möglich.
-* Frontend-Favicons werden nun nur noch beim Speichern auf der Einstellungsseite für die Frontend-Favicons generiert.
-
-### Version 1.4 ###
-
-=== 24.09.2020 ===
-* Neu: Ein <code>favicon.ico</code> wird zur Sicherheit noch ins Root-Verzeichnis der Website gelegt, da manche Suchmaschinen einfach nach dem Standardpfad schauen.
-* Umstellung auf die Klasse <code>fe_favicon</code> zur Generierung der Icons und zur Ausgabe des HTML-Codes.
-* Die Frontend-Favicons werden nun nur noch generiert, wenn Sie noch nicht im Assets-Ordner des AddOns existieren, nicht mehr bei jedem Seitenaufruf.
-* Die <code>.settings</code>-Datei für die Frontend-Favicons wird bei einem Update oder Reinstall gelöscht, falls sie aus früheren Versionen noch fehlerhaft war.
-
-### Version 1.3.4 ###
-
-=== 22.09.2020 ===
-* Behebt die Warnings bzgl. <code>array_key_exists()</code> in FE_FaviconGenerator.php - Danke an Serhan Sidan @ <a href="https://www.mattomedia.de">Mattomedia.de</a>
-* Anpassung an Imageick-Version zur korrekten Generierung von Favicons.
-
-### Version 1.3.3 ###
-
-=== 13.03.2020 ===
-* Behebt einen Fehler der Frontend-Favicons der Version 1.3.2. Korrigiert die Einbindung der Color-Pickers.
-
-### Version 1.3.2 ###
-
-=== 12.03.2020 ===
-* Backend-Favicon-Update für Rex 5.10.0. Diese Verson korrigiert die Einbindung der gefärbten Icons im Backend und berücksichtigt die verschiedenen Einbindungsarten der Versionen 5.0-5.7, von 5.7-5.8, 5.8.0 und ab 5.8.1 bis zu 5.10.0.
-
-### Version 1.3.1 ###
-
-=== 08.11.2019 ===
-* Backend-Favicon-Update für Rex 5.8.1. In der Redaxo Version 5.8.1 wurden die Favicons geändert und anders eingebunden. Diese Verson korrigiert die Einbindung der gefärbten Icons im Backend und berücksichtigt die verschiedenen Einbindungsarten der Versionen 5.0-5.7, von 5.7-5.8, 5.8.0 und ab 5.8.1.
-
-### Version 1.3 ###
-
-=== 03.09.2019 ===
-* Backend-Favicon-Update für Rex 5.8.0. In der Redaxo Version 5.8.0 wurden die Favicons geändert und anders eingebunden. Diese Verson korrigiert die Einbindung der gefärbten Icons im Backend und berücksichtigt die verschiedenen Einbindungsarten der Versionen 5.0-5.7, von 5.7-5.8 und ab 5.8.
-* Fixed: SVG-Branding-Logo wurde nicht geladen, wenn Frontend durch maintenance-AddOn gesperrt war. Danke @helpy
-
-### Version 1.2 ###
-
-=== 28.06.2019 ===
-* rex::isFrontend() entfernt, da die Funktion erst ab REDAXO 5.7 verfügbar ist und niedrigere Versionen beim Update des AddOns einen Whoops bekommen haben.
-* Meldungen angepasst, wenn ImageMagick auf dem Server nicht verfügbar ist und man Favicons für das Frontend generieren wollte.
-* SVG-Unterstützung für das Projekt-Logo im Backend
-
-### Version 1.1 ###
-
-=== 11.05.2019 ===
-* NEU: Favicon-Generator fürs Frontend.
-* Unter dem neuen Menüpunkt Frontend-Favicon kann eine Datei aus dem Medienpool ausgewählt werden, die dann automatisch in die jeweiligen Formate für Favicons generiert wird.
-* Ebenfalls kann die Tile-Color für Android-Geräte und Windows-Tiles angegeben werden (Das Favicon wird dabei nicht gefärbt).
-* Die Einbindung ins Frontend ist mittels dem Snippet REX_BE_BRANDING[type=fe_favicon] im Template im <head>-Bereich möglich.
-
-### Version 1.0.9 ###
-
-=== 19.03.2019 ===
-* Wenn Redaxo in einem Unterordner installiert ist, gab es einen Fehler, wenn man die Option für das Färben der Favicons aktiviert hatte.
-* Tile-Color für Android Endgeräte ergänzt.
-* Pfade für Einbindung der Favicons gefixt.
-
-### Version 1.0.8 ###
-
-=== 13.03.2019 ===
-* Favicon-Update für Rex 5.7.0. In der Redaxo Version 5.7.0 wurden die Favicons geändert und anders eingebunden. Diese Verson korrigiert die Einbindung der gefärbten Icons je nachdem, ob die Redaxo-Version größer oder kleiner als V 5.7.0 ist.
-
-### Version 1.0.7 ###
-
-=== 26.02.2019 ===
-* Der Ordner assets/favicon und die Datei assets/favicon/.original wurden ergänzt. Ohne den Ordner bzw. die Datei gibt es einen Fehler, wenn man das Favicon färben möchte.
-
-### Version 1.0.6 ###
-
-=== 19.10.2018 ===
-* Der Servername für FavIcons für Android wurde noch mit R4-Methoden angeben und wurde auf R5 korrigiert.
-
-### Version 1.0.5 ###
-
-=== 22.08.2018 ===
-* Diverse Notices gefixt
-
-### Version 1.0.4 ###
-
-=== 21.08.2018 ===
-* Favicon im Backend kann gefärbt werden (Imagemagick benötigt)
-* Übersichtlichere Aufteilung in Konfiguration und Branding-Page
-* Umgestellt auf includeCurrentPageSubPath
-* jQuery Colorpicker ist keine Pflicht mehr. Wenn ui_tools/jquery-minicolors installiert ist, wird es verwendet, ansonsten normales input-Feld oder selbst mitglieferter jQuery-Colorpicker
-* In der Konfiguration kann aus den installierten Editoren der bevorzugte festgelegt werden (zur Zeit: ckEditor, ckEditor 5, Markitup / Markdown o. Textile, redactor 2, tinymce4.
-
-### Version 1.0.3 ###
-
-=== 05.06.2018 ===
-* Bugfix Kompatibilität mit Quick Navigation
-
+---
 
 Autor
--------
-Daniel Springer, Medienfeuer<br>
-<a href="https://www.medienfeuer.de">www.medienfeuer.de</a>
+-----
+
+Daniel Springer, Medienfeuer
+[www.medienfeuer.de](https://www.medienfeuer.de)
+
+---
 
 Credits
 -------
-### border ###
-"border" stammt aus dem (mittlerweile nicht mehr weitergeführten) AddOn "out5" von Oliver Kreischer / FOR. Vielen Dank!
 
-### hex2rgb, rgb2hex und makeFavIco ###
-Die Funktionen zur Umwandlung von RGB-, bzw. HEX-Werten und zum Färben des PNGs stammen von Jan Kristinus aus dem R4-AddON "Backend Utilities / Colorizer" von RexDude.
+**border**
+Ursprünglich aus dem AddOn „out5" von Oliver Kreischer / FOR.
 
-### FaviconGenerator ###
-Class generation favicon for browsers and devices Android, Apple, Windows and display of html code. It supports a large number of settings such as margins, color, compression, three different methods of crop and screen orientation.
-* @author    Dmitry Mamontov <d.slonyara@gmail.com>
-* @copyright 2015 Dmitry Mamontov <d.slonyara@gmail.com>
-* @license   http://www.opensource.org/licenses/BSD-3-Clause  The BSD 3-Clause License
-* @version   Release: 1.0.0
-* @link      https://github.com/dmamontov/favicon
-* @since     Class available since Release 1.0.0
+**hex2rgb, rgb2hex, makeFavIcon**
+Basierend auf Funktionen von Jan Kristinus aus dem R4-AddOn „Backend Utilities / Colorizer" von RexDude.
 
-### jQuery MiniColors ###
-A tiny color picker built on jQuery
-Developed by Cory LaViska for A Beautiful Site, LLC
+**FaviconGenerator**
+Class generation favicon for browsers and devices.
+* Author: Dmitry Mamontov <d.slonyara@gmail.com>
+* License: [BSD 3-Clause](http://www.opensource.org/licenses/BSD-3-Clause)
+* [github.com/dmamontov/favicon](https://github.com/dmamontov/favicon)
 
-Licensed under the MIT license: http://opensource.org/licenses/MIT
-
-Demo & Documentation
-http://labs.abeautifulsite.net/jquery-minicolors/
-
-
+**jQuery MiniColors**
+A tiny color picker built on jQuery.
+Developed by Cory LaViska for A Beautiful Site, LLC.
+Licensed under the [MIT License](http://opensource.org/licenses/MIT).
+[Demo & Dokumentation](http://labs.abeautifulsite.net/jquery-minicolors/)

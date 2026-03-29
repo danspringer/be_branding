@@ -1,183 +1,183 @@
 <?php
-$editor_array = array();
-array_push($editor_array, 'Keinen Editor nutzen');
 
-if (rex_addon::get('ckeditor')->isAvailable()) {
-    array_push($editor_array, 'ckeditor');
-}
-
-if (rex_addon::get('cke5')->isAvailable()) {
-    array_push($editor_array, 'cke5');
-}
-
-if (rex_addon::get('markitup')->isAvailable()) {
-    array_push($editor_array, 'markitup markdown');
-}
-
-if (rex_addon::get('markitup')->isAvailable()) {
-    array_push($editor_array, 'markitup textile');
-}
-
-if (rex_addon::get('redactor2')->isAvailable()) {
-    array_push($editor_array, 'redactor2');
-}
-
-if (rex_addon::get('tinymce4')->isAvailable()) {
-    array_push($editor_array, 'tinymce4');
-}
-
+/** @var rex_addon $this */
 
 $content = '';
 $buttons = '';
 
-
+// ─────────────────────────────────────────────────────────────────────────────
 // Einstellungen speichern
-if (rex_post('formsubmit', 'string') == '1') {
+// ─────────────────────────────────────────────────────────────────────────────
+if (rex_post('formsubmit', 'string') === '1') {
     $this->setConfig(rex_post('baseconfig', [
-        ['editor', 'string'],
-        ['showborder', 'int'],
-        ['coloricon', 'int'],
-        ['colorpicker', 'int'],
-		['domainprofiles_enabled', 'int'],
-
+        ['editor',                'string'],
+        ['showborder',            'int'],
+        ['coloricon',             'int'],
+        ['colorpicker',           'int'],
+        ['domainprofiles_enabled','int'],
     ]));
 
-
-    // Generierte Favicons loeschen, wenn gespeichert wurde, damit Sie frisch generiert werden koennen
-    $files = glob(rex_path::base('assets/addons/be_branding/favicon/*')); // get all file names
-    foreach ($files as $file) { // iterate files
-        if (is_file($file))
-            unlink($file); // delete file
+    // Generierte Favicons invalidieren
+    foreach (glob(rex_path::base('assets/addons/be_branding/favicon/*')) ?: [] as $file) {
+        if (is_file($file)) {
+            unlink($file);
+        }
     }
 
-    echo rex_view::success('Grundeinstellungen des AddOns gespeichert');
+    echo rex_view::success('Grundeinstellungen gespeichert.');
 }
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Editor-Optionen ermitteln
+// ─────────────────────────────────────────────────────────────────────────────
+$editorOptions = ['Keinen Editor nutzen'];
+$editorMap = [
+    'ckeditor'  => 'ckeditor',
+    'cke5'      => 'cke5',
+    'markitup'  => ['markitup markdown', 'markitup textile'],
+    'redactor2' => 'redactor2',
+    'tinymce4'  => 'tinymce4',
+];
+foreach ($editorMap as $addon => $values) {
+    if (rex_addon::get($addon)->isAvailable()) {
+        foreach ((array)$values as $v) {
+            $editorOptions[] = $v;
+        }
+    }
+}
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Domainprofile
+// ─────────────────────────────────────────────────────────────────────────────
 $content .= '<fieldset><legend>Domainprofile</legend>';
-$content .= '<div class="well">Wenn die Option "Domainprofile" aktiviert ist, steht für jede in YRewrite angelegte Domain ein eigenes Backend-Branding-Profil zur Verfügung.<br>Das bedeutet, dass das Backend je nach Login-URL (also z.B. <code>deinedomain.de/redaxo</code> oder <code>deinezweitedomain.de/redaxo</code>) unterschiedlich aussehen kann.</div>';
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be-branding-domainprofiles_enabled">Domainprofile aktivieren?</label>';
-$n['field'] = '<input type="checkbox" id="be-branding-domainprofiles_enabled" name="baseconfig[domainprofiles_enabled]" value="1" ' . ($this->getConfig('domainprofiles_enabled') ? 'checked="checked" ' : '') . ' />';
-$formElements[] = $n;
+$content .= '<div class="well">Wenn aktiviert, hat jede YRewrite-Domain ein eigenes Branding-Profil.'
+    . ' Das Backend sieht je nach Login-URL (<code>domain-a.de/redaxo</code> oder <code>domain-b.de/redaxo</code>)'
+    . ' unterschiedlich aus.</div>';
 
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/form.php');
-
+$n = [
+    'label' => '<label for="be-branding-domainprofiles_enabled">Domainprofile aktivieren?</label>',
+    'field' => '<input type="checkbox" id="be-branding-domainprofiles_enabled"'
+        . ' name="baseconfig[domainprofiles_enabled]" value="1"'
+        . ($this->getConfig('domainprofiles_enabled') ? ' checked="checked"' : '') . ' />',
+];
+$frag = new rex_fragment();
+$frag->setVar('elements', [$n], false);
+$content .= $frag->parse('core/form/form.php');
 $content .= '</fieldset>';
 
-
-$content .= '<fieldset><legend>Colorpicker f&uuml;r Farbauswahlfelder</legend>';
-
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be-branding-colorpicker">Colorpicker in Farbauswahl verwenden?</label>';
-$n['field'] = '<input type="checkbox" id="be-branding-colorpicker" name="baseconfig[colorpicker]" value="1" ' . ($this->getConfig('colorpicker') ? 'checked="checked" ' : '') . ' />';
-$formElements[] = $n;
-
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/form.php');
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Colorpicker
+// ─────────────────────────────────────────────────────────────────────────────
+$content .= '<fieldset><legend>Colorpicker für Farbauswahl</legend>';
+$n = [
+    'label' => '<label for="be-branding-colorpicker">Colorpicker verwenden?</label>',
+    'field' => '<input type="checkbox" id="be-branding-colorpicker"'
+        . ' name="baseconfig[colorpicker]" value="1"'
+        . ($this->getConfig('colorpicker') ? ' checked="checked"' : '') . ' />',
+];
+$frag = new rex_fragment();
+$frag->setVar('elements', [$n], false);
+$content .= $frag->parse('core/form/form.php');
+$content .= '<p class="help-block rex-note" style="margin-top:4px">'
+    . 'Tipp: Hex-Farbcodes (#ff6400) werden beim Verlassen des Feldes automatisch in rgba umgerechnet.</p>';
 $content .= '</fieldset>';
 
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Text-Editor
+// ─────────────────────────────────────────────────────────────────────────────
 $content .= '<fieldset><legend>Text-Editor</legend>';
-
-$formElements = array();
-$elements = array();
-$elements['label'] = '
-  <label for="rex-mform-config-template">Editor f&uuml;r Text-Eingabe w&auml;hlen</label>
-';
-
-// create select
 $select = new rex_select;
 $select->setId('rex-be_branding-baseconfig-editor');
 $select->setSize(1);
 $select->setAttribute('class', 'form-control');
 $select->setName('baseconfig[editor]');
-// add options
-foreach ($editor_array as $editor) {
-    $select->addOption($editor, $editor);
+foreach ($editorOptions as $opt) {
+    $select->addOption($opt, $opt);
 }
 $select->setSelected($this->getConfig('editor'));
-$elements['field'] = $select->get();
-$formElements[] = $elements;
-// parse select element
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/form.php');
 
+$n = ['label' => '<label for="rex-be_branding-baseconfig-editor">Editor für Text-Eingabe</label>',
+      'field' => $select->get()];
+$frag = new rex_fragment();
+$frag->setVar('elements', [$n], false);
+$content .= $frag->parse('core/form/form.php');
 $content .= '</fieldset>';
 
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Backend-Favicon
+// ─────────────────────────────────────────────────────────────────────────────
 $content .= '<fieldset><legend>Backend-Favicon</legend>';
 
-// Nur wenn Imagemagick verf�gbar ist anzeigen
-if (class_exists('Imagick') === true) {
-    $formElements = [];
-    $n = [];
-    $n['label'] = '<label for="be-branding-coloricon">Favicon im Backend f&auml;rben?</label>';
-    $n['field'] = '<input type="checkbox" id="be-branding-coloricon" name="baseconfig[coloricon]" value="1" ' . ($this->getConfig('coloricon') ? 'checked="checked" ' : '') . ' />';
-    $formElements[] = $n;
+if (class_exists('Imagick')) {
+    $n = [
+        'label' => '<label for="be-branding-coloricon">Favicon im Backend einfärben?</label>',
+        'field' => '<input type="checkbox" id="be-branding-coloricon"'
+            . ' name="baseconfig[coloricon]" value="1"'
+            . ($this->getConfig('coloricon') ? ' checked="checked"' : '') . ' />',
+    ];
+    $frag = new rex_fragment();
+    $frag->setVar('elements', [$n], false);
+    $content .= $frag->parse('core/form/form.php');
 
-    $fragment = new rex_fragment();
-    $fragment->setVar('elements', $formElements, false);
-    $content .= $fragment->parse('core/form/form.php');
+    // Favicon-Vorschau: bereits generierte Icons anzeigen
+    $faviconDir = rex_path::base('assets/addons/be_branding/favicon/');
+    $faviconFiles = glob($faviconDir . 'favicon-original-*.png') ?: [];
+    if (!empty($faviconFiles)) {
+        $content .= '<div style="margin-top:8px">';
+        $content .= '<p class="text-muted" style="font-size:12px">Zuletzt generierte Favicons:</p>';
+        $content .= '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">';
+        foreach (array_slice($faviconFiles, 0, 6) as $file) {
+            $url  = rex_url::base('assets/addons/be_branding/favicon/' . basename($file));
+            $hex  = '#' . str_replace(['favicon-original-', '.png'], '', basename($file));
+            $content .= '<div style="text-align:center">'
+                . '<img src="' . rex_escape($url) . '?v=' . filemtime($file) . '"'
+                . ' alt="Favicon ' . rex_escape($hex) . '"'
+                . ' style="width:32px;height:32px;border:1px solid #ddd;border-radius:4px;display:block"/>'
+                . '<small style="font-size:10px;color:#888">' . rex_escape($hex) . '</small>'
+                . '</div>';
+        }
+        $content .= '</div></div>';
+    }
+} else {
+    $content .= '<p><code>Imagick</code> ist auf diesem Server nicht verfügbar &ndash;'
+        . ' Favicons können nicht automatisch eingefärbt werden.</p>';
 }
 
-if (class_exists('Imagick') === false) {
-    $content .= '<p><code>Imagemagick</code> ist nicht auf dem Server installiert, deshalb k&ouml;nnen keine Favicons generiert werden.</p>';
-}
 $content .= '</fieldset>';
 
-
+// ─────────────────────────────────────────────────────────────────────────────
+// Top-Border
+// ─────────────────────────────────────────────────────────────────────────────
 $content .= '<fieldset><legend>Top-Border</legend>';
-$formElements = [];
-$n = [];
-$n['label'] = '<label for="be-branding-showborder">Top-Border anzeigen?</label>';
-$n['field'] = '<input type="checkbox" id="be-branding-showborder" name="baseconfig[showborder]" value="1" ' . ($this->getConfig('showborder') ? 'checked="checked" ' : '') . ' />';
-$formElements[] = $n;
-
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$content .= $fragment->parse('core/form/form.php');
-
-
+$n = [
+    'label' => '<label for="be-branding-showborder">Top-Border anzeigen?</label>',
+    'field' => '<input type="checkbox" id="be-branding-showborder"'
+        . ' name="baseconfig[showborder]" value="1"'
+        . ($this->getConfig('showborder') ? ' checked="checked"' : '') . ' />',
+];
+$frag = new rex_fragment();
+$frag->setVar('elements', [$n], false);
+$content .= $frag->parse('core/form/form.php');
 $content .= '</fieldset>';
 
+// ─────────────────────────────────────────────────────────────────────────────
+// Speichern-Button
+// ─────────────────────────────────────────────────────────────────────────────
+$n = ['field' => '<button class="btn btn-save rex-form-aligned" type="submit" name="save">Speichern</button>'];
+$frag = new rex_fragment();
+$frag->setVar('elements', [$n], false);
+$buttons = '<fieldset class="rex-form-action">' . $frag->parse('core/form/submit.php') . '</fieldset>';
 
-// Save-Button
-$formElements = [];
-$n = [];
-$n['field'] = '<button class="btn btn-save rex-form-aligned" type="submit" name="save" value="Speichern">Speichern</button>';
-$formElements[] = $n;
+// ─────────────────────────────────────────────────────────────────────────────
+// Ausgabe
+// ─────────────────────────────────────────────────────────────────────────────
+$frag = new rex_fragment();
+$frag->setVar('class', 'edit');
+$frag->setVar('title', 'Grundeinstellungen');
+$frag->setVar('body', $content, false);
+$frag->setVar('buttons', $buttons, false);
 
-$fragment = new rex_fragment();
-$fragment->setVar('elements', $formElements, false);
-$buttons = $fragment->parse('core/form/submit.php');
-$buttons = '
-<fieldset class="rex-form-action">
-    ' . $buttons . '
-</fieldset>
-';
-
-// Ausgabe Formular
-$fragment = new rex_fragment();
-$fragment->setVar('class', 'edit');
-$fragment->setVar('title', 'Grundeinstellungen');
-$fragment->setVar('body', $content, false);
-$fragment->setVar('buttons', $buttons, false);
-$output = $fragment->parse('core/page/section.php');
-
-$output = '
-<form action="' . rex_url::currentBackendPage() . '" method="post">
-<input type="hidden" name="formsubmit" value="1" />
-    ' . $output . '
-</form>
-';
-
-echo $output;
-?>
+echo '<form action="' . rex_url::currentBackendPage() . '" method="post">'
+    . '<input type="hidden" name="formsubmit" value="1">'
+    . $frag->parse('core/page/section.php')
+    . '</form>';

@@ -1,5 +1,5 @@
 package: be_branding
-version: '1.8.1'
+version: '2.0.0-dev'
 author: Medienfeuer, Daniel Springer
 supportpage: https://github.com/medienfeuer/be_branding
 
@@ -8,13 +8,13 @@ page:
     perm: be_branding[]
     icon: rex-icon fa-fire
     subpages:
-        infos: { title: 'Infos', perm: 'be_branding[help]',subPath: README.md  } # config-Seite mit separaten Rechten
-        branding: { title: 'Backend Branding', perm: 'be_branding[branding]', icon: rex-icon fa-fire } # Branding-Seite mit separaten Rechten
-        fe_favicon: { title: 'Frontend-Favicons', perm: 'be_branding[fe_favicon]', icon: rex-icon fa-star } # Frontend-Favicon
-        config: { title: 'Konfiguration', perm: 'be_branding[config]', icon: rex-icon fa-wrench } # config-Seite mit separaten Rechten
-        credits: { title: 'Credits', perm: 'be_branding[credits]', icon: rex-icon fa-copyright, itemclass: pull-right} # config-Seite mit separaten Rechten
+        infos:      { title: 'Infos',              perm: 'be_branding[help]',      subPath: README.md }
+        branding:   { title: 'Backend Branding',   perm: 'be_branding[branding]',  icon: rex-icon fa-fire }
+        fe_favicon: { title: 'Frontend-Favicons',  perm: 'be_branding[fe_favicon]',icon: rex-icon fa-star }
+        config:     { title: 'Konfiguration',      perm: 'be_branding[config]',    icon: rex-icon fa-wrench }
+        credits:    { title: 'Credits',            perm: 'be_branding[credits]',   icon: rex-icon fa-copyright, itemclass: pull-right }
 
 requires:
-    redaxo: '>=5.13' # benötigt mindestens REDAXO 5.13
+    redaxo: '>=5.13'
     packages:
         yrewrite: '>=2.7'
