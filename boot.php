@@ -103,7 +103,7 @@ if ($this->getConfig('agency') && rex_be_controller::getCurrentPage() === 'credi
 $currentSubPage = rex_be_controller::getCurrentPagePart(2);
 if ($this->getConfig('colorpicker')
     && !rex_addon::get('ui_tools')->getPlugin('jquery-minicolors')->isAvailable()
-    && in_array($currentSubPage, ['branding', 'fe_favicon'], true)) {
+    && in_array($currentSubPage, ['be_branding'], true)) {
 
     rex_view::addCssFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.css?v=' . $this->getVersion()));
     rex_view::addJsFile($this->getAssetsUrl('jquery-minicolors/jquery.minicolors.min.js?v=' . $this->getVersion()));
