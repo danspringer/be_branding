@@ -391,6 +391,66 @@ class be_branding
     // Favicon
     // ─────────────────────────────────────────────────────────────
 
+    /**
+     * Generiert ein invertiertes Backend-Favicon als SVG:
+     * farbige quadratische Fläche mit dem REDAXO-R in Weiß.
+     *
+     * Kein Imagick, kein GD nötig – reines SVG.
+     * Wird beim Speichern der Branding-Einstellungen aufgerufen.
+     *
+     * Gespeichert unter: assets/addons/be_branding/favicon/favicon-inverted-{hex}.svg
+     *
+     * @param  string $hex       Hintergrundfarbe als #rrggbb
+     * @param  string $domainSuffix  z.B. '--3' oder ''
+     * @return string|false      Pfad zur generierten Datei oder false bei Fehler
+     */
+    /**
+     * Generiert ein invertiertes Backend-Favicon als SVG:
+     * farbige quadratische Fläche mit dem REDAXO-R (weißes statisches Asset).
+     *
+     * Kein Imagick, kein GD, kein SVG-Parsing – das R kommt als fertiges
+     * Asset aus assets/img/favicon-r.svg und wird via <image> eingebettet.
+     *
+     * Gespeichert unter: assets/addons/be_branding/favicon/favicon-inverted-{hex}{suffix}.svg
+     *
+     * @param  string $hex          Hintergrundfarbe als #rrggbb
+     * @param  string $domainSuffix z.B. '--3' oder ''
+     * @return string|false         Pfad zur generierten Datei oder false bei Fehler
+     */
+    public static function generateInvertedFavicon(string $hex, string $domainSuffix = ''): string|false
+    {
+        if (!$hex || !preg_match('/^#[0-9a-fA-F]{6}$/', $hex)) {
+            return false;
+        }
+
+        $hexEsc = htmlspecialchars($hex, ENT_XML1);
+
+        // Absoluter URL zum weißen R-Asset (muss vom Browser aufrufbar sein)
+        $redaxoR = '<path fill="#ffffff" d="M47.928,0.575L7.693,0.592L0,77.033h19.478l2.332-23.125h18.772l10.255,23.125h21.2L60.487,50.99 c10.598-5.783,14.229-13.92,15.102-23.823C76.695,14.604,66.008,0.575,47.928,0.575z M46.456,34.529H23.762l1.477-14.653 c8.459,0.043,19.314,0.102,23.173,0.102c4.981,0,7.741,3.41,7.741,6.984C56.153,31.677,52.171,34.529,46.456,34.529z"/>';
+        $svg = <<<SVG
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100">
+                  <rect width="100" height="100" rx="16" fill="{$hexEsc}"/>
+                      <g transform="translate(50,60) scale(0.95) translate(-35,-50)">
+                        {$redaxoR}
+                      </g>
+                </svg>
+                SVG;
+
+        $filename  = 'favicon-inverted-' . ltrim($hex, '#') . ($domainSuffix ?: '') . '.svg';
+        $targetDir = rex_path::addonAssets('be_branding', 'favicon/');
+
+        if (!is_dir($targetDir)) {
+            rex_dir::create($targetDir);
+        }
+
+        $targetPath = $targetDir . $filename;
+        if (file_put_contents($targetPath, $svg) === false) {
+            return false;
+        }
+
+        return $targetPath;
+    }
+
     public static function makeFavIcon(string $hexColor, string $path): void
     {
         $rgbColor = self::hex2rgb($hexColor);
@@ -519,9 +579,11 @@ class be_branding
 
         // Sicherstellen dass neue Keys mit Defaultwerten existieren
         $newDefaults = [
-            'color1_dark' => '',
-            'color2_dark' => '',
-            'custom_css'  => '',
+            'color1_dark'       => '',
+            'color2_dark'       => '',
+            'custom_css'        => '',
+            'be_favicon_setting'=> '',
+            'be_favicon_invert' => 0,
         ];
         foreach ($newDefaults as $key => $default) {
             if ($addon->getConfig($key) === null) {

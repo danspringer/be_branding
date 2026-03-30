@@ -15,6 +15,11 @@ if (!rex::isBackend()) {
     return;
 }
 
+// Asset einbinden
+if (rex_be_controller::getCurrentPage() == 'system/be_branding/branding') {
+    rex_view::addJsFile($this->getAssetsUrl('js/be_branding.js?v=' . $this->getVersion()));
+}
+
 // ─────────────────────────────────────────────────────────────────────────────
 // Logo im Login-Screen (vor dem Login gibt es kein Header-Fragment)
 // ─────────────────────────────────────────────────────────────────────────────

@@ -95,38 +95,79 @@
     }
     ?>
     <?php
-    // BE-Favicon nur färben, wenn Imagemagick verfügbar ist
-    if(class_exists('Imagick') === true) {
-        if(rex_addon::get('be_branding')->getConfig('coloricon') == 1) {
+    // ── Backend-Favicon ──────────────────────────────────────────────────────
+    // Imagick nötig. Farbe und Invertierung werden pro Domain konfiguriert.
+    if (class_exists('Imagick')) {
+        $addon         = rex_addon::get('be_branding');
+        $domainSuffix  = be_branding::getCurrentBeDomainId(true);
+        $faviconSetting = (string) $addon->getConfig('be_favicon_setting' . $domainSuffix);
+        $faviconInvert  = (bool)   $addon->getConfig('be_favicon_invert'  . $domainSuffix);
 
-            $addon = rex_addon::get('be_branding');
-            // Initiale Farbe für R setzen und als neues png abspeichern
-            be_branding::makeFavIcon(be_branding::rgba2hex($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true))), rex_path::addon('be_branding') . 'vendor/favicon/');
-            // aus dem png dann die Favicons generieren
-            //https://github.com/dmamontov/favicon reinholen
-            require rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
-            $fav = new BE_FaviconGenerator(rex_path::addonAssets('be_branding') . 'favicon/favicon-original-' . str_replace('#', '', be_branding::rgba2hex($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true)))) . '.png');
+        // Farbe ermitteln je nach Einstellung (primary / secondary / leer = Standard)
+        $faviconHex = '';
+        if ($faviconSetting === 'primary') {
+            $faviconHex = be_branding::rgba2hex((string) $addon->getConfig('color1' . $domainSuffix));
+        } elseif ($faviconSetting === 'secondary') {
+            $faviconHex = be_branding::rgba2hex((string) $addon->getConfig('color2' . $domainSuffix));
+        }
 
-            $fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
+        if ($faviconHex !== '' && $faviconHex !== '#') {
 
-            $fav->setConfig(array(
-                'apple-background' => substr($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true)), 1, 6),
-                'apple-margin' => 0,
-                'android-background' => substr($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true)), 1, 6),
-                'android-margin' => 0,
-                'android-name' => rex::getServerName(),
-                'android-url' => rex::getServer(),
-                'android-orientation' => BE_FaviconGenerator::ANDROID_PORTRAIT,
-                'ms-background' => substr($addon->getConfig('color1'), 1, 6)
-            ));
+            if ($faviconInvert) {
+                // ── Invertierter Modus: vorberechnetes SVG direkt einbinden ──
+                // Datei wird beim Speichern der Branding-Einstellungen generiert.
+                $svgFilename = 'favicon-inverted-' . ltrim($faviconHex, '#')
+                    . ($domainSuffix ? $domainSuffix : '') . '.svg';
+                $svgPath = rex_path::addonAssets('be_branding', 'favicon/' . $svgFilename);
 
-            // Erst die BE-Branding Favicons ausgeben
-            echo $fav->createAllAndGetHtml(be_branding::rgba2hex($addon->getConfig('color1'. be_branding::getCurrentBeDomainId(true))));
-            // Jetzt die Redaxo-Favicons löschen, aber die Scripts im pageHeader beibehalten
-            echo be_favicon::removeRexCoreFavicons($this->pageHeader,"link","rel","icon");
+                // Fallback: on-the-fly generieren falls Datei noch nicht existiert
+                if (!file_exists($svgPath)) {
+                    be_branding::generateInvertedFavicon($faviconHex, (string) $domainSuffix);
+                }
+
+                if (file_exists($svgPath)) {
+                    $svgUrl = rex_url::addonAssets('be_branding', 'favicon/' . $svgFilename);
+                    echo '<link rel="icon" type="image/svg+xml" href="' . rex_escape($svgUrl) . '">';
+                    echo be_favicon::removeRexCoreFavicons($this->pageHeader, 'link', 'rel', 'icon');
+                } else {
+                    echo $this->pageHeader;
+                }
+
+            } else {
+                // ── Normaler Modus: Imagick-Weg (gefärbtes Original-PNG) ──
+                be_branding::makeFavIcon($faviconHex, rex_path::addon('be_branding') . 'vendor/favicon/');
+
+                $faviconPng = rex_path::addonAssets('be_branding')
+                    . 'favicon/favicon-original-' . ltrim($faviconHex, '#') . '.png';
+
+                if (file_exists($faviconPng)) {
+                    require_once rex_path::addon('be_branding') . 'vendor/favicon/src/BE_FaviconGenerator.php';
+
+                    $fav = new BE_FaviconGenerator($faviconPng);
+                    $fav->setCompression(BE_FaviconGenerator::COMPRESSION_VERYHIGH);
+                    $fav->setConfig([
+                        'apple-background'    => 'ffffff',
+                        'apple-margin'        => 0,
+                        'android-background'  => 'ffffff',
+                        'android-margin'      => 0,
+                        'android-name'        => rex::getServerName(),
+                        'android-url'         => rex::getServer(),
+                        'android-orientation' => BE_FaviconGenerator::ANDROID_PORTRAIT,
+                        'ms-background'       => 'ffffff',
+                    ]);
+
+                    echo $fav->createAllAndGetHtml($faviconHex);
+                    echo be_favicon::removeRexCoreFavicons($this->pageHeader, 'link', 'rel', 'icon');
+                } else {
+                    echo $this->pageHeader;
+                }
+            }
+
         } else {
             echo $this->pageHeader;
         }
+    } else {
+        echo $this->pageHeader;
     }
     ?>
 

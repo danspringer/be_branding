@@ -2,8 +2,6 @@
 
 /** @var rex_addon $this */
 
-rex_view::addJsFile($this->getAssetsUrl('js/be_branding.js?v=' . $this->getVersion()));
-
 $content = '';
 $buttons = '';
 
@@ -59,7 +57,8 @@ if (rex_post('formsubmit', 'string') === '1') {
             $did = $domain->getValue('id');
             foreach (['agency', 'file', 'file2', 'textarea', 'border_text', 'border_color',
                       'color1', 'color2', 'color1_dark', 'color2_dark',
-                      'login_bg', 'login_bg_setting', 'custom_css'] as $key) {
+                      'login_bg', 'login_bg_setting', 'custom_css',
+                      'be_favicon_setting', 'be_favicon_invert'] as $key) {
                 $domainprofiles[] = [$key . '--' . $did, 'string'];
             }
         }
@@ -79,6 +78,8 @@ if (rex_post('formsubmit', 'string') === '1') {
             ['login_bg', 'string'],
             ['login_bg_setting', 'string'],
             ['custom_css', 'string'],
+            ['be_favicon_setting', 'string'],
+            ['be_favicon_invert', 'int'],
         ]));
     }
 
@@ -86,6 +87,31 @@ if (rex_post('formsubmit', 'string') === '1') {
     foreach (glob(rex_path::base('assets/addons/be_branding/favicon/*')) ?: [] as $file) {
         if (is_file($file)) {
             unlink($file);
+        }
+    }
+
+    // Invertiertes Favicon generieren (pro Domain / global)
+    if ($this->getConfig('domainprofiles_enabled')) {
+        foreach ($domains as $domain) {
+            $did    = $domain->getValue('id');
+            $suffix = '--' . $did;
+            if ($this->getConfig('be_favicon_invert' . $suffix)) {
+                $setting = $this->getConfig('be_favicon_setting' . $suffix);
+                $colorKey = $setting === 'secondary' ? 'color2' : 'color1';
+                $hex = be_branding::rgba2hex((string) $this->getConfig($colorKey . $suffix));
+                if ($hex) {
+                    be_branding::generateInvertedFavicon($hex, $suffix);
+                }
+            }
+        }
+    } else {
+        if ($this->getConfig('be_favicon_invert')) {
+            $setting  = $this->getConfig('be_favicon_setting');
+            $colorKey = $setting === 'secondary' ? 'color2' : 'color1';
+            $hex = be_branding::rgba2hex((string) $this->getConfig($colorKey));
+            if ($hex) {
+                be_branding::generateInvertedFavicon($hex);
+            }
         }
     }
 
@@ -228,8 +254,7 @@ $buildProfileContent = function (
     // ── Farbschema
     $c .= '<fieldset><legend>Farbschema</legend>';
 
-    // Primärfarbe + Favicon-Vorschau
-    $c .= '<div class="row"><div class="col-md-10">';
+    // Primärfarbe
     $formElements = [$buildColorField(
         'be_branding-config-color1',
         'config[color1' . $prefix . ']',
@@ -241,11 +266,6 @@ $buildProfileContent = function (
     $frag = new rex_fragment();
     $frag->setVar('elements', $formElements, false);
     $c .= $frag->parse('core/form/container.php');
-    $c .= '</div><div class="col-md-2" style="padding-top:24px;text-align:center">';
-    $c .= '<img id="be-branding-favicon-preview" src="" alt="Favicon-Vorschau"'
-        . ' style="width:32px;height:32px;border-radius:4px;border:1px solid #ddd;display:block;margin:0 auto 4px"/>';
-    $c .= '<small style="font-size:11px;color:#888">Favicon-Vorschau</small>';
-    $c .= '</div></div>';
 
     // Sekundärfarbe
     $formElements = [$buildColorField(
@@ -294,6 +314,71 @@ $buildProfileContent = function (
     $c .= '</div>'; // end well dark mode
 
     $c .= '</fieldset>';
+
+    // ── Backend-Favicon
+    if (class_exists('Imagick')) {
+        $c .= '<fieldset><legend>Backend-Favicon</legend>';
+
+        // Farbauswahl
+        $beFaviconSelectId = 'be-branding-be-favicon-option' . ($prefix ?: '');
+        $beFaviconSelect   = new rex_select;
+        $beFaviconSelect->setId($beFaviconSelectId);
+        $beFaviconSelect->setSize(1);
+        $beFaviconSelect->setAttribute('class', 'form-control');
+        $beFaviconSelect->setName('config[be_favicon_setting' . $prefix . ']');
+        $beFaviconSelect->addOption('REDAXO-Standard (nicht färben, nicht invertieren)', '');
+        $beFaviconSelect->addOption('Primärfarbe', 'primary');
+        $beFaviconSelect->addOption('Sekundärfarbe', 'secondary');
+        $beFaviconSelect->setSelected($cfg('be_favicon_setting'));
+
+        $formElements = [['label' => '<label for="' . $esc($beFaviconSelectId) . '">Favicon-Farbe</label>',
+            'field' => $beFaviconSelect->get()]];
+        $frag = new rex_fragment();
+        $frag->setVar('elements', $formElements, false);
+        $c .= $frag->parse('core/form/form.php');
+
+        // Invertieren-Option
+        $beFaviconInvertId = 'be-branding-be-favicon-invert' . ($prefix ?: '');
+        $formElements = [[
+            'label' => '<label for="' . $esc($beFaviconInvertId) . '">Favicon invertieren?'
+                . '<p><small>Erzeugt ein Favicon mit farbiger Hintergrundfläche und weißem Logo &ndash;'
+                . ' besser sichtbar im Dark Mode und auf farbigen Browser-Tabs.</small></p></label>',
+            'field' => '<input type="checkbox" id="' . $esc($beFaviconInvertId) . '"'
+                . ' name="config[be_favicon_invert' . $esc($prefix) . ']" value="1"'
+                . ($cfg('be_favicon_invert') ? ' checked="checked"' : '') . ' />',
+        ]];
+        $frag = new rex_fragment();
+        $frag->setVar('elements', $formElements, false);
+        $c .= $frag->parse('core/form/form.php');
+
+        // Live-Vorschau (Canvas via JS) + zuletzt generierte Icons
+        $c .= '<div style="margin-top:12px;display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">';
+
+        // Canvas-Vorschau (wird per JS befüllt)
+        $c .= '<div style="text-align:center">'
+            . '<img id="be-branding-favicon-preview" src="" alt="Vorschau"'
+            . ' style="width:48px;height:48px;border-radius:6px;border:1px solid #ddd;display:block;margin:0 auto 4px"/>'
+            . '<small style="font-size:11px;color:#888">Vorschau</small>'
+            . '</div>';
+
+        // Bereits generierte PNGs (Imagick)
+        $faviconDir   = rex_path::base('assets/addons/be_branding/favicon/');
+        $faviconFiles = glob($faviconDir . 'favicon-original-*.png') ?: [];
+        foreach (array_slice($faviconFiles, 0, 5) as $file) {
+            $url = rex_url::base('assets/addons/be_branding/favicon/' . basename($file));
+            $hex = '#' . str_replace(['favicon-original-', '.png'], '', basename($file));
+            $c .= '<div style="text-align:center">'
+                . '<img src="' . $esc($url) . '?v=' . filemtime($file) . '"'
+                . ' alt="' . $esc($hex) . '"'
+                . ' style="width:32px;height:32px;border:1px solid #ddd;border-radius:4px;display:block;margin:0 auto 4px"/>'
+                . '<small style="font-size:10px;color:#888">' . $esc($hex) . '</small>'
+                . '</div>';
+        }
+
+        $c .= '</div>'; // end flex
+
+        $c .= '</fieldset>';
+    }
 
     // ── Projektbranding
     $c .= '<fieldset><legend>Projektbranding</legend>';
@@ -384,12 +469,11 @@ $buildProfileContent = function (
     // ── Custom CSS
     $c .= '<fieldset><legend>Custom CSS</legend>';
     $c .= '<p class="help-block">Wird direkt in den Backend-Output eingebettet. '
-        . 'Nur für Anpassungen, die über Farbe/Logo hinausgehen.</p>';
+        . 'Nur für Anpassungen, die über Farbe/Logo hinausgehen.<br>Eingabe ohne umschließendes <code>'.htmlentities('<style></style>').'</code>-Tag</p>';
     $formElements = [['label' => '<label>Freies CSS für das Backend</label>',
         'field' => '<textarea class="form-control" name="config[custom_css' . $esc($prefix) . ']"'
             . ' rows="6" style="width:100%;font-family:monospace;font-size:12px">'
             . $esc($cfg('custom_css')) . '</textarea>']];
-    $frag = new rex_fragment();
     $frag->setVar('elements', $formElements, false);
     $c .= $frag->parse('core/form/container.php');
     $c .= '</fieldset>';
@@ -499,4 +583,4 @@ $frag = new rex_fragment();
 $frag->setVar('class', 'edit');
 $frag->setVar('title', 'Export / Import');
 $frag->setVar('body', $ioContent, false);
-echo $frag->parse('core/page/section.php');
+#echo $frag->parse('core/page/section.php'); // Export/Import ausblenden

@@ -3,7 +3,7 @@
  *
  * - Live-Farbvorschau (Primär-/Sekundärfarbe, Dark Mode)
  * - Hex ↔ rgba Konvertierung im Colorpicker
- * - Favicon-Vorschau nach Farb-Eingabe
+ * - Favicon-Vorschau nach Farb-Eingabe (inkl. Invertierung)
  * - Login-Hintergrund-Auswahl (show/hide)
  */
 
@@ -66,8 +66,9 @@
     }
 
     function applyLivePreview() {
-        var color1 = normalizeColor($('#be_branding-config-color1').val());
-        var color2 = normalizeColor($('#be_branding-config-color2').val());
+        var color1         = normalizeColor($('#be_branding-config-color1').val());
+        var color2         = normalizeColor($('#be_branding-config-color2').val());
+        var topBorderColor = normalizeColor($('#be_branding-config-border-color').val());
 
         if (!color1 && !color2) {
             getOrCreatePreviewStyle().text('');
@@ -80,32 +81,174 @@
         }
         if (color2) {
             css += '.rex-redaxo-logo path.rex-redaxo-logo-r,'
-                 + '.rex-redaxo-logo path.rex-redaxo-logo-e,'
-                 + '.rex-redaxo-logo path.rex-redaxo-logo-d,'
-                 + '.rex-redaxo-logo path.rex-redaxo-logo-cms { fill: ' + color2 + ' !important; }\n';
+                + '.rex-redaxo-logo path.rex-redaxo-logo-e,'
+                + '.rex-redaxo-logo path.rex-redaxo-logo-d,'
+                + '.rex-redaxo-logo path.rex-redaxo-logo-cms { fill: ' + color2 + ' !important; }\n';
             css += '.rex-nav-meta .text-muted { color: ' + color2 + ' !important; }\n';
+        }
+        if (topBorderColor) {
+            css += '#be_branding-top-border { background-color: ' + topBorderColor + ' !important; }\n';
         }
 
         getOrCreatePreviewStyle().text(css);
     }
 
-    function updateFaviconPreview(color) {
-        var $preview = $('#be-branding-favicon-preview');
-        if (!$preview.length) return;
+    /**
+     * Zeichnet die Favicon-Vorschau im Canvas.
+     * Berücksichtigt die Invertierungs-Checkbox:
+     *   normal    → transparenter Hintergrund, farbiges R
+     *   invertiert → farbige Fläche, weißes R
+     */
+        // URL zum weißen R-Asset (relativ zu den Addon-Assets)
+    var FAVICON_R_URL = (rex && rex.base_url ? rex.base_url : '/') + 'assets/addons/be_branding/img/favicon-r.svg';
 
-        var hex = /^#/.test(color) ? color : rgba2hex(color);
-        // Zeichnet ein minimales 16x16-Favicon-Preview im Canvas
+    // Gecachtes Image-Objekt damit wir nicht bei jedem Update neu laden
+    var _rImage      = null;
+    var _rImageReady = false;
+
+    function loadRImage(callback) {
+        if (_rImageReady) {
+            callback(_rImage);
+            return;
+        }
+        var img = new Image();
+        img.onload = function () {
+            _rImage      = img;
+            _rImageReady = true;
+            callback(img);
+        };
+        img.onerror = function () {
+            callback(null); // Fallback: kein R-Bild
+        };
+        img.src = FAVICON_R_URL;
+    }
+
+    /**
+     * Rendert das Favicon-Canvas mit dem echten REDAXO-R aus den Assets,
+     * setzt es als Preview-Bild und bindet es live als Tab-Favicon ein.
+     */
+    function updateFaviconPreview() {
+        var $select  = $('[name^="config[be_favicon_setting"]').first();
+        var setting  = $select.val();
+        var inverted = $('[name^="config[be_favicon_invert"]').is(':checked');
+
+        var colorRaw = '';
+        if (setting === 'primary') {
+            colorRaw = normalizeColor($('#be_branding-config-color1').val());
+        } else if (setting === 'secondary') {
+            colorRaw = normalizeColor($('#be_branding-config-color2').val());
+        }
+
+        loadRImage(function (rImg) {
+            _renderFaviconCanvas(setting, colorRaw, inverted, rImg);
+        });
+    }
+
+    function _renderFaviconCanvas(setting, colorRaw, inverted, rImg) {
+        var size   = 64;
         var canvas = document.createElement('canvas');
-        canvas.width = canvas.height = 32;
-        var ctx = canvas.getContext('2d');
-        ctx.fillStyle = hex || '#cccccc';
-        ctx.fillRect(0, 0, 32, 32);
-        ctx.fillStyle = '#ffffff';
-        ctx.font = 'bold 20px sans-serif';
-        ctx.textAlign = 'center';
-        ctx.textBaseline = 'middle';
-        ctx.fillText('R', 16, 17);
-        $preview.attr('src', canvas.toDataURL());
+        canvas.width = canvas.height = size;
+        var ctx  = canvas.getContext('2d');
+        var half = size / 2;
+
+        if (colorRaw && setting) {
+            var hex = /^#/.test(colorRaw) ? colorRaw : rgba2hex(colorRaw);
+
+            if (inverted) {
+                // Farbige Fläche mit abgerundeten Ecken
+                var r = size * 0.18;
+                ctx.beginPath();
+                ctx.moveTo(r, 0);
+                ctx.lineTo(size - r, 0);
+                ctx.quadraticCurveTo(size, 0, size, r);
+                ctx.lineTo(size, size - r);
+                ctx.quadraticCurveTo(size, size, size - r, size);
+                ctx.lineTo(r, size);
+                ctx.quadraticCurveTo(0, size, 0, size - r);
+                ctx.lineTo(0, r);
+                ctx.quadraticCurveTo(0, 0, r, 0);
+                ctx.closePath();
+                ctx.fillStyle = hex;
+                ctx.fill();
+
+                // Weißes R-Asset drüberlegen (mit Padding)
+                if (rImg) {
+                    var pad = size * 0.14;
+                    ctx.drawImage(rImg, pad, pad, size - pad * 2, size - pad * 2);
+                }
+
+            } else {
+                // Schachbrett-Hintergrund (signalisiert Transparenz)
+                ctx.fillStyle = '#f0f0f0';
+                ctx.fillRect(0, 0, half, half);
+                ctx.fillRect(half, half, half, half);
+                ctx.fillStyle = '#e0e0e0';
+                ctx.fillRect(half, 0, half, half);
+                ctx.fillRect(0, half, half, half);
+
+                // Farbiges R: R-Asset tonen via globalCompositeOperation
+                if (rImg) {
+                    // Temporäres Canvas: R erst in Zielfarbe einfärben
+                    var tmp    = document.createElement('canvas');
+                    tmp.width  = tmp.height = size;
+                    var tctx   = tmp.getContext('2d');
+                    tctx.drawImage(rImg, 0, 0, size, size);
+                    tctx.globalCompositeOperation = 'source-in';
+                    tctx.fillStyle = hex;
+                    tctx.fillRect(0, 0, size, size);
+                    ctx.drawImage(tmp, 0, 0);
+                }
+            }
+
+        } else {
+            // REDAXO-Standard: originales Core-Favicon als Preview setzen,
+            // kein Canvas nötig
+            var $preview = $('#be-branding-favicon-preview');
+            if ($preview.length) {
+                var coreFavicon = (rex && rex.base_url ? rex.base_url : '/') + 'assets/addons/be_style/plugins/redaxo/icons/favicon-32x32.png';
+                $preview.attr('src', coreFavicon);
+            }
+            return; // früh raus, kein Tab-Favicon überschreiben
+        }
+
+        var dataUrl = canvas.toDataURL('image/png');
+
+        // ── Preview-Bild aktualisieren ──
+        var $preview = $('#be-branding-favicon-preview');
+        if ($preview.length) {
+            $preview.attr('src', dataUrl);
+        }
+
+        // ── Tab-Favicon live setzen ──
+        if (colorRaw && setting) {
+            if (inverted) {
+                // Invertiert: serverseitig generiertes SVG bevorzugen (exaktes REDAXO-R)
+                var hexNoHash = (/^#/.test(colorRaw) ? colorRaw : rgba2hex(colorRaw)).replace('#', '');
+                var svgUrl    = (rex && rex.base_url ? rex.base_url : '/') + 'assets/addons/be_branding/favicon/favicon-inverted-' + hexNoHash + '.svg';
+                var $link     = $('link[rel="icon"][type="image/svg+xml"]');
+                if (!$link.length) {
+                    $link = $('<link rel="icon" type="image/svg+xml">').appendTo('head');
+                }
+                $.ajax({ url: svgUrl, type: 'HEAD' })
+                    .done(function () { $link.attr('href', svgUrl + '?t=' + Date.now()); })
+                    .fail(function () {
+                        $link.remove();
+                        setFaviconDataUrl(dataUrl);
+                    });
+            } else {
+                $('link[type="image/svg+xml"]').remove();
+                setFaviconDataUrl(dataUrl);
+            }
+        }
+    }
+
+    function setFaviconDataUrl(dataUrl) {
+        var $existing = $('link[rel~="icon"]:not([type="image/svg+xml"])');
+        if ($existing.length) {
+            $existing.first().attr('href', dataUrl);
+        } else {
+            $('<link rel="icon" type="image/png">').attr('href', dataUrl).appendTo('head');
+        }
     }
 
     // ─────────────────────────────────────────────────────────────
@@ -129,6 +272,8 @@
         var $select  = $(selectId);
         var $setting = $(settingId);
 
+        if (!$select.length || !$setting.length) return;
+
         function update(animate) {
             if ($select.val() === 'own_bg') {
                 animate ? $setting.show('fast') : $setting.show();
@@ -151,12 +296,16 @@
         var $colorInputs = $('.be-branding-color-input');
         $colorInputs.on('input change', function () {
             applyLivePreview();
-            var color1 = normalizeColor($('#be_branding-config-color1').val());
-            if (color1) updateFaviconPreview(color1);
+            updateFaviconPreview();
         });
 
         // Einmalig beim Laden vorschauen
         applyLivePreview();
+        updateFaviconPreview();
+
+        // Favicon-Vorschau auch bei Änderung von Select und Invertierungs-Checkbox
+        $(document).on('change', '[name^="config[be_favicon_setting"]', updateFaviconPreview);
+        $(document).on('change', '[name^="config[be_favicon_invert"]',  updateFaviconPreview);
 
         // Hex-Eingabe normalisieren
         $colorInputs.each(function () {
@@ -164,9 +313,7 @@
         });
 
         // Login-BG Toggle (einfaches Profil)
-        if ($('#be-branding-login-bg-option').length) {
-            setupLoginBgToggle('#be-branding-login-bg-option', '#be-branding-login-bg-setting');
-        }
+        setupLoginBgToggle('#be-branding-login-bg-option', '#be-branding-login-bg-setting');
 
         // Login-BG Toggle (Domainprofile – IDs werden per data-Attribut übergeben)
         $('[data-be-branding-domain-id]').each(function () {
@@ -176,10 +323,6 @@
                 '#be-branding-login-bg-setting--' + id
             );
         });
-
-        // Initialen Favicon-Preview
-        var color1 = normalizeColor($('#be_branding-config-color1').val());
-        if (color1) updateFaviconPreview(color1);
 
         // Export-Button: JSON-Download auslösen
         $('#be-branding-export-btn').on('click', function (e) {

@@ -1,18 +1,15 @@
 package: be_branding
-version: '2.0.0-dev'
+version: '2.0.0'
 author: Medienfeuer, Daniel Springer
 supportpage: https://github.com/medienfeuer/be_branding
 
-page:
-    title: 'Backend Branding'
-    perm: be_branding[]
-    icon: rex-icon fa-fire
-    subpages:
-        infos:      { title: 'Infos',              perm: 'be_branding[help]',      subPath: README.md }
-        branding:   { title: 'Backend Branding',   perm: 'be_branding[branding]',  icon: rex-icon fa-fire }
-        fe_favicon: { title: 'Frontend-Favicons',  perm: 'be_branding[fe_favicon]',icon: rex-icon fa-star }
-        config:     { title: 'Konfiguration',      perm: 'be_branding[config]',    icon: rex-icon fa-wrench }
-        credits:    { title: 'Credits',            perm: 'be_branding[credits]',   icon: rex-icon fa-copyright, itemclass: pull-right }
+pages:
+    system/be_branding:   { title: 'Backend Branding',   perm: 'be_branding[branding]',  icon: rex-icon fa-fire,subPath: README.md }
+    system/be_branding/help: { title: 'Info',   perm: 'be_branding[help]',  icon: rex-icon fa-info-circle,subPath: README.md }
+    system/be_branding/branding:   { title: 'Backend Anpassungen',   perm: 'be_branding[branding]',  icon: rex-icon fa-palette}
+    system/be_branding/fe_favicon: { title: 'Frontend-Favicons',  perm: 'be_branding[fe_favicon]',icon: rex-icon fa-star }
+    system/be_branding/config:     { title: 'Konfiguration',      perm: 'be_branding[config]',    icon: rex-icon fa-wrench }
+    system/be_branding/credits:    { title: 'Credits',            perm: 'be_branding[credits]',   icon: rex-icon fa-copyright, itemclass: pull-right }
 
 requires:
     redaxo: '>=5.13'

@@ -17,7 +17,7 @@ $borderColor = rex_escape((string) $addon->getConfig('border_color' . be_brandin
 <div id="rex-js-nav-top" class="rex-nav-top<?php if (!$isPopup && !$isSetup): ?> rex-nav-top-is-fixed<?php endif; ?>">
 
     <?php if ($showBorder && $borderText !== ''): ?>
-        <div style="font-size:12px; background-color:<?= $borderColor ?>; color:#fff; width:100%; font-weight:bold; text-align:center; padding:8px 0 6px;">
+        <div id="be_branding-top-border" style="font-size:12px; background-color:<?= $borderColor ?>; color:#fff; width:100%; font-weight:bold; text-align:center; padding:8px 0 6px;">
             <?= rex_escape($borderText) ?>
         </div>
         <style>.rex-is-logged-in .rex-page-main{padding-top:90px}.rex-is-logged-in .rex-nav-main{padding:90px 0 0}</style>

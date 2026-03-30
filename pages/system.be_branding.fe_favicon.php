@@ -136,9 +136,9 @@ foreach ($domains as $domain) {
         $formElements[0]['field'] .= '
 <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
     <img src="' . rex_escape($svgUrl) . '" alt="SVG-Vorschau"
-         style="width:84px;height:84px;border:1px solid #ddd;border-radius:4px;background:#f5f5f5;padding:2px">
+         style="width:64px;height:64px;border:1px solid #ddd;border-radius:4px;background:#f5f5f5;padding:2px">
     <img src="' . rex_escape($svgUrl) . '" alt="SVG-Vorschau groß"
-         style="width:84px;height:84px;border:1px solid #ddd;border-radius:4px;background:#222;padding:4px">
+         style="width:64px;height:64px;border:1px solid #ddd;border-radius:4px;background:#222;padding:4px">
     <span class="text-muted" style="font-size:12px">Vorschau hell &amp; dunkel</span>
 </div>';
     }
@@ -196,7 +196,7 @@ foreach ($domains as $domain) {
                 . '<div style="display:flex;gap:8px;align-items:flex-end;flex-wrap:wrap">';
             foreach ($generatedFiles as $size => $url) {
                 [$w] = explode('x', $size);
-                $displaySize = (int) $w;
+                $displaySize = $w;
                 $content .= '<div style="text-align:center">'
                     . '<img src="' . rex_escape($url) . '?v=' . time() . '"'
                     . ' style="width:' . $displaySize . 'px;height:' . $displaySize . 'px;border:1px solid #ddd;border-radius:3px;display:block">'

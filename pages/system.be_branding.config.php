@@ -12,7 +12,6 @@ if (rex_post('formsubmit', 'string') === '1') {
     $this->setConfig(rex_post('baseconfig', [
         ['editor',                'string'],
         ['showborder',            'int'],
-        ['coloricon',             'int'],
         ['colorpicker',           'int'],
         ['domainprofiles_enabled','int'],
     ]));
@@ -101,48 +100,6 @@ $n = ['label' => '<label for="rex-be_branding-baseconfig-editor">Editor für Tex
 $frag = new rex_fragment();
 $frag->setVar('elements', [$n], false);
 $content .= $frag->parse('core/form/form.php');
-$content .= '</fieldset>';
-
-// ─────────────────────────────────────────────────────────────────────────────
-// Backend-Favicon
-// ─────────────────────────────────────────────────────────────────────────────
-$content .= '<fieldset><legend>Backend-Favicon</legend>';
-
-if (class_exists('Imagick')) {
-    $n = [
-        'label' => '<label for="be-branding-coloricon">Favicon im Backend einfärben?</label>',
-        'field' => '<input type="checkbox" id="be-branding-coloricon"'
-            . ' name="baseconfig[coloricon]" value="1"'
-            . ($this->getConfig('coloricon') ? ' checked="checked"' : '') . ' />',
-    ];
-    $frag = new rex_fragment();
-    $frag->setVar('elements', [$n], false);
-    $content .= $frag->parse('core/form/form.php');
-
-    // Favicon-Vorschau: bereits generierte Icons anzeigen
-    $faviconDir = rex_path::base('assets/addons/be_branding/favicon/');
-    $faviconFiles = glob($faviconDir . 'favicon-original-*.png') ?: [];
-    if (!empty($faviconFiles)) {
-        $content .= '<div style="margin-top:8px">';
-        $content .= '<p class="text-muted" style="font-size:12px">Zuletzt generierte Favicons:</p>';
-        $content .= '<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap">';
-        foreach (array_slice($faviconFiles, 0, 6) as $file) {
-            $url  = rex_url::base('assets/addons/be_branding/favicon/' . basename($file));
-            $hex  = '#' . str_replace(['favicon-original-', '.png'], '', basename($file));
-            $content .= '<div style="text-align:center">'
-                . '<img src="' . rex_escape($url) . '?v=' . filemtime($file) . '"'
-                . ' alt="Favicon ' . rex_escape($hex) . '"'
-                . ' style="width:32px;height:32px;border:1px solid #ddd;border-radius:4px;display:block"/>'
-                . '<small style="font-size:10px;color:#888">' . rex_escape($hex) . '</small>'
-                . '</div>';
-        }
-        $content .= '</div></div>';
-    }
-} else {
-    $content .= '<p><code>Imagick</code> ist auf diesem Server nicht verfügbar &ndash;'
-        . ' Favicons können nicht automatisch eingefärbt werden.</p>';
-}
-
 $content .= '</fieldset>';
 
 // ─────────────────────────────────────────────────────────────────────────────
