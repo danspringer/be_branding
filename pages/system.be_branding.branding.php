@@ -188,11 +188,11 @@ $buildMediaWidget = static function (
 // ─────────────────────────────────────────────────────────────────────────────
 // Hilfsfunktion: Editor-Params ermitteln
 // ─────────────────────────────────────────────────────────────────────────────
-$getEditorParams = static function (string $editor): string {
+$getEditorParams = static function (mixed $editor): string {
     return match ($editor) {
         'ckeditor'          => 'class="form-control ckeditor" data-ckeditor-profile="lite"',
         'cke5'              => 'class="form-control cke5-editor" data-profile="default" data-lang="'
-                               . rex_escape(\Cke5\Utils\Cke5Lang::getUserLang()) . '"',
+            . rex_escape(\Cke5\Utils\Cke5Lang::getUserLang()) . '"',
         'markitup markdown' => 'class="form-control markitupEditor-markdown_full"',
         'markitup textile'  => 'class="form-control markitupEditor-textile_full"',
         'redactor2'         => 'class="form-control redactorEditor2-full"',
@@ -471,7 +471,7 @@ $buildProfileContent = function (
     $c .= '<p class="help-block">Wird direkt in den Backend-Output eingebettet. '
         . 'Nur für Anpassungen, die über Farbe/Logo hinausgehen.<br>Eingabe ohne umschließendes <code>'.htmlentities('<style></style>').'</code>-Tag</p>';
     $formElements = [['label' => '<label>Freies CSS für das Backend</label>',
-        'field' => '<textarea class="form-control" name="config[custom_css' . $esc($prefix) . ']"'
+        'field' => '<textarea class="form-control rex-code rex-js-code" name="config[custom_css' . $esc($prefix) . ']"'
             . ' rows="6" style="width:100%;font-family:monospace;font-size:12px">'
             . $esc($cfg('custom_css')) . '</textarea>']];
     $frag->setVar('elements', $formElements, false);
