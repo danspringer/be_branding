@@ -15,7 +15,7 @@
                 if ($logoSrc):
                 ?>
                     <img src="<?= rex_escape($logoSrc) ?>"
-                         class="img-responsive center-block"
+                         class="img-responsive center-block be-branding-logo-backend"
                          style="padding:20px 10px 5px;width:100%;"
                          alt=""/>
                 <?php endif; ?>

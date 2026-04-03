@@ -135,10 +135,14 @@ foreach ($domains as $domain) {
         $svgUrl = rex_url::frontend('media/' . $svgValue);
         $formElements[0]['field'] .= '
 <div style="margin-top:8px;display:flex;align-items:center;gap:10px">
-    <img src="' . rex_escape($svgUrl) . '" alt="SVG-Vorschau"
+        <div style="color-scheme: light;">
+            <img src="' . rex_escape($svgUrl) . '" alt="SVG-Vorschau hell"
          style="width:64px;height:64px;border:1px solid #ddd;border-radius:4px;background:#f5f5f5;padding:2px">
-    <img src="' . rex_escape($svgUrl) . '" alt="SVG-Vorschau groß"
-         style="width:64px;height:64px;border:1px solid #ddd;border-radius:4px;background:#222;padding:4px">
+         </div>
+         <div style="color-scheme: dark;">
+            <img src="' . rex_escape($svgUrl) . '" alt="SVG-Vorschau dark-Mode"
+                 style="width:64px;height:64px;border:1px solid #ddd;border-radius:4px;background:#222;padding:4px">
+         </div>
     <span class="text-muted" style="font-size:12px">Vorschau hell &amp; dunkel</span>
 </div>';
     }
