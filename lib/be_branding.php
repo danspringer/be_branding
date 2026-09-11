@@ -144,8 +144,13 @@ class be_branding
         $color1 = self::getDomainConfig('color1');
         $color2 = self::getDomainConfig('color2');
 
+        // Custom CSS wird IMMER ausgegeben — der frühere Early-Return ohne
+        // Primär-/Sekundärfarbe hat es stillschweigend verworfen (#38)
+        $customCss = self::getDomainConfig('custom_css');
+        $customBlock = $customCss !== '' ? "\n/* be_branding custom CSS */\n" . $customCss . "\n" : '';
+
         if (!$color1 && !$color2) {
-            return '';
+            return $customBlock !== '' ? '<style>' . $customBlock . '</style></head>' : '';
         }
 
         $color1e = rex_escape($color1);
@@ -193,12 +198,7 @@ class be_branding
         }
 
         $css .= self::buildLoginCss($color1, $color2);
-
-        // Custom CSS
-        $customCss = self::getDomainConfig('custom_css');
-        if ($customCss !== '') {
-            $css .= "\n/* be_branding custom CSS */\n" . $customCss . "\n";
-        }
+        $css .= $customBlock;
 
         return '<style>' . $css . '</style></head>';
     }

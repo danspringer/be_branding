@@ -45,20 +45,25 @@ if ($this->getConfig('file') && !rex::getUser()) {
 // ─────────────────────────────────────────────────────────────────────────────
 // Agentur-Block in den Credits
 // ─────────────────────────────────────────────────────────────────────────────
-if ($this->getConfig('agency') && rex_be_controller::getCurrentPage() === 'credits'
+// Domain-bewusster Check: der frühere Guard auf den unprefixten Key
+// getConfig('agency') schlug fehl, wenn der Wert nur im Domainprofil
+// ('agency--<id>') gepflegt war (#38)
+if (rex_be_controller::getCurrentPage() === 'credits'
+    && be_branding::getDomainConfig('agency') !== ''
     && rex_get('license', 'string', 'NONE') === 'NONE') {
 
     rex_extension::register('PAGE_TITLE_SHOWN', static function (rex_extension_point $ep) {
         $addon = rex_addon::get('be_branding');
 
-        $agencyName = rex_escape($addon->getConfig('agency' . be_branding::getCurrentBeDomainId(true)));
+        $agencyName = be_branding::getDomainConfig('agency', true);
         $text_col   = '';
         $img_col    = '';
 
-        $file2 = $addon->getConfig('file2' . be_branding::getCurrentBeDomainId(true));
+        // getDomainConfig: Domainprofil-Wert mit Fallback auf globale Einstellung (#38)
+        $file2 = be_branding::getDomainConfig('file2');
         $imgSrc = $file2 ? be_branding::checkExtension($file2) : '';
 
-        $rawText = (string) $addon->getConfig('textarea' . be_branding::getCurrentBeDomainId(true));
+        $rawText = be_branding::getDomainConfig('textarea');
 
         // Text durch konfigurierten Editor rendern
         $html_text = $rawText;
@@ -114,16 +119,15 @@ if ($this->getConfig('colorpicker')
 // Haupt-CSS (Header-Farben, Login-Screen, Dark Mode, Custom CSS)
 // Delegiert an be_branding::buildHeaderCss()
 // ─────────────────────────────────────────────────────────────────────────────
-if ($this->getConfig('color1' . be_branding::getCurrentBeDomainId(true))
-    || $this->getConfig('color2' . be_branding::getCurrentBeDomainId(true))) {
-
-    rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
-        $cssBlock = be_branding::buildHeaderCss();
-        if ($cssBlock !== '') {
-            $ep->setSubject(str_replace('</head>', $cssBlock, $ep->getSubject()));
-        }
-    }, rex_extension::LATE);
-}
+// Immer registrieren: buildHeaderCss() entscheidet selbst, was ausgegeben wird.
+// Der frühere color1/color2-Guard hat ohne Primärfarbe auch Custom CSS und
+// Login-Einstellungen verworfen (#38).
+rex_extension::register('OUTPUT_FILTER', static function (rex_extension_point $ep) {
+    $cssBlock = be_branding::buildHeaderCss();
+    if ($cssBlock !== '') {
+        $ep->setSubject(str_replace('</head>', $cssBlock, $ep->getSubject()));
+    }
+}, rex_extension::LATE);
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Customizer: Domain-Link im Header anpassen
