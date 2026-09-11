@@ -39,8 +39,12 @@ class fe_favicon
                 'apple-margin'        => 0,
                 'android-background'  => $tileColor,
                 'android-margin'      => 0,
-                'android-name'        => rex::getServerName(),
-                'android-url'         => rex::getServer(),
+                /* Multi-Domain (YRewrite): Name + start_url pro Domain — mit den
+                   globalen Werten (rex::getServer()) bekämen alle Domains die
+                   start_url der Haupt-Domain und der Browser verwirft sie als
+                   cross-origin ("property 'start_url' ignored"). */
+                'android-name'        => $domain->getHost(),
+                'android-url'         => $domain->getUrl(),
                 'android-orientation' => FE_FaviconGenerator::ANDROID_PORTRAIT,
                 'ms-background'       => $tileColor,
             ]);
