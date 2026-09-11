@@ -49,23 +49,18 @@ class be_favicon {
      * @return void
      */
     static function removeRexCoreFavicons($html = "", $tag = "link", $attr = "rel", $value = "icon") {
-        #dump($html);
-        // Per Regex erst nach dem entsprechenden Tag mit Attribut suchen
-        $regex = "/<$tag.*?$attr=\".*?$value.*?\".*?>(.*?)/is";
-        preg_match_all($regex,$html,$matches,PREG_PATTERN_ORDER);
-        #dump($matches[0]);
-        // Alle Regex-Treffer aus dem HTML löschen
-        foreach ($matches[0] as $icon) {
-            $html = str_replace($icon,'', $html);
-        }
-        // Jetzt noch die MS-Tile von Hand entfernen, z.B. <meta name="msapplication-TileColor" content="#2d89ef">
-        $regexTile = "/<meta.*?name=\".*?TileColor.*?\".*?>(.*?)/is";
-        preg_match_all($regexTile,$html,$matches2,PREG_PATTERN_ORDER);
-        foreach ($matches2[0] as $tile) {
-            $html = str_replace($tile,'', $html);
-        }
-        #dump($matches2[0]);
-        return$html;
+        // Innerhalb eines Tags nur [^>]* matchen — die frühere Variante mit
+        // .*? über /s konnte sich vom <link>-Tag über beliebigen Inhalt
+        // (z. B. Watsons <script>var $watsonSettings…</script>) bis zum
+        // nächsten Vorkommen von "icon" fressen und ihn mitlöschen (#35)
+        $regex = '/<' . preg_quote($tag, '/') . '\b[^>]*\b' . preg_quote($attr, '/')
+               . '="[^"]*' . preg_quote($value, '/') . '[^"]*"[^>]*>\s*/i';
+        $html = (string) preg_replace($regex, '', $html);
+
+        // MS-Tile-Meta entfernen, z.B. <meta name="msapplication-TileColor" content="#2d89ef">
+        $html = (string) preg_replace('/<meta\b[^>]*\bname="[^"]*TileColor[^"]*"[^>]*>\s*/i', '', $html);
+
+        return $html;
     } // EoF
 
 }
