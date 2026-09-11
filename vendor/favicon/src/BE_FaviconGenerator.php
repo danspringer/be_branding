@@ -609,7 +609,7 @@ class BE_FaviconGenerator
      * @access private
      * @final
      */
-    final private function setColorAndMargin(Imagick $image, $colorKey = '', $marginKey = '')
+    private function setColorAndMargin(Imagick $image, $colorKey = '', $marginKey = '')
     {
         if (isset($this->settings[$colorKey]) && empty($this->settings[$colorKey]) === false) {
 			#$image->setImageBackgroundColor("#{$this->settings[$colorKey]}");
@@ -645,7 +645,7 @@ class BE_FaviconGenerator
      * @access private
      * @final
      */
-    final private function createImage($size)
+    private function createImage($size)
     {
         list($sizes['width'], $sizes['height']) = explode('x', $size);
 
@@ -693,7 +693,7 @@ class BE_FaviconGenerator
      * @access private
      * @final
      */
-    final private function getOffsetCenter(Imagick $image, $width, $height)
+    private function getOffsetCenter(Imagick $image, $width, $height)
     {
         $size = $image->getImageGeometry();
 
@@ -712,7 +712,7 @@ class BE_FaviconGenerator
      * @access private
      * @final
      */
-    final private function getOffsetBalanced(Imagick $image, $width, $height)
+    private function getOffsetBalanced(Imagick $image, $width, $height)
     {
         $size = $image->getImageGeometry();
 
@@ -796,7 +796,7 @@ class BE_FaviconGenerator
      * @access private
      * @final
      */
-    final private function getOffsetEntropy(Imagick $image, $width, $height)
+    private function getOffsetEntropy(Imagick $image, $width, $height)
     {
         $clone = clone($image);
         $clone->edgeimage(1);
@@ -819,7 +819,7 @@ class BE_FaviconGenerator
      * @access private
      * @final
      */
-    final private function sliceEntropy(Imagick $image, $size, $axis)
+    private function sliceEntropy(Imagick $image, $size, $axis)
     {
         $rank = array();
 
