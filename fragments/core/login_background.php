@@ -14,6 +14,10 @@ $loginBg = (string) $addon->getConfig('login_bg' . be_branding::getCurrentBeDoma
 $useOwn  = $setting === 'own_bg' && $loginBg !== '';
 $useStd  = $setting === 'redaxo_standard_bg' || (!$setting && !$useOwn);
 
+// Breiten-Deskriptoren für srcset (eigene Bilder: 2100/3300, neuer Core-Standard: 2400/3500)
+$wSmall = 2100;
+$wLarge = 3300;
+
 if ($useOwn) {
     // Eigene Bilder: WebP + JPG (AVIF über Media Manager nur wenn Server das unterstützt)
     $src2100webp  = rex_url::frontend(rex_media_manager::getUrl('be_branding_login_2100_webp', $loginBg));
@@ -24,12 +28,26 @@ if ($useOwn) {
     $src3300jpg   = rex_url::frontend(rex_media_manager::getUrl('be_branding_login_3300_jpg',  $loginBg));
     $showBg = true;
 } elseif ($useStd) {
-    // REDAXO-Standard (Avif-Bundle aus be_style)
-    $src2100avif  = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-korpa-9XngoIpxcEo-unsplash_2100.avif');
-    $src3300avif  = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-korpa-9XngoIpxcEo-unsplash_3300.avif');
-    $src2100webp  = ''; $src3300webp  = '';
-    $src2100jpg   = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-korpa-9XngoIpxcEo-unsplash_2100.jpg');
-    $src3300jpg   = rex_url::pluginAssets('be_style', 'redaxo', 'images/jr-korpa-9XngoIpxcEo-unsplash_3300.jpg');
+    // REDAXO-Standard: neuere Cores liefern jr-korpa-UFx4NcvTRBE-unsplash
+    // (-2400/-3500, AVIF+WebP), ältere jr-korpa-9XngoIpxcEo-unsplash
+    // (_2100/_3300, AVIF+JPG). Existenz-Check statt Versionsvergleich (#36)
+    $stdNew = 'images/jr-korpa-UFx4NcvTRBE-unsplash';
+    $stdOld = 'images/jr-korpa-9XngoIpxcEo-unsplash';
+    $src2100webp = ''; $src3300webp = '';
+    if (file_exists(rex_path::pluginAssets('be_style', 'redaxo', $stdNew . '-2400.avif'))) {
+        $wSmall = 2400;
+        $wLarge = 3500;
+        $src2100avif = rex_url::pluginAssets('be_style', 'redaxo', $stdNew . '-2400.avif');
+        $src3300avif = rex_url::pluginAssets('be_style', 'redaxo', $stdNew . '-3500.avif');
+        // kein JPG im neuen Bundle — WebP als <img>-Fallback (wie im Core-Fragment)
+        $src2100jpg  = rex_url::pluginAssets('be_style', 'redaxo', $stdNew . '-2400.webp');
+        $src3300jpg  = rex_url::pluginAssets('be_style', 'redaxo', $stdNew . '-3500.webp');
+    } else {
+        $src2100avif = rex_url::pluginAssets('be_style', 'redaxo', $stdOld . '_2100.avif');
+        $src3300avif = rex_url::pluginAssets('be_style', 'redaxo', $stdOld . '_3300.avif');
+        $src2100jpg  = rex_url::pluginAssets('be_style', 'redaxo', $stdOld . '_2100.jpg');
+        $src3300jpg  = rex_url::pluginAssets('be_style', 'redaxo', $stdOld . '_3300.jpg');
+    }
     $showBg = true;
 } else {
     $showBg = false;
@@ -40,14 +58,14 @@ if ($showBg):
 <picture class="rex-background">
     <?php if ($src2100avif): ?>
     <source
-        srcset="<?= rex_escape($src2100avif) ?> 2100w, <?= rex_escape($src3300avif) ?> 3300w"
+        srcset="<?= rex_escape($src2100avif) ?> <?= $wSmall ?>w, <?= rex_escape($src3300avif) ?> <?= $wLarge ?>w"
         sizes="100vw"
         type="image/avif"
     />
     <?php endif; ?>
     <?php if ($useOwn && $src2100webp): ?>
     <source
-        srcset="<?= rex_escape($src2100webp) ?> 2100w, <?= rex_escape($src3300webp) ?> 3300w"
+        srcset="<?= rex_escape($src2100webp) ?> <?= $wSmall ?>w, <?= rex_escape($src3300webp) ?> <?= $wLarge ?>w"
         sizes="100vw"
         type="image/webp"
     />
@@ -55,7 +73,7 @@ if ($showBg):
     <img
         alt=""
         src="<?= rex_escape($src2100jpg) ?>"
-        srcset="<?= rex_escape($src2100jpg) ?> 2100w, <?= rex_escape($src3300jpg) ?> 3300w"
+        srcset="<?= rex_escape($src2100jpg) ?> <?= $wSmall ?>w, <?= rex_escape($src3300jpg) ?> <?= $wLarge ?>w"
         sizes="100vw"
     />
 </picture>
